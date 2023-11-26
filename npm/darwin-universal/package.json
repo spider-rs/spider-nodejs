@@ -1,0 +1,15 @@
+{
+  "name": "spider-rs-darwin-universal",
+  "version": "0.0.0",
+  "os": [
+    "darwin"
+  ],
+  "main": "spider-rs.darwin-universal.node",
+  "files": [
+    "spider-rs.darwin-universal.node"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">= 10"
+  }
+}
