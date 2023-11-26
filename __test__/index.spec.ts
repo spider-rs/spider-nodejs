@@ -1,15 +1,10 @@
 import test from 'ava'
 
-import { collectAllLinks } from '../index.js'
+import { crawl } from '../index.js'
 
-test('collect links native', async (t) => {
-  const { links } = await collectAllLinks("https://rsseau.fr");
+test('crawl native', async (t) => {
+  const { links, pages } = await crawl("https://rsseau.fr");
 
-  t.assert(links.length > 1, "should be more than one")
-})
-
-test('collect pages native', async (t) => {
-  const { pages } = await collectAllLinks("https://rsseau.fr");
-
-  t.assert(pages.length > 1, "should be more than one")
+  t.assert(links.length > 1, "should be more than one link")
+  t.assert(pages.length > 1, "should be more than one page")
 })

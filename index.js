@@ -252,7 +252,7 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { Website, collectAllLinks } = nativeBinding
+const { Website, crawl } = nativeBinding
 
 module.exports.Website = Website
-module.exports.collectAllLinks = collectAllLinks
+module.exports.crawl = crawl

@@ -23,7 +23,7 @@ pub struct Website {
 
 #[napi]
 /// crawl a website gathering all links to array
-pub async fn collect_all_links(n: String) -> Website {
+pub async fn crawl(n: String) -> Website {
   let mut website = spider::website::Website::new(&n);
   let mut rx2 = website
     .subscribe(16)

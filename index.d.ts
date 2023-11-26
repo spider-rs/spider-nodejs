@@ -11,7 +11,7 @@ export interface Page {
   content: string
 }
 /** crawl a website gathering all links to array */
-export function collectAllLinks(n: string): Promise<Website>
+export function crawl(n: string): Promise<Website>
 export class Website {
   /** all of the website links. */
   links: Array<string>
