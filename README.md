@@ -1,6 +1,6 @@
 # spider-nodejs
 
-The spider project ported to nodejs via napi.
+The [spider](https://github.com/spider-rs/spider) project ported to nodejs via napi.
 
 ## Getting Started
 
