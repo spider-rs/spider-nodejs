@@ -1,6 +1,6 @@
 {
   "name": "@spider-rs/spider-rs-linux-arm64-musl",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "os": [
     "linux"
   ],
