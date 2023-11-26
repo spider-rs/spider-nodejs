@@ -1,3 +1,3 @@
-# `spider-rs-linux-x64-musl`
+# `@spider-rs/spider-rs-linux-x64-musl`
 
-This is the **x86_64-unknown-linux-musl** binary for `spider-rs`
+This is the **x86_64-unknown-linux-musl** binary for `@spider-rs/spider-rs`

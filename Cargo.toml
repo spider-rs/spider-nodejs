@@ -1,6 +1,6 @@
 [package]
 edition = "2021"
-name = "spider-rs"
+name = "spider-rs_spider-rs"
 version = "0.0.0"
 description = "The fastest web crawler written in Rust ported to nodejs."
 repository = "https://github.com/spider-rs/spider-nodejs"

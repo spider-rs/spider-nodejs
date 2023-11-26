@@ -84,6 +84,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@spider-rs/spider-rs@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@spider-rs/spider-rs@workspace:."
+  dependencies:
+    "@napi-rs/cli": "npm:^2.16.5"
+    ava: "npm:^5.1.1"
+    typescript: "npm:^5.3.2"
+  languageName: unknown
+  linkType: soft
+
 "abbrev@npm:^2.0.0":
   version: 2.0.0
   resolution: "abbrev@npm:2.0.0"
@@ -1598,16 +1608,6 @@ __metadata:
   checksum: 43f69dbc9f34fc8220bc51c6eea1c39715ab3cfdb115d6e3285f6c7d1a603c5c75655668a5bbc11e3c7e2c99d60321fb8d7ab6f38cda6a215fadd0d6d0b52130
   languageName: node
   linkType: hard
-
-"spider-rs@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "spider-rs@workspace:."
-  dependencies:
-    "@napi-rs/cli": "npm:^2.16.5"
-    ava: "npm:^5.1.1"
-    typescript: "npm:^5.3.2"
-  languageName: unknown
-  linkType: soft
 
 "sprintf-js@npm:~1.0.2":
   version: 1.0.3

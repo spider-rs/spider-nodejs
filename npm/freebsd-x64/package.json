@@ -1,6 +1,6 @@
 {
-  "name": "spider-rs-freebsd-x64",
-  "version": "0.0.3",
+  "name": "@spider-rs/spider-rs-freebsd-x64",
+  "version": "0.0.0",
   "os": [
     "freebsd"
   ],

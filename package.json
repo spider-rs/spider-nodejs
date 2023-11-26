@@ -1,6 +1,6 @@
 {
-  "name": "spider-rs",
-  "version": "0.0.3",
+  "name": "@spider-rs/spider-rs",
+  "version": "0.0.4",
   "main": "index.js",
   "types": "index.d.ts",
   "napi": {
@@ -22,6 +22,11 @@
     }
   },
   "license": "MIT",
+  "keywords": [
+    "spider",
+    "crawler"
+  ],
+  "repository": "https://github.com/spider-rs/spider-nodejs",
   "devDependencies": {
     "@napi-rs/cli": "^2.16.5",
     "ava": "^5.1.1",

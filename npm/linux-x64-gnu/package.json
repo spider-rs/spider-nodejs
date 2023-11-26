@@ -1,6 +1,6 @@
 {
-  "name": "spider-rs-linux-x64-gnu",
-  "version": "0.0.3",
+  "name": "@spider-rs/spider-rs-linux-x64-gnu",
+  "version": "0.0.0",
   "os": [
     "linux"
   ],

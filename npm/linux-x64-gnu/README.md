@@ -1,3 +1,3 @@
-# `spider-rs-linux-x64-gnu`
+# `@spider-rs/spider-rs-linux-x64-gnu`
 
-This is the **x86_64-unknown-linux-gnu** binary for `spider-rs`
+This is the **x86_64-unknown-linux-gnu** binary for `@spider-rs/spider-rs`

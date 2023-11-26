@@ -4,10 +4,10 @@ The spider project ported to nodejs via napi.
 
 ## Getting Started
 
-1. `npm i spider-rs --save`
+1. `npm i @spider-rs/spider-rs --save`
 
 ```ts
-import { collectAllLinks } from 'spider-rs'
+import { collectAllLinks } from '@spider-rs/spider-rs'
 
 // gather all the links found in a website fast concurrently.
 const links = await collectAllLinks("https://rsseau.fr");

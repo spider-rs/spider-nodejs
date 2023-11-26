@@ -2,6 +2,6 @@
   "compilerOptions": {
     "module": "commonjs",
     "strict": true,
-    "lib": ["ES2015"]
+    "lib": ["ES2015", "dom"]
   }
 }
