@@ -86,30 +86,25 @@ mac Apple M1 Max
 64 GB of RAM memory
 1 TB of SSD disk space
 -----------------------
+```
 
 Test url: `https://choosealicense.com` (small)
 
 32 pages
-
-```
 
 |                                   | `libraries`           |
 | :-------------------------------- | :-------------------- |
 | **`spider-rs: crawl 10 samples`** | `286ms`(✅ **1.00x**) |
 | **`crawlee: crawl 10 samples`**   | `1s` (✅ **1.00x**)   |
 
----
-
 Test url: `https://rsseau.fr` (medium)
 
 211 pages
 
-```
-
-|                                   | `libraries`          |
-| :-------------------------------- | :------------------- |
-| **`spider-rs: crawl 10 samples`** | `2.5s` (✅ **1.00x**)  |
-| **`crawlee: crawl 10 samples`**   | `75s` (✅ **1.00x**) |
+|                                   | `libraries`           |
+| :-------------------------------- | :-------------------- |
+| **`spider-rs: crawl 10 samples`** | `2.5s` (✅ **1.00x**) |
+| **`crawlee: crawl 10 samples`**   | `75s` (✅ **1.00x**)  |
 
 The performance scales the larger the website and if throttling is needed. Linux benchmarks are about 10x faster than macOS for spider-rs.
 
@@ -118,4 +113,3 @@ The performance scales the larger the website and if throttling is needed. Linux
 Install the napi cli `npm i @napi-rs/cli --global`.
 
 1. `yarn build:test`
-```
