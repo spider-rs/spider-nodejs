@@ -1,4 +1,4 @@
-# spider-nodejs
+# spider-rs
 
 The [spider](https://github.com/spider-rs/spider) project ported to nodejs via napi.
 
@@ -33,6 +33,25 @@ const { links, pages } = new crawl("https://rsseau.fr");
 console.log(pages)
 ```
 
+## Benchmarks
+
+```sh
+----------------------
+mac Apple M1 Max
+10-core CPU
+64 GB of RAM memory
+1 TB of SSD disk space
+-----------------------
+
+Test url: `https://rsseau.fr`
+
+211 pages
+```
+
+|                                          | `libraries`           |
+| :--------------------------------------- | :-------------------- |
+| **`spider-rs: crawl 10 samples`**        | `4s`   (✅ **1.00x**) |
+| **`crawlee: crawl 10 samples`**          | `75s`  (✅ **1.00x**) |
 
 ## Development
 
