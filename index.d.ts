@@ -44,6 +44,10 @@ export class Website {
   withTld(tld: boolean): this
   /** Only use HTTP/2. */
   withHttp2PriorKnowledge(http2PriorKnowledge: boolean): this
+  /** Max time to wait for request duration to milliseconds. */
+  withRequestTimeout(requestTimeout?: number | undefined | null): this
+  /** add external domains */
+  withExternalDomains(externalDomains?: Array<string> | undefined | null): this
   /** Set the crawling budget */
   withBudget(budget?: Record<string, number> | undefined | null): this
   /** Regex black list urls from the crawl */
