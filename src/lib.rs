@@ -3,6 +3,8 @@
 #[macro_use]
 extern crate napi_derive;
 
+use std::time::Duration;
+
 use compact_str::CompactString;
 use napi::{bindgen_prelude::Object, tokio::task::JoinHandle};
 use spider::lazy_static::lazy_static;
@@ -293,6 +295,29 @@ impl Website {
       .inner
       .configuration
       .with_http2_prior_knowledge(http2_prior_knowledge);
+    self
+  }
+
+  /// Max time to wait for request duration to milliseconds.
+  #[napi]
+  pub fn with_request_timeout(&mut self, request_timeout: Option<u32>) -> &Self {
+    self
+      .inner
+      .configuration
+      .with_request_timeout(match request_timeout {
+        Some(d) => Some(Duration::from_millis(d.into())),
+        _ => None,
+      });
+    self
+  }
+
+  /// add external domains
+  #[napi]
+  pub fn with_external_domains(&mut self, external_domains: Option<Vec<String>>) -> &Self {
+    self.inner.with_external_domains(match external_domains {
+      Some(ext) => Some(ext.into_iter()),
+      _ => None,
+    });
     self
   }
 

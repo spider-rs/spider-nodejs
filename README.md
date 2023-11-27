@@ -111,8 +111,7 @@ Test url: `https://rsseau.fr` (medium)
 | **`spider-rs: crawl 10 samples`** | `4s` (✅ **1.00x**)  |
 | **`crawlee: crawl 10 samples`**   | `75s` (✅ **1.00x**) |
 
-
-The performance scales the larger the website and if throttling is needed.
+The performance scales the larger the website and if throttling is needed. Linux benchmarks are about 10x faster than macOS for spider-rs.
 
 ## Development
 
