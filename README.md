@@ -39,6 +39,35 @@ await website.scrape();
 console.log(website.getPages());
 ```
 
+Cron jobs can be done with the following.
+
+```ts
+import { Website } from "@spider-rs/spider-rs";
+
+const website = new Website("https://choosealicense.com").withCron(
+  "1/5 * * * * *",
+);
+// sleep function to test cron
+const stopCron = (time: number, handle: Cron) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(handle.stop());
+    }, time);
+  });
+};
+
+const links: NPage[] = [];
+
+const onPageEvent = (err: Error | null, value: NPage) => {
+  links.push(value);
+};
+
+const handle = await website.runCron(onPageEvent);
+
+// stop the cron in 4 seconds
+await stopCron(4000, handle);
+```
+
 Use the crawl shortcut to get the page content and url.
 
 ```ts

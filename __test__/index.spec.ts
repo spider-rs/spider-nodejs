@@ -1,5 +1,5 @@
 import test from "ava";
-import { crawl, Website, type NPage } from "../index.js";
+import { crawl, Website, type NPage, Cron } from "../index.js";
 
 const TEST_URL = "https://choosealicense.com";
 
@@ -74,6 +74,31 @@ test("new website native onPageEvent", async (t) => {
   };
 
   await website.crawl(onPageEvent);
+
+  // should be valid unless new pages and routes are created.
+  t.assert(links.length > 1, "should be more than one page");
+});
+
+test("new website native cron", async (t) => {
+  const website = new Website(TEST_URL).withCron("1/5 * * * * *");
+  // sleep function to test cron
+  const sleep = (time: number, handle: Cron) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(handle.stop());
+      }, time);
+    });
+  };
+
+  const links: NPage[] = [];
+
+  const onPageEvent = (err: Error | null, value: NPage) => {
+    links.push(value);
+  };
+
+  const handle = await website.runCron(onPageEvent);
+
+  await sleep(4000, handle);
 
   // should be valid unless new pages and routes are created.
   t.assert(links.length > 1, "should be more than one page");

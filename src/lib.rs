@@ -4,7 +4,7 @@
 extern crate napi_derive;
 
 use compact_str::CompactString;
-use napi::bindgen_prelude::Object;
+use napi::{bindgen_prelude::Object, tokio::task::JoinHandle};
 use spider::lazy_static::lazy_static;
 
 lazy_static! {
@@ -115,6 +115,41 @@ impl Website {
       }
       _ => self.inner.crawl().await,
     }
+  }
+
+  /// run the cron
+  #[napi]
+  pub async unsafe fn run_cron(
+    &mut self,
+    on_page_event: Option<napi::threadsafe_function::ThreadsafeFunction<NPage>>,
+  ) -> Cron {
+    let cron_handle = match on_page_event {
+      Some(callback) => {
+        let mut rx2 = self
+          .inner
+          .subscribe(*BUFFER / 2)
+          .expect("sync feature should be enabled");
+
+        let handler = spider::tokio::spawn(async move {
+          while let Ok(res) = rx2.recv().await {
+            callback.call(
+              Ok(NPage {
+                url: res.get_url().into(),
+                content: res.get_html().into(),
+              }),
+              napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
+            );
+          }
+        });
+
+        Some(handler)
+      }
+      _ => None,
+    };
+
+    let inner = self.inner.run_cron().await;
+
+    Cron { inner, cron_handle }
   }
 
   #[napi]
@@ -309,10 +344,10 @@ impl Website {
 
   /// Setup cron jobs to run
   #[napi]
-  pub fn with_cron(&mut self, cron_str: String, cron_type: String) -> &Self {
+  pub fn with_cron(&mut self, cron_str: String, cron_type: Option<String>) -> &Self {
     self.inner.with_cron(
       cron_str.as_str(),
-      if cron_type == "scrape" {
+      if cron_type.unwrap_or_default() == "scrape" {
         spider::website::CronType::Scrape
       } else {
         spider::website::CronType::Crawl
@@ -343,5 +378,27 @@ impl Website {
       _ => (),
     }
     self
+  }
+}
+
+/// a runner for handling crons
+#[napi]
+pub struct Cron {
+  /// the runner task
+  inner: spider::features::cron::Runner,
+  /// inner cron handle
+  cron_handle: Option<JoinHandle<()>>,
+}
+
+#[napi]
+impl Cron {
+  /// stop the cron instance
+  #[napi]
+  pub async unsafe fn stop(&mut self) {
+    self.inner.stop().await;
+    match &self.cron_handle {
+      Some(h) => h.abort(),
+      _ => (),
+    }
   }
 }

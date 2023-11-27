@@ -13,7 +13,7 @@ compact_str = "0.7.1"
 napi = { version = "2.12.2", default-features = false, features = ["napi4", "async", "tokio_rt"] }
 napi-derive = "2.12.2"
 num_cpus = "1.16.0"
-spider = { version = "1.50.5", features = ["napi", "budget", "cron", "regex"] }
+spider = { version = "1.50.8", features = ["napi", "budget", "cron", "regex"] }
 
 [target.x86_64-unknown-linux-gnu.dependencies]
 openssl-sys = { version = "0.9.96", features = ["vendored"] }

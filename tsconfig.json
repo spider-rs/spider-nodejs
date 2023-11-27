@@ -3,6 +3,7 @@
     "module": "commonjs",
     "strict": true,
     "lib": ["es2016", "dom"],
+    "types": ["node"],
     "skipLibCheck": true
   }
 }

@@ -24,6 +24,8 @@ export class Website {
   constructor(url: string)
   /** crawl a website */
   crawl(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null): Promise<void>
+  /** run the cron */
+  runCron(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null): Promise<Cron>
   /** scrape a website */
   scrape(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null): Promise<void>
   /** get all the links of a website */
@@ -47,11 +49,16 @@ export class Website {
   /** Regex black list urls from the crawl */
   withBlacklistUrl(blacklistUrl?: Array<string> | undefined | null): this
   /** Setup cron jobs to run */
-  withCron(cronStr: string, cronType: string): this
+  withCron(cronStr: string, cronType?: string | undefined | null): this
   /** Delay between request as ms. */
   withDelay(delay: number): this
   /** Use proxies for request. */
   withProxies(proxies?: Array<string> | undefined | null): this
   /** build the inner website - not required for all builder_steps */
   build(): this
+}
+/** a runner for handling crons */
+export class Cron {
+  /** stop the cron instance */
+  stop(): Promise<void>
 }
