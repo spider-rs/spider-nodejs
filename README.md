@@ -10,7 +10,12 @@ The [spider](https://github.com/spider-rs/spider) project ported to nodejs via n
 import { Website } from "@spider-rs/spider-rs";
 
 const website = new Website("https://rsseau.fr");
-await website.crawl();
+
+const onPageEvent = (_err, value) => {
+  console.log(value)
+};
+
+await website.crawl(onPageEvent);
 console.log(website.getLinks());
 ```
 
@@ -53,7 +58,19 @@ mac Apple M1 Max
 1 TB of SSD disk space
 -----------------------
 
-Test url: `https://rsseau.fr`
+Test url: `https://choosealicense.com` (small)
+
+32 pages
+```
+
+|                                   | `libraries`          |
+| :-------------------------------- | :------------------- |
+| **`spider-rs: crawl 10 samples`** | `390ms`(✅ **1.00x**)|
+| **`crawlee: crawl 10 samples`**   | `1s` (✅ **1.00x**) |
+
+---
+
+Test url: `https://rsseau.fr` (medium)
 
 211 pages
 ```
@@ -62,6 +79,9 @@ Test url: `https://rsseau.fr`
 | :-------------------------------- | :------------------- |
 | **`spider-rs: crawl 10 samples`** | `4s` (✅ **1.00x**)  |
 | **`crawlee: crawl 10 samples`**   | `75s` (✅ **1.00x**) |
+
+
+The performance scales the larger the website and if throttling is needed.
 
 ## Development
 

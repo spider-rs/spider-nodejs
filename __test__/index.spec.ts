@@ -1,7 +1,7 @@
 import test from "ava";
-import { crawl, Website } from "../index.js";
+import { crawl, Website, type NPage } from "../index.js";
 
-const TEST_URL = "https://rsseau.fr";
+const TEST_URL = "https://choosealicense.com";
 
 test("crawl native", async (t) => {
   const { links, pages } = await crawl(TEST_URL);
@@ -62,4 +62,19 @@ test("new website native blacklist pages", async (t) => {
     links.length > 1 && !links.includes(`${TEST_URL}/blog`),
     "should be more than one page",
   );
+});
+
+test("new website native onPageEvent", async (t) => {
+  const website = new Website(TEST_URL);
+
+  const links: NPage[] = [];
+
+  const onPageEvent = (err: Error | null, value: NPage) => {
+    links.push(value);
+  };
+
+  await website.crawl(onPageEvent);
+
+  // should be valid unless new pages and routes are created.
+  t.assert(links.length > 1, "should be more than one page");
 });

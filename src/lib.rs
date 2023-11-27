@@ -7,6 +7,10 @@ use compact_str::CompactString;
 use napi::bindgen_prelude::Object;
 use spider::lazy_static::lazy_static;
 
+lazy_static! {
+  pub static ref BUFFER: usize = (num_cpus::get() * 20).max(88);
+}
+
 /// a simple page object
 #[derive(Default, Clone)]
 #[napi(object)]
@@ -31,13 +35,8 @@ pub struct NWebsite {
 pub async fn crawl(url: String) -> NWebsite {
   let mut website = spider::website::Website::new(&url);
   let mut rx2 = website
-    .subscribe(16)
+    .subscribe(*BUFFER / 2)
     .expect("sync feature should be enabled");
-
-  lazy_static! {
-    pub static ref BUFFER: usize = (num_cpus::get() * 20).max(88);
-  }
-
   let (tx, mut rx) = spider::tokio::sync::mpsc::channel(*BUFFER);
 
   spider::tokio::spawn(async move {
@@ -89,14 +88,64 @@ impl Website {
   }
   #[napi]
   /// crawl a website
-  pub async unsafe fn crawl(&mut self) {
-    self.inner.crawl().await;
+  pub async unsafe fn crawl(
+    &mut self,
+    on_page_event: Option<napi::threadsafe_function::ThreadsafeFunction<NPage>>,
+  ) {
+    match on_page_event {
+      Some(callback) => {
+        let mut rx2 = self
+          .inner
+          .subscribe(*BUFFER / 2)
+          .expect("sync feature should be enabled");
+
+        spider::tokio::spawn(async move {
+          while let Ok(res) = rx2.recv().await {
+            callback.call(
+              Ok(NPage {
+                url: res.get_url().into(),
+                content: res.get_html().into(),
+              }),
+              napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
+            );
+          }
+        });
+
+        self.inner.crawl().await;
+      }
+      _ => self.inner.crawl().await,
+    }
   }
 
   #[napi]
   /// scrape a website
-  pub async unsafe fn scrape(&mut self) {
-    self.inner.scrape().await;
+  pub async unsafe fn scrape(
+    &mut self,
+    on_page_event: Option<napi::threadsafe_function::ThreadsafeFunction<NPage>>,
+  ) {
+    match on_page_event {
+      Some(callback) => {
+        let mut rx2 = self
+          .inner
+          .subscribe(*BUFFER / 2)
+          .expect("sync feature should be enabled");
+
+        spider::tokio::spawn(async move {
+          while let Ok(res) = rx2.recv().await {
+            callback.call(
+              Ok(NPage {
+                url: res.get_url().into(),
+                content: res.get_html().into(),
+              }),
+              napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
+            );
+          }
+        });
+
+        self.inner.scrape().await;
+      }
+      _ => self.inner.scrape().await,
+    }
   }
 
   #[napi]
@@ -241,17 +290,19 @@ impl Website {
   #[napi]
   /// Regex black list urls from the crawl
   pub fn with_blacklist_url(&mut self, blacklist_url: Option<Vec<String>>) -> &Self {
-
-    self.inner.configuration.with_blacklist_url(match blacklist_url {
-      Some(v) => {
-        let mut blacklist: Vec<CompactString> = Vec::new();
-        for item in v {
-          blacklist.push(CompactString::new(item));
+    self
+      .inner
+      .configuration
+      .with_blacklist_url(match blacklist_url {
+        Some(v) => {
+          let mut blacklist: Vec<CompactString> = Vec::new();
+          for item in v {
+            blacklist.push(CompactString::new(item));
+          }
+          Some(blacklist)
         }
-        Some(blacklist)
-      }
-      _ => None,
-    });
+        _ => None,
+      });
 
     self
   }

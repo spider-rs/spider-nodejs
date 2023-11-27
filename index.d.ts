@@ -23,9 +23,9 @@ export class NWebsite {
 export class Website {
   constructor(url: string)
   /** crawl a website */
-  crawl(): Promise<void>
+  crawl(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null): Promise<void>
   /** scrape a website */
-  scrape(): Promise<void>
+  scrape(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null): Promise<void>
   /** get all the links of a website */
   getLinks(): Array<string>
   /** get all the pages of a website - requires calling website.scrape */
