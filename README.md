@@ -98,7 +98,7 @@ Test url: `https://choosealicense.com` (small)
 | **`spider-rs: crawl 10 samples`** | `286ms`(✅ **1.00x**) |
 | **`crawlee: crawl 10 samples`**   | `1s` (✅ **1.00x**)   |
 
----
+```
 
 Test url: `https://rsseau.fr` (medium)
 
@@ -106,10 +106,12 @@ Test url: `https://rsseau.fr` (medium)
 
 ```
 
-|                                   | `libraries`          |
-| :-------------------------------- | :------------------- |
-| **`spider-rs: crawl 10 samples`** | `2.5s` (✅ **1.00x**)  |
-| **`crawlee: crawl 10 samples`**   | `75s` (✅ **1.00x**) |
+|                                   | `libraries`           |
+| :-------------------------------- | :-------------------- |
+| **`spider-rs: crawl 10 samples`** | `2.5s` (✅ **1.00x**) |
+| **`crawlee: crawl 10 samples`**   | `75s` (✅ **1.00x**)  |
+
+```
 
 The performance scales the larger the website and if throttling is needed. Linux benchmarks are about 10x faster than macOS for spider-rs.
 
