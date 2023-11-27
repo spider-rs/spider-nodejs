@@ -1,37 +1,49 @@
-import test from 'ava'
+import test from "ava";
+import { crawl, Website } from "../index.js";
 
-import { crawl, Website } from '../index.js'
+const TEST_URL = "https://rsseau.fr";
 
-test('crawl native', async (t) => {
-  const { links, pages } = await crawl("https://rsseau.fr");
+test("crawl native", async (t) => {
+  const { links, pages } = await crawl(TEST_URL);
 
-  t.assert(links.length > 1, "should be more than one link")
-  t.assert(pages.length > 1, "should be more than one page")
-})
+  t.assert(links.length > 1, "should be more than one link");
+  t.assert(pages.length > 1, "should be more than one page");
+});
 
-test('new website native', async (t) => {
-  const website = new Website("https://rsseau.fr");
+test("new website native", async (t) => {
+  const website = new Website(TEST_URL);
   await website.crawl();
- 
-  t.assert(website.getLinks().length > 1, "should be more than one link")
-})
 
-test('new website scrape native', async (t) => {
-  const website = new Website("https://rsseau.fr");
+  t.assert(website.getLinks().length > 1, "should be more than one link");
+});
+
+test("new website scrape native", async (t) => {
+  const website = new Website(TEST_URL);
   await website.scrape();
 
-  t.assert(website.getPages().length > 1, "should be more than one page")
-})
+  t.assert(website.getPages().length > 1, "should be more than one page");
+});
 
-
-test('new website native with custom headers', async (t) => {
-  const website = new Website("https://rsseau.fr")
+test("new website native with custom config", async (t) => {
+  const website = new Website(TEST_URL)
     .withHeaders({
-      "authorization": "somerandomjwt"
+      authorization: "somerandomjwt",
     })
     .build();
 
   await website.crawl();
- 
-  t.assert(website.getLinks().length > 1, "should be more than one link")
-})
+
+  t.assert(website.getLinks().length > 1, "should be more than one page");
+});
+
+test("new website native budget one page", async (t) => {
+  const website = new Website(TEST_URL)
+    .withBudget({
+      "*": 1,
+    })
+    .build();
+
+  await website.crawl();
+
+  t.assert(website.getLinks().length === 1, "should be one link");
+});

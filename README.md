@@ -14,7 +14,7 @@ await website.crawl();
 console.log(website.getLinks());
 ```
 
-Collect the resource.
+Collect the resources for a website. View [config](https://docs.rs/spider/latest/spider/website/struct.Website.html) for options, when using convert the method to camelCase.
 
 ```ts
 import { Website } from "@spider-rs/spider-rs";
@@ -23,7 +23,12 @@ const website = new Website("https://rsseau.fr")
   .withHeaders({
     authorization: "somerandomjwt",
   })
+  .withBudget({
+      // limit up to 200 pages crawled for the entire website
+      "*": 200,
+   })
   .build();
+
 await website.scrape();
 console.log(website.getPages());
 ```

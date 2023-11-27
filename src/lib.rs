@@ -170,6 +170,87 @@ impl Website {
     self
   }
 
+  /// Add user agent to request.
+  #[napi]
+  pub fn with_user_agent(&mut self, user_agent: Option<&str>) -> &Self {
+    self.inner.configuration.with_user_agent(user_agent);
+    self
+  }
+
+  /// Respect robots.txt file.
+  #[napi]
+  pub fn with_respect_robots_txt(&mut self, respect_robots_txt: bool) -> &Self {
+    self
+      .inner
+      .configuration
+      .with_respect_robots_txt(respect_robots_txt);
+    self
+  }
+
+  /// Include subdomains detection.
+  #[napi]
+  pub fn with_subdomains(&mut self, subdomains: bool) -> &Self {
+    self.inner.configuration.with_subdomains(subdomains);
+    self
+  }
+
+  /// Include tld detection.
+  #[napi]
+  pub fn with_tld(&mut self, tld: bool) -> &Self {
+    self.inner.configuration.with_tld(tld);
+    self
+  }
+
+  /// Only use HTTP/2.
+  #[napi]
+  pub fn with_http2_prior_knowledge(&mut self, http2_prior_knowledge: bool) -> &Self {
+    self
+      .inner
+      .configuration
+      .with_http2_prior_knowledge(http2_prior_knowledge);
+    self
+  }
+
+  #[napi]
+  pub fn with_budget(&mut self, budget: Option<std::collections::HashMap<String, u32>>) -> &Self {
+    use spider::hashbrown::hash_map::HashMap;
+
+    match budget {
+      Some(d) => {
+        let v = d
+          .iter()
+          .map(|e| e.0.to_owned() + "," + &e.1.to_string())
+          .collect::<Vec<_>>();
+        let v = v.join("");
+        let v = v
+          .split(",")
+          .collect::<Vec<_>>()
+          .chunks(2)
+          .map(|x| (x[0], x[1].parse::<u32>().unwrap_or_default()))
+          .collect::<HashMap<&str, u32>>();
+
+        self.inner.with_budget(Some(v));
+      }
+      _ => (),
+    }
+
+    self
+  }
+
+  /// Delay between request as ms.
+  #[napi]
+  pub fn with_delay(&mut self, delay: u32) -> &Self {
+    self.inner.configuration.with_delay(delay.into());
+    self
+  }
+
+  /// Use proxies for request.
+  #[napi]
+  pub fn with_proxies(&mut self, proxies: Option<Vec<String>>) -> &Self {
+    self.inner.configuration.with_proxies(proxies);
+    self
+  }
+
   #[napi]
   /// build the inner website - not required for all builder_steps
   pub fn build(&mut self) -> &Self {

@@ -32,6 +32,21 @@ export class Website {
   getPages(): Array<NPage>
   /** Set HTTP headers for request using [reqwest::header::HeaderMap](https://docs.rs/reqwest/latest/reqwest/header/struct.HeaderMap.html). */
   withHeaders(headers?: object | undefined | null): this
-  /** build the inner website */
+  /** Add user agent to request. */
+  withUserAgent(userAgent?: string | undefined | null): this
+  /** Respect robots.txt file. */
+  withRespectRobotsTxt(respectRobotsTxt: boolean): this
+  /** Include subdomains detection. */
+  withSubdomains(subdomains: boolean): this
+  /** Include tld detection. */
+  withTld(tld: boolean): this
+  /** Only use HTTP/2. */
+  withHttp2PriorKnowledge(http2PriorKnowledge: boolean): this
+  withBudget(budget?: Record<string, number> | undefined | null): this
+  /** Delay between request as ms. */
+  withDelay(delay: number): this
+  /** Use proxies for request. */
+  withProxies(proxies?: Array<string> | undefined | null): this
+  /** build the inner website - not required for all builder_steps */
   build(): this
 }
