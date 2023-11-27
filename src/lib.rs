@@ -14,7 +14,8 @@ pub struct Page {
 }
 
 #[napi]
-pub struct Website {
+/// website main data from rust to node
+pub struct NWebsite {
   /// all of the website links.
   pub links: Vec<String>,
   /// the pages found
@@ -23,8 +24,8 @@ pub struct Website {
 
 #[napi]
 /// crawl a website gathering all links to array
-pub async fn crawl(n: String) -> Website {
-  let mut website = spider::website::Website::new(&n);
+pub async fn crawl(url: String) -> NWebsite {
+  let mut website = spider::website::Website::new(&url);
   let mut rx2 = website
     .subscribe(16)
     .expect("sync feature should be enabled");
@@ -59,5 +60,64 @@ pub async fn crawl(n: String) -> Website {
 
   let links = pages.iter().map(|x| x.url.clone()).collect::<Vec<String>>();
 
-  Website { links, pages }
+  NWebsite { links, pages }
+}
+
+#[napi]
+pub struct Website {
+  /// the website from spider
+  inner: spider::website::Website,
+}
+
+#[napi]
+impl Website {
+  #[napi(constructor)]
+  pub fn new(url: String) -> Self {
+    Website {
+      inner: spider::website::Website::new(&url),
+    }
+  }
+  #[napi]
+  /// crawl a website
+  pub async unsafe fn crawl(&mut self) {
+    self.inner.crawl().await;
+  }
+
+  #[napi]
+  /// scrape a website
+  pub async unsafe fn scrape(&mut self) {
+    self.inner.scrape().await;
+  }
+
+  #[napi]
+  /// get all the links of a website
+  pub fn get_links(&self) -> Vec<String> {
+    let links = self
+      .inner
+      .get_links()
+      .iter()
+      .map(|x| x.as_ref().to_string())
+      .collect::<Vec<String>>();
+    links
+  }
+
+  /// get all the pages of a website
+  #[napi]
+  pub fn get_pages(&self) -> Vec<Page> {
+    let mut pages: Vec<Page> = Vec::new();
+
+    match self.inner.get_pages() {
+      Some(p) => {
+        for page in p.iter() {
+          pages.push(Page {
+            url: page.get_url().into(),
+            content: page.get_html(),
+          });
+        }
+      }
+      _ => (),
+    }
+
+    pages
+  }
 }

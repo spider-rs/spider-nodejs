@@ -11,10 +11,22 @@ export interface Page {
   content: string
 }
 /** crawl a website gathering all links to array */
-export function crawl(n: string): Promise<Website>
-export class Website {
+export function crawl(url: string): Promise<NWebsite>
+/** website main data from rust to node */
+export class NWebsite {
   /** all of the website links. */
   links: Array<string>
   /** the pages found */
   pages: Array<Page>
+}
+export class Website {
+  constructor(url: string)
+  /** crawl a website */
+  crawl(): Promise<void>
+  /** scrape a website */
+  scrape(): Promise<void>
+  /** get all the links of a website */
+  getLinks(): Array<string>
+  /** get all the pages of a website */
+  getPages(): Array<Page>
 }
