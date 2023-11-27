@@ -12,7 +12,7 @@ import { Website } from "@spider-rs/spider-rs";
 const website = new Website("https://rsseau.fr");
 
 const onPageEvent = (_err, value) => {
-  console.log(value)
+  console.log(value);
 };
 
 await website.crawl(onPageEvent);
@@ -29,9 +29,9 @@ const website = new Website("https://rsseau.fr")
     authorization: "somerandomjwt",
   })
   .withBudget({
-      // limit up to 200 pages crawled for the entire website
-      "*": 200,
-   })
+    // limit up to 200 pages crawled for the entire website
+    "*": 200,
+  })
   .withBlacklistUrl([new RegExp("/books").source, "/resume"])
   .build();
 
@@ -61,18 +61,20 @@ mac Apple M1 Max
 Test url: `https://choosealicense.com` (small)
 
 32 pages
+
 ```
 
-|                                   | `libraries`          |
-| :-------------------------------- | :------------------- |
-| **`spider-rs: crawl 10 samples`** | `390ms`(✅ **1.00x**)|
-| **`crawlee: crawl 10 samples`**   | `1s` (✅ **1.00x**) |
+|                                   | `libraries`           |
+| :-------------------------------- | :-------------------- |
+| **`spider-rs: crawl 10 samples`** | `390ms`(✅ **1.00x**) |
+| **`crawlee: crawl 10 samples`**   | `1s` (✅ **1.00x**)   |
 
 ---
 
 Test url: `https://rsseau.fr` (medium)
 
 211 pages
+
 ```
 
 |                                   | `libraries`          |
@@ -88,3 +90,4 @@ The performance scales the larger the website and if throttling is needed.
 Install the napi cli `npm i @napi-rs/cli --global`.
 
 1. `yarn build:test`
+```
