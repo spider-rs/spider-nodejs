@@ -7,30 +7,34 @@ The [spider](https://github.com/spider-rs/spider) project ported to nodejs via n
 1. `npm i @spider-rs/spider-rs --save`
 
 ```ts
-import { Website } from '@spider-rs/spider-rs'
+import { Website } from "@spider-rs/spider-rs";
 
 const website = new Website("https://rsseau.fr");
 await website.crawl();
-console.log(website.getLinks())
+console.log(website.getLinks());
 ```
 
 Collect the resource.
 
 ```ts
-import { Website } from '@spider-rs/spider-rs'
+import { Website } from "@spider-rs/spider-rs";
 
-const website = new Website("https://rsseau.fr");
+const website = new Website("https://rsseau.fr")
+  .withHeaders({
+    authorization: "somerandomjwt",
+  })
+  .build();
 await website.scrape();
-console.log(website.getPages())
+console.log(website.getPages());
 ```
 
 Use the crawl shortcut to get the page content and url.
 
 ```ts
-import { crawl } from '@spider-rs/spider-rs'
+import { crawl } from "@spider-rs/spider-rs";
 
 const { links, pages } = new crawl("https://rsseau.fr");
-console.log(pages)
+console.log(pages);
 ```
 
 ## Benchmarks
@@ -48,10 +52,10 @@ Test url: `https://rsseau.fr`
 211 pages
 ```
 
-|                                          | `libraries`           |
-| :--------------------------------------- | :-------------------- |
-| **`spider-rs: crawl 10 samples`**        | `4s`   (✅ **1.00x**) |
-| **`crawlee: crawl 10 samples`**          | `75s`  (✅ **1.00x**) |
+|                                   | `libraries`          |
+| :-------------------------------- | :------------------- |
+| **`spider-rs: crawl 10 samples`** | `4s` (✅ **1.00x**)  |
+| **`crawlee: crawl 10 samples`**   | `75s` (✅ **1.00x**) |
 
 ## Development
 

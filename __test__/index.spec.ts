@@ -22,3 +22,16 @@ test('new website scrape native', async (t) => {
 
   t.assert(website.getPages().length > 1, "should be more than one page")
 })
+
+
+test('new website native with custom headers', async (t) => {
+  const website = new Website("https://rsseau.fr")
+    .withHeaders({
+      "authorization": "somerandomjwt"
+    })
+    .build();
+
+  await website.crawl();
+ 
+  t.assert(website.getLinks().length > 1, "should be more than one link")
+})
