@@ -27,6 +27,7 @@ const website = new Website("https://rsseau.fr")
       // limit up to 200 pages crawled for the entire website
       "*": 200,
    })
+  .withBlacklistUrl([new RegExp("/books").source, "/resume"])
   .build();
 
 await website.scrape();

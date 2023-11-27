@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "strict": true,
-    "lib": ["ES2015", "dom"],
+    "lib": ["es2016", "dom"],
     "skipLibCheck": true
   }
 }

@@ -47,3 +47,19 @@ test("new website native budget one page", async (t) => {
 
   t.assert(website.getLinks().length === 1, "should be one link");
 });
+
+test("new website native blacklist pages", async (t) => {
+  const website = new Website(TEST_URL)
+    .withBlacklistUrl(["/blog", new RegExp("/books").source, "/resume"])
+    .build();
+
+  await website.crawl();
+
+  const links = website.getLinks();
+
+  // should be valid unless new pages and routes are created.
+  t.assert(
+    links.length > 1 && !links.includes(`${TEST_URL}/blog`),
+    "should be more than one page",
+  );
+});

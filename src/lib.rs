@@ -3,6 +3,7 @@
 #[macro_use]
 extern crate napi_derive;
 
+use compact_str::CompactString;
 use napi::bindgen_prelude::Object;
 use spider::lazy_static::lazy_static;
 
@@ -212,6 +213,7 @@ impl Website {
   }
 
   #[napi]
+  /// Set the crawling budget
   pub fn with_budget(&mut self, budget: Option<std::collections::HashMap<String, u32>>) -> &Self {
     use spider::hashbrown::hash_map::HashMap;
 
@@ -220,8 +222,7 @@ impl Website {
         let v = d
           .iter()
           .map(|e| e.0.to_owned() + "," + &e.1.to_string())
-          .collect::<Vec<_>>();
-        let v = v.join("");
+          .collect::<String>();
         let v = v
           .split(",")
           .collect::<Vec<_>>()
@@ -234,6 +235,38 @@ impl Website {
       _ => (),
     }
 
+    self
+  }
+
+  #[napi]
+  /// Regex black list urls from the crawl
+  pub fn with_blacklist_url(&mut self, blacklist_url: Option<Vec<String>>) -> &Self {
+
+    self.inner.configuration.with_blacklist_url(match blacklist_url {
+      Some(v) => {
+        let mut blacklist: Vec<CompactString> = Vec::new();
+        for item in v {
+          blacklist.push(CompactString::new(item));
+        }
+        Some(blacklist)
+      }
+      _ => None,
+    });
+
+    self
+  }
+
+  /// Setup cron jobs to run
+  #[napi]
+  pub fn with_cron(&mut self, cron_str: String, cron_type: String) -> &Self {
+    self.inner.with_cron(
+      cron_str.as_str(),
+      if cron_type == "scrape" {
+        spider::website::CronType::Scrape
+      } else {
+        spider::website::CronType::Crawl
+      },
+    );
     self
   }
 

@@ -42,7 +42,12 @@ export class Website {
   withTld(tld: boolean): this
   /** Only use HTTP/2. */
   withHttp2PriorKnowledge(http2PriorKnowledge: boolean): this
+  /** Set the crawling budget */
   withBudget(budget?: Record<string, number> | undefined | null): this
+  /** Regex black list urls from the crawl */
+  withBlacklistUrl(blacklistUrl?: Array<string> | undefined | null): this
+  /** Setup cron jobs to run */
+  withCron(cronStr: string, cronType: string): this
   /** Delay between request as ms. */
   withDelay(delay: number): this
   /** Use proxies for request. */
