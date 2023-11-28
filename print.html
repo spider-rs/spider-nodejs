@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">User Guide</li><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li class="chapter-item expanded "><a href="simple.html"><strong aria-hidden="true">2.</strong> A simple example</a></li><li class="chapter-item expanded affix "><li class="part-title">Config</li><li class="chapter-item expanded "><a href="website.html"><strong aria-hidden="true">3.</strong> Website</a></li><li class="chapter-item expanded affix "><li class="part-title">Usage</li><li class="chapter-item expanded "><a href="crawl.html"><strong aria-hidden="true">4.</strong> Crawl</a></li><li class="chapter-item expanded "><a href="cron-job.html"><strong aria-hidden="true">5.</strong> Cron Job</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">User Guide</li><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li class="chapter-item expanded "><a href="simple.html"><strong aria-hidden="true">2.</strong> A simple example</a></li><li class="chapter-item expanded affix "><li class="part-title">Config</li><li class="chapter-item expanded "><a href="website.html"><strong aria-hidden="true">3.</strong> Website</a></li><li class="chapter-item expanded affix "><li class="part-title">Usage</li><li class="chapter-item expanded "><a href="crawl.html"><strong aria-hidden="true">4.</strong> Crawl</a></li><li class="chapter-item expanded "><a href="scrape.html"><strong aria-hidden="true">5.</strong> Scrape</a></li><li class="chapter-item expanded "><a href="cron-job.html"><strong aria-hidden="true">6.</strong> Cron Job</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -322,7 +322,7 @@ const website = new Website(&quot;https://choosealicense.com&quot;);
   .build();
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="crawl"><a class="header" href="#crawl">Crawl</a></h1>
-<p>Crawl a website concurrently. </p>
+<p>Crawl a website concurrently.</p>
 <pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
 
 // pass in the website url
@@ -357,6 +357,18 @@ const onPageEvent = (err, value) =&gt; {
 
 await website.crawl(onPageEvent, true);
 // this will run instantly as the crawl is in the background
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="scrape"><a class="header" href="#scrape">Scrape</a></h1>
+<p>Scape a website and collect the resource data.</p>
+<pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
+
+// pass in the website url
+const website = new Website(&quot;https://rsseau.fr&quot;);
+
+await website.scrape();
+
+// [ { url: &quot;https://rsseau.fr/blog&quot;, html: &quot;&lt;html&gt;...&lt;/html&gt;&quot;}, ...]
+console.log(website.getPages());
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cron-jobs"><a class="header" href="#cron-jobs">Cron Jobs</a></h1>
 <p>Use a cron job that can run any time of day to gather website data.</p>
