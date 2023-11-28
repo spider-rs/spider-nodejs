@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="simple.html"><strong aria-hidden="true">2.</strong> A simple example</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">User Guide</li><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="simple.html"><strong aria-hidden="true">2.</strong> A simple example</a></li><li class="chapter-item expanded affix "><li class="part-title">Config</li><li class="chapter-item expanded "><a href="website.html"><strong aria-hidden="true">3.</strong> Website</a></li><li class="chapter-item expanded affix "><li class="part-title">Features</li><li class="chapter-item expanded "><a href="cron-job.html"><strong aria-hidden="true">4.</strong> Cron Job</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -227,6 +227,113 @@ const onPageEvent = (err: Error | null, value: NPage) =&gt; {
 
 await website.crawl(onPageEvent);
 console.log(website.getLinks());
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="website"><a class="header" href="#website">Website</a></h1>
+<p>The Website class is the foundations to the spider.</p>
+<h2 id="builder-pattern"><a class="header" href="#builder-pattern">Builder pattern</a></h2>
+<p>We use the builder pattern to configure the website for crawling.</p>
+<p>*note: Replace <code>https://choosealicense.com</code> from the examples below with your website target URL.</p>
+<p>All of the examples use typescript by default.</p>
+<pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
+
+const website = new Website(&quot;https://choosealicense.com&quot;);
+</code></pre>
+<h3 id="custom-headers"><a class="header" href="#custom-headers">Custom Headers</a></h3>
+<p>Add custom HTTP headers to use when crawling/scraping.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
+  .withHeaders({
+    authorization: &quot;somerandomjwt&quot;,
+  })
+  .build();
+</code></pre>
+<h3 id="blacklist"><a class="header" href="#blacklist">Blacklist</a></h3>
+<p>Prevent crawling a set path, url, or pattern with Regex.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
+  .withBlacklistUrl([&quot;/blog&quot;, new RegExp(&quot;/books&quot;).source, &quot;/resume&quot;])
+  .build();
+</code></pre>
+<h3 id="crons"><a class="header" href="#crons">Crons</a></h3>
+<p>Setup a cron job that can run at any time in the background using cron-syntax.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
+  .withCron(&quot;1/5 * * * * *&quot;)
+  .build();
+</code></pre>
+<p>View the <a href="./cron-job.html">cron</a> section for details how to use the cron.</p>
+<h3 id="budget"><a class="header" href="#budget">Budget</a></h3>
+<p>Add a crawl budget that prevents crawling <code>x</code> amount of pages.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
+  .withBudget({
+    &quot;*&quot;: 1,
+  })
+  .build();
+</code></pre>
+<h3 id="subdomains"><a class="header" href="#subdomains">Subdomains</a></h3>
+<p>Include subdomains in request.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
+  .withSubdomains(true)
+  .build();
+</code></pre>
+<h3 id="tld"><a class="header" href="#tld">TLD</a></h3>
+<p>Include TLDs in request.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
+  .withTlds(true)
+  .build();
+</code></pre>
+<h3 id="external-domains"><a class="header" href="#external-domains">External Domains</a></h3>
+<p>Add external domains to include with the website.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
+  .withExternalDomains([&quot;https://www.myotherdomain.com&quot;])
+  .build();
+</code></pre>
+<h3 id="proxy"><a class="header" href="#proxy">Proxy</a></h3>
+<p>Use a proxy to crawl a website.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
+  .withProxies([&quot;https://www.myproxy.com&quot;])
+  .build();
+</code></pre>
+<h3 id="delays"><a class="header" href="#delays">Delays</a></h3>
+<p>Add delays between pages.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
+  .withDelays(200)
+  .build();
+</code></pre>
+<h3 id="user-agent"><a class="header" href="#user-agent">User-Agent</a></h3>
+<p>Use a custom User-Agent.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
+  .withUserAgent(&quot;mybot/v1&quot;)
+  .build();
+</code></pre>
+<h3 id="request-timeout"><a class="header" href="#request-timeout">Request Timeout</a></h3>
+<p>Add a request timeout per page in miliseconds. Example shows 30 seconds.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
+  .withRequestTimeout(30000)
+  .build();
+</code></pre>
+<h3 id="respect-robots"><a class="header" href="#respect-robots">Respect Robots</a></h3>
+<p>Respect the robots.txt file.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
+  .withRespectRobotsTxt(true)
+  .build();
+</code></pre>
+<h3 id="http2-prior-knowledge"><a class="header" href="#http2-prior-knowledge">Http2 Prior Knowledge</a></h3>
+<p>Use http2 to connect if you know the website servers supports this.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
+  .withHttp2PriorKnowledge(true)
+  .build();
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cron-jobs"><a class="header" href="#cron-jobs">Cron Jobs</a></h1>
+<p>Use a cron job that can run any time of day to gather website data.</p>
+<pre><code class="language-ts">import { Website, type NPage } from &quot;@spider-rs/spider-rs&quot;;
+
+const website = new Website(&quot;https://choosealicense.com&quot;)
+  .withCron(&quot;1/5 * * * * *&quot;)
+  .build();
+
+const onPageEvent = (err: Error | null, value: NPage) =&gt; {
+  links.push(value);
+};
+
+const handle = await website.runCron(onPageEvent);
 </code></pre>
 
                     </main>
