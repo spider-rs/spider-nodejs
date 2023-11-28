@@ -336,7 +336,7 @@ console.log(website.getLinks());
 
 const website = new Website(&quot;https://rsseau.fr&quot;);
 
-const onPageEvent = (err: Error | null, value: NPage) =&gt; {
+const onPageEvent = (err, value) =&gt; {
   console.log(value);
 };
 
@@ -348,7 +348,7 @@ await website.crawl(onPageEvent);
 
 const website = new Website(&quot;https://rsseau.fr&quot;);
 
-const onPageEvent = (err: Error | null, value: NPage) =&gt; {
+const onPageEvent = (err, value) =&gt; {
   console.log(value);
 };
 
