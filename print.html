@@ -322,9 +322,10 @@ const website = new Website(&quot;https://choosealicense.com&quot;);
   .build();
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="crawl"><a class="header" href="#crawl">Crawl</a></h1>
-<p>Crawl a website concurrently.</p>
+<p>Crawl a website concurrently. </p>
 <pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
 
+// pass in the website url
 const website = new Website(&quot;https://rsseau.fr&quot;);
 
 await website.crawl();
