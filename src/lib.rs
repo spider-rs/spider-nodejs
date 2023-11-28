@@ -93,27 +93,54 @@ impl Website {
   pub async unsafe fn crawl(
     &mut self,
     on_page_event: Option<napi::threadsafe_function::ThreadsafeFunction<NPage>>,
+    background: Option<bool>,
   ) {
+    // only run in background if on_page_event is handled for streaming.
+    let background = background.is_some() && background.unwrap_or_default() == true;
+
     match on_page_event {
       Some(callback) => {
-        let mut rx2 = self
-          .inner
-          .subscribe(*BUFFER / 2)
-          .expect("sync feature should be enabled");
+        if background {
+          let mut website = self.inner.clone();
 
-        spider::tokio::spawn(async move {
-          while let Ok(res) = rx2.recv().await {
-            callback.call(
-              Ok(NPage {
-                url: res.get_url().into(),
-                content: res.get_html().into(),
-              }),
-              napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
-            );
-          }
-        });
+          let mut rx2 = website
+            .subscribe(*BUFFER / 2)
+            .expect("sync feature should be enabled");
 
-        self.inner.crawl().await;
+          spider::tokio::spawn(async move {
+            while let Ok(res) = rx2.recv().await {
+              callback.call(
+                Ok(NPage {
+                  url: res.get_url().into(),
+                  content: res.get_html().into(),
+                }),
+                napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
+              );
+            }
+          });
+
+          spider::tokio::spawn(async move {
+            website.crawl().await;
+          });
+        } else {
+          let mut rx2 = self
+            .inner
+            .subscribe(*BUFFER / 2)
+            .expect("sync feature should be enabled");
+
+          spider::tokio::spawn(async move {
+            while let Ok(res) = rx2.recv().await {
+              callback.call(
+                Ok(NPage {
+                  url: res.get_url().into(),
+                  content: res.get_html().into(),
+                }),
+                napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
+              );
+            }
+          });
+          self.inner.crawl().await;
+        }
       }
       _ => self.inner.crawl().await,
     }

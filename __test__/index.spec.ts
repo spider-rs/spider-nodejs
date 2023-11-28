@@ -73,7 +73,10 @@ test("new website native onPageEvent", async (t) => {
     links.push(value);
   };
 
-  await website.crawl(onPageEvent);
+  // run the event in the background
+  const backgroundStream = true;
+
+  await website.crawl(onPageEvent, backgroundStream);
 
   // should be valid unless new pages and routes are created.
   t.assert(links.length > 1, "should be more than one page");

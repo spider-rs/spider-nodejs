@@ -23,7 +23,7 @@ export class NWebsite {
 export class Website {
   constructor(url: string)
   /** crawl a website */
-  crawl(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null): Promise<void>
+  crawl(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null, background?: boolean | undefined | null): Promise<void>
   /** run the cron */
   runCron(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null): Promise<Cron>
   /** scrape a website */
