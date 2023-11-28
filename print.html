@@ -326,7 +326,34 @@ const website = new Website(&quot;https://choosealicense.com&quot;);
 <pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
 
 const website = new Website(&quot;https://rsseau.fr&quot;);
-await website.scrape();
+
+await website.crawl();
+console.log(website.getLinks());
+</code></pre>
+<h2 id="async-event"><a class="header" href="#async-event">Async Event</a></h2>
+<p>You can pass in a async function as the first param to the crawl function for realtime updates streamed.</p>
+<pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
+
+const website = new Website(&quot;https://rsseau.fr&quot;);
+
+const onPageEvent = (err: Error | null, value: NPage) =&gt; {
+  console.log(value);
+};
+
+await website.crawl(onPageEvent);
+</code></pre>
+<h2 id="background"><a class="header" href="#background">Background</a></h2>
+<p>You can run the request in the background and receive events with the second param set to <code>true</code>.</p>
+<pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
+
+const website = new Website(&quot;https://rsseau.fr&quot;);
+
+const onPageEvent = (err: Error | null, value: NPage) =&gt; {
+  console.log(value);
+};
+
+await website.crawl(onPageEvent, true);
+// this will run instantly as the crawl is in the background
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cron-jobs"><a class="header" href="#cron-jobs">Cron Jobs</a></h1>
 <p>Use a cron job that can run any time of day to gather website data.</p>
