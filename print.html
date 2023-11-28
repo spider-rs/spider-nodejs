@@ -323,14 +323,14 @@ const website = new Website(&quot;https://choosealicense.com&quot;);
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cron-jobs"><a class="header" href="#cron-jobs">Cron Jobs</a></h1>
 <p>Use a cron job that can run any time of day to gather website data.</p>
-<pre><code class="language-ts">import { Website, type NPage } from &quot;@spider-rs/spider-rs&quot;;
+<pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
 
 const website = new Website(&quot;https://choosealicense.com&quot;)
   .withCron(&quot;1/5 * * * * *&quot;)
   .build();
 
-const onPageEvent = (err: Error | null, value: NPage) =&gt; {
-  links.push(value);
+const onPageEvent = (err, value) =&gt; {
+  console.log(value);
 };
 
 const handle = await website.runCron(onPageEvent);
