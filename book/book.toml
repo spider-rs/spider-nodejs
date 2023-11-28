@@ -1,0 +1,6 @@
+[book]
+authors = ["j-mendez"]
+language = "en"
+multilingual = false
+src = "src"
+title = "spider-rs"
