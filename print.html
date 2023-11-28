@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded "><a href="nodejs.html"><strong aria-hidden="true">1.</strong> Node.js</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="simple.html"><strong aria-hidden="true">2.</strong> A simple example</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -184,13 +184,15 @@ await website.crawl();
 
 console.log(website.getLinks());
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="nodejs"><a class="header" href="#nodejs">Node.js</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h1>
+<p>Install the package.</p>
+<pre><code class="language-sh">yarn add @spider-rs/spider-rs
+# or
+npm install @spider-rs/spider-rs
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="a-simple-example"><a class="header" href="#a-simple-example">A simple example</a></h1>
 <p>We use the node-addon to port the Rust project over with napi to target node.js.</p>
 <p>There are some performance drawbacks from the addon, even still the crawls are lightning fast and performant.</p>
-<h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
-<ol>
-<li><code>npm i @spider-rs/spider-rs --save</code></li>
-</ol>
 <h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
 <p>The examples below can help get started with spider.</p>
 <h3 id="basic"><a class="header" href="#basic">Basic</a></h3>
