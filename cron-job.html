@@ -179,6 +179,7 @@ const website = new Website(&quot;https://choosealicense.com&quot;)
   .withCron(&quot;1/5 * * * * *&quot;)
   .build();
 
+// get the pages of the website when the cron runs streamed.
 const onPageEvent = (err, value) =&gt; {
   console.log(value);
 };
