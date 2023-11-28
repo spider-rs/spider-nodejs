@@ -192,6 +192,9 @@ console.log(website.getLinks());
 <li><code>npm i @spider-rs/spider-rs --save</code></li>
 </ol>
 <h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<p>The examples below can help get started with spider.</p>
+<h3 id="basic"><a class="header" href="#basic">Basic</a></h3>
+<p>A basic example.</p>
 <pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
 
 const website = new Website(&quot;https://rsseau.fr&quot;)
@@ -206,6 +209,21 @@ const website = new Website(&quot;https://rsseau.fr&quot;)
   .build();
 
 await website.crawl();
+console.log(website.getLinks());
+</code></pre>
+<h3 id="events"><a class="header" href="#events">Events</a></h3>
+<p>You can pass a function that could be async as param to <code>crawl</code> and <code>scrape</code>.</p>
+<pre><code class="language-ts">import { Website, type NPage } from &quot;@spider-rs/spider-rs&quot;;
+
+const website = new Website(&quot;https://rsseau.fr&quot;);
+
+const links: NPage[] = [];
+
+const onPageEvent = (err: Error | null, value: NPage) =&gt; {
+  links.push(value);
+};
+
+await website.crawl(onPageEvent);
 console.log(website.getLinks());
 </code></pre>
 
