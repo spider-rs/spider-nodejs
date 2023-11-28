@@ -4,13 +4,15 @@
 
 # User Guide
 
-- [Getting Started](./getting-started.md)
+- [Getting started](./getting-started.md)
 - [A simple example](./simple.md)
 
 # Config
 
 - [Website](./website.md)
 
-# Features
+# Usage
 
+- [Crawl](./crawl.md)
+- [Scrape](./scrape.md)
 - [Cron Job](./cron-job.md)
