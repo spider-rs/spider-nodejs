@@ -73,8 +73,8 @@ test("new website native onPageEvent", async (t) => {
     links.push(value);
   };
 
-  // run the event in the background
-  const backgroundStream = true;
+  // running in background can be done with a sleep timer for test.
+  const backgroundStream = false;
 
   await website.crawl(onPageEvent, backgroundStream);
 
