@@ -23,6 +23,8 @@ export class NWebsite {
 export class Website {
   /** a new website */
   constructor(url: string)
+  /** Get the crawl status */
+  getStatus(): string
   /** subscribe and add an event listener */
   subscribe(onPageEvent: (err: Error | null, value: NPage) => any): number
   /** remove a subscription listener */

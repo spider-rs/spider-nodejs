@@ -6,8 +6,9 @@ extern crate napi_derive;
 use std::time::Duration;
 
 use compact_str::CompactString;
+use indexmap::IndexMap;
 use napi::{bindgen_prelude::Object, tokio::task::JoinHandle};
-use spider::{hashbrown::HashMap, lazy_static::lazy_static, website::CrawlStatus};
+use spider::lazy_static::lazy_static;
 
 lazy_static! {
   pub static ref BUFFER: usize = (num_cpus::get() * 20).max(88);
@@ -79,7 +80,7 @@ pub struct Website {
   /// the website from spider
   inner: spider::website::Website,
   /// spawn subscription handles
-  subscription_handles: HashMap<u32, JoinHandle<()>>,
+  subscription_handles: IndexMap<u32, JoinHandle<()>>,
 }
 
 #[napi]
@@ -89,7 +90,7 @@ impl Website {
   pub fn new(url: String) -> Self {
     Website {
       inner: spider::website::Website::new(&url),
-      subscription_handles: HashMap::new(),
+      subscription_handles: IndexMap::new(),
     }
   }
 
@@ -123,7 +124,11 @@ impl Website {
       }
     });
 
-    let id = self.subscription_handles.len() as u32;
+    // always return the highest value as the next id.
+    let id = match self.subscription_handles.last() {
+      Some(handle) => handle.0 + 1,
+      _ => 0,
+    };
 
     self.subscription_handles.insert(id, handle);
 
@@ -149,7 +154,7 @@ impl Website {
       // we may want to get all subs and remove them
       _ => {
         let keys = self.subscription_handles.len();
-        for k in self.subscription_handles.drain() {
+        for k in self.subscription_handles.drain(..) {
           k.1.abort();
         }
         keys > 0
