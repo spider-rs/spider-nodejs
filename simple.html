@@ -209,13 +209,12 @@ const website = new Website(&quot;https://choosealicense.com&quot;);
 
 const links = [];
 
-const onPageEvent = async (err: Error | null, page: NPage) =&gt; {
+const onPageEvent = async (err, page) =&gt; {
   links.push( { title: pageTitle(page), url: page.url });
 };
 
 // params in order event, background, and headless chrome
 await website.crawl(onPageEvent);
-console.log(website.getLinks());
 </code></pre>
 
                     </main>

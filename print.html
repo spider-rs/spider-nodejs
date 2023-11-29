@@ -228,13 +228,12 @@ const website = new Website(&quot;https://choosealicense.com&quot;);
 
 const links = [];
 
-const onPageEvent = async (err: Error | null, page: NPage) =&gt; {
+const onPageEvent = async (err, page) =&gt; {
   links.push( { title: pageTitle(page), url: page.url });
 };
 
 // params in order event, background, and headless chrome
 await website.crawl(onPageEvent);
-console.log(website.getLinks());
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="website"><a class="header" href="#website">Website</a></h1>
 <p>The Website class is the foundations to the spider.</p>
