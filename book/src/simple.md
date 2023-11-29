@@ -15,7 +15,7 @@ A basic example.
 ```ts
 import { Website } from "@spider-rs/spider-rs";
 
-const website = new Website("https://rsseau.fr");
+const website = new Website("https://choosealicense.com");
 
 await website.crawl();
 console.log(website.getLinks());
@@ -28,7 +28,7 @@ You can pass a function that could be async as param to `crawl` and `scrape`.
 ```ts
 import { Website, type NPage } from "@spider-rs/spider-rs";
 
-const website = new Website("https://rsseau.fr");
+const website = new Website("https://choosealicense.com");
 
 const links: NPage[] = [];
 
@@ -36,6 +36,7 @@ const onPageEvent = (err: Error | null, value: NPage) => {
   links.push(value);
 };
 
+// params in order event, background, and headless chrome
 await website.crawl(onPageEvent);
 console.log(website.getLinks());
 ```

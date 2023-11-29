@@ -22,7 +22,6 @@ await page.fetch();
 get all the links related to a page.
 
 ```ts
-
 const page = new Page("https://choosealicense.com", false, false);
 await page.fetch();
 const links = await page.getLinks();
@@ -34,7 +33,6 @@ console.log(links);
 Get the markup for the page or HTML.
 
 ```ts
-
 const page = new Page("https://choosealicense.com", false, false);
 await page.fetch();
 const html = page.getHtml();
@@ -46,7 +44,6 @@ console.log(html);
 Get the raw bytes of a page to store the files in a database.
 
 ```ts
-
 const page = new Page("https://choosealicense.com", false, false);
 await page.fetch();
 const bytes = page.getBytes();

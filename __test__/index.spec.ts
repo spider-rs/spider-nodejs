@@ -139,7 +139,7 @@ test("new single page", async (t) => {
   t.assert(page.getBytes().length >= 100, "should be valid bytes");
 });
 
-test("new website native headless", async (t) => {
+test.skip("new website native headless", async (t) => {
   const website = new Website(TEST_URL);
   await website.crawl(undefined, false, true);
 

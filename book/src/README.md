@@ -7,7 +7,7 @@ Spider powers some big tools and helps bring the crawling aspect to almost no do
 ```ts
 import { Website } from "@spider-rs/spider-rs";
 
-const website = new Website("https://rsseau.fr");
+const website = new Website("https://choosealicense.com");
 
 await website.crawl();
 

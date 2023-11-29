@@ -16,8 +16,8 @@ console.log(website.getPages());
 
 ## Headless Chrome
 
-Headless Chrome rendering can be done by setting the third param in `crawl` or `scrape` to `true`. 
-It will attempt to connect to chrome running remotely if the `CHROME_URL` env variable is set with chrome launching as a fallback. Using a remote connection with `CHROME_URL` will 
+Headless Chrome rendering can be done by setting the third param in `crawl` or `scrape` to `true`.
+It will attempt to connect to chrome running remotely if the `CHROME_URL` env variable is set with chrome launching as a fallback. Using a remote connection with `CHROME_URL` will
 drastically speed up runs.
 
 ```ts

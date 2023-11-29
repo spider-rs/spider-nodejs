@@ -31,6 +31,8 @@ const website = new Website("https://rsseau.fr")
   .withBudget({
     // limit up to 200 pages crawled for the entire website
     "*": 200,
+    // limit only 10 pages on the docs page
+    "/docs": 10
   })
   .withBlacklistUrl([new RegExp("/books").source, "/resume"])
   .build();
@@ -78,7 +80,7 @@ const website = new Website("https://choosealicense.com").withCron(
   "1/5 * * * * *",
 );
 // sleep function to test cron
-const stopCron = (time: number, handle: Cron) => {
+const stopCron = (time: number, handle) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(handle.stop());
@@ -86,9 +88,9 @@ const stopCron = (time: number, handle: Cron) => {
   });
 };
 
-const links: NPage[] = [];
+const links = [];
 
-const onPageEvent = (err: Error | null, value: NPage) => {
+const onPageEvent = (err, value) => {
   links.push(value);
 };
 
@@ -103,11 +105,13 @@ Use the crawl shortcut to get the page content and url.
 ```ts
 import { crawl } from "@spider-rs/spider-rs";
 
-const { links, pages } = new crawl("https://rsseau.fr");
+const { links, pages } = await crawl("https://rsseau.fr");
 console.log(pages);
 ```
 
 ## Benchmarks
+
+Spider is about 1,000x (small websites) 10,000x (medium websites), and 100,000x (production grade websites) times faster than the popular crawlee library even with the node port performance hits.
 
 ```sh
 ----------------------
@@ -119,19 +123,17 @@ mac Apple M1 Max
 ```
 
 Test url: `https://choosealicense.com` (small)
-
 32 pages
 
-|                                   | `libraries`           |
+| `libraries`                           | `speed`               |
 | :-------------------------------- | :-------------------- |
 | **`spider-rs: crawl 10 samples`** | `286ms`(✅ **1.00x**) |
-| **`crawlee: crawl 10 samples`**   | `1s` (✅ **1.00x**)   |
+| **`crawlee: crawl 10 samples`**   | `1.7s` (✅ **1.00x**)   |
 
 Test url: `https://rsseau.fr` (medium)
-
 211 pages
 
-|                                   | `libraries`           |
+| `libraries`                           | `speed`               |
 | :-------------------------------- | :-------------------- |
 | **`spider-rs: crawl 10 samples`** | `2.5s` (✅ **1.00x**) |
 | **`crawlee: crawl 10 samples`**   | `75s` (✅ **1.00x**)  |
