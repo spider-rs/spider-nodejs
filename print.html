@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">User Guide</li><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li class="chapter-item expanded "><a href="simple.html"><strong aria-hidden="true">2.</strong> A simple example</a></li><li class="chapter-item expanded affix "><li class="part-title">Configuration</li><li class="chapter-item expanded "><a href="website.html"><strong aria-hidden="true">3.</strong> Website</a></li><li class="chapter-item expanded "><a href="page.html"><strong aria-hidden="true">4.</strong> Page</a></li><li class="chapter-item expanded "><a href="env.html"><strong aria-hidden="true">5.</strong> Environment</a></li><li class="chapter-item expanded affix "><li class="part-title">Usage</li><li class="chapter-item expanded "><a href="crawl.html"><strong aria-hidden="true">6.</strong> Crawl</a></li><li class="chapter-item expanded "><a href="scrape.html"><strong aria-hidden="true">7.</strong> Scrape</a></li><li class="chapter-item expanded "><a href="cron-job.html"><strong aria-hidden="true">8.</strong> Cron Job</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">User Guide</li><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li class="chapter-item expanded "><a href="simple.html"><strong aria-hidden="true">2.</strong> A simple example</a></li><li class="chapter-item expanded affix "><li class="part-title">Configuration</li><li class="chapter-item expanded "><a href="website.html"><strong aria-hidden="true">3.</strong> Website</a></li><li class="chapter-item expanded "><a href="page.html"><strong aria-hidden="true">4.</strong> Page</a></li><li class="chapter-item expanded "><a href="env.html"><strong aria-hidden="true">5.</strong> Environment</a></li><li class="chapter-item expanded affix "><li class="part-title">Usage</li><li class="chapter-item expanded "><a href="crawl.html"><strong aria-hidden="true">6.</strong> Crawl</a></li><li class="chapter-item expanded "><a href="scrape.html"><strong aria-hidden="true">7.</strong> Scrape</a></li><li class="chapter-item expanded "><a href="cron-job.html"><strong aria-hidden="true">8.</strong> Cron Job</a></li><li class="chapter-item expanded affix "><li class="part-title">Benchmarks</li><li class="chapter-item expanded "><a href="benchmarks.html"><strong aria-hidden="true">9.</strong> Compare</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -473,6 +473,32 @@ const onPageEvent = (err, value) =&gt; {
 
 const handle = await website.runCron(onPageEvent);
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="benchmarks"><a class="header" href="#benchmarks">Benchmarks</a></h1>
+<p>The speed of Spider-RS ported compared to other tools.</p>
+<p>Spider is about 1,000x (small websites) 10,000x (medium websites), and 100,000x (production grade websites) times faster than the popular crawlee library even with the node port performance hits.</p>
+<pre><code class="language-sh">----------------------
+mac Apple M1 Max
+10-core CPU
+64 GB of RAM memory
+1 TB of SSD disk space
+-----------------------
+</code></pre>
+<p>Test url: <code>https://choosealicense.com</code> (small)</p>
+<p>32 pages</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left"></th><th style="text-align: left"><code>libraries</code></th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong><code>spider-rs: crawl 10 samples</code></strong></td><td style="text-align: left"><code>286ms</code>(✅ <strong>1.00x</strong>)</td></tr>
+<tr><td style="text-align: left"><strong><code>crawlee: crawl 10 samples</code></strong></td><td style="text-align: left"><code>1.7s</code> (✅ <strong>1.00x</strong>)</td></tr>
+</tbody></table>
+</div>
+<p>Test url: <code>https://rsseau.fr</code> (medium)</p>
+<p>211 pages</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left"></th><th style="text-align: left"><code>libraries</code></th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong><code>spider-rs: crawl 10 samples</code></strong></td><td style="text-align: left"><code>2.5s</code> (✅ <strong>1.00x</strong>)</td></tr>
+<tr><td style="text-align: left"><strong><code>crawlee: crawl 10 samples</code></strong></td><td style="text-align: left"><code>75s</code> (✅ <strong>1.00x</strong>)</td></tr>
+</tbody></table>
+</div>
+<p>The performance scales the larger the website and if throttling is needed. </p>
+<p>Linux benchmarks are about 10x faster than macOS for spider-rs.</p>
 
                     </main>
 
