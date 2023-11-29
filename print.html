@@ -334,24 +334,21 @@ await page.fetch();
 </code></pre>
 <h2 id="page-links"><a class="header" href="#page-links">Page Links</a></h2>
 <p>get all the links related to a page.</p>
-<pre><code class="language-ts">
-const page = new Page(&quot;https://choosealicense.com&quot;, false, false);
+<pre><code class="language-ts">const page = new Page(&quot;https://choosealicense.com&quot;, false, false);
 await page.fetch();
 const links = await page.getLinks();
 console.log(links);
 </code></pre>
 <h2 id="page-html"><a class="header" href="#page-html">Page Html</a></h2>
 <p>Get the markup for the page or HTML.</p>
-<pre><code class="language-ts">
-const page = new Page(&quot;https://choosealicense.com&quot;, false, false);
+<pre><code class="language-ts">const page = new Page(&quot;https://choosealicense.com&quot;, false, false);
 await page.fetch();
 const html = page.getHtml();
 console.log(html);
 </code></pre>
 <h2 id="page-bytes"><a class="header" href="#page-bytes">Page Bytes</a></h2>
 <p>Get the raw bytes of a page to store the files in a database.</p>
-<pre><code class="language-ts">
-const page = new Page(&quot;https://choosealicense.com&quot;, false, false);
+<pre><code class="language-ts">const page = new Page(&quot;https://choosealicense.com&quot;, false, false);
 await page.fetch();
 const bytes = page.getBytes();
 console.log(bytes);
@@ -417,9 +414,9 @@ website.unsubscribe(subscriptionID);
 // this will run instantly as the crawl is in the background
 </code></pre>
 <h2 id="headless-chrome"><a class="header" href="#headless-chrome">Headless Chrome</a></h2>
-<p>Headless Chrome rendering can be done by setting the third param in <code>crawl</code> or <code>scrape</code> to <code>true</code>. 
-It will attempt to connect to chrome running remotely if the <code>CHROME_URL</code> env variable is set with chrome launching as a fallback. Using a remote connection with <code>CHROME_URL</code> will 
-drastically speed up runs. </p>
+<p>Headless Chrome rendering can be done by setting the third param in <code>crawl</code> or <code>scrape</code> to <code>true</code>.
+It will attempt to connect to chrome running remotely if the <code>CHROME_URL</code> env variable is set with chrome launching as a fallback. Using a remote connection with <code>CHROME_URL</code> will
+drastically speed up runs.</p>
 <pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
 
 const website = new Website(&quot;https://rsseau.fr&quot;);
@@ -444,8 +441,8 @@ await website.scrape();
 console.log(website.getPages());
 </code></pre>
 <h2 id="headless-chrome-1"><a class="header" href="#headless-chrome-1">Headless Chrome</a></h2>
-<p>Headless Chrome rendering can be done by setting the third param in <code>crawl</code> or <code>scrape</code> to <code>true</code>. 
-It will attempt to connect to chrome running remotely if the <code>CHROME_URL</code> env variable is set with chrome launching as a fallback. Using a remote connection with <code>CHROME_URL</code> will 
+<p>Headless Chrome rendering can be done by setting the third param in <code>crawl</code> or <code>scrape</code> to <code>true</code>.
+It will attempt to connect to chrome running remotely if the <code>CHROME_URL</code> env variable is set with chrome launching as a fallback. Using a remote connection with <code>CHROME_URL</code> will
 drastically speed up runs.</p>
 <pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
 
@@ -483,21 +480,21 @@ mac Apple M1 Max
 1 TB of SSD disk space
 -----------------------
 </code></pre>
-<p>Test url: <code>https://choosealicense.com</code> (small)</p>
-<p>32 pages</p>
-<div class="table-wrapper"><table><thead><tr><th style="text-align: left"></th><th style="text-align: left"><code>libraries</code></th></tr></thead><tbody>
+<p>Test url: <code>https://choosealicense.com</code> (small)
+32 pages</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left"><code>libraries</code></th><th style="text-align: left"><code>speed</code></th></tr></thead><tbody>
 <tr><td style="text-align: left"><strong><code>spider-rs: crawl 10 samples</code></strong></td><td style="text-align: left"><code>286ms</code>(✅ <strong>1.00x</strong>)</td></tr>
 <tr><td style="text-align: left"><strong><code>crawlee: crawl 10 samples</code></strong></td><td style="text-align: left"><code>1.7s</code> (✅ <strong>1.00x</strong>)</td></tr>
 </tbody></table>
 </div>
-<p>Test url: <code>https://rsseau.fr</code> (medium)</p>
-<p>211 pages</p>
-<div class="table-wrapper"><table><thead><tr><th style="text-align: left"></th><th style="text-align: left"><code>libraries</code></th></tr></thead><tbody>
+<p>Test url: <code>https://rsseau.fr</code> (medium)
+211 pages</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left"><code>libraries</code></th><th style="text-align: left"><code>speed</code></th></tr></thead><tbody>
 <tr><td style="text-align: left"><strong><code>spider-rs: crawl 10 samples</code></strong></td><td style="text-align: left"><code>2.5s</code> (✅ <strong>1.00x</strong>)</td></tr>
 <tr><td style="text-align: left"><strong><code>crawlee: crawl 10 samples</code></strong></td><td style="text-align: left"><code>75s</code> (✅ <strong>1.00x</strong>)</td></tr>
 </tbody></table>
 </div>
-<p>The performance scales the larger the website and if throttling is needed. </p>
+<p>The performance scales the larger the website and if throttling is needed.</p>
 <p>Linux benchmarks are about 10x faster than macOS for spider-rs.</p>
 
                     </main>

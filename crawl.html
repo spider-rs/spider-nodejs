@@ -226,9 +226,9 @@ website.unsubscribe(subscriptionID);
 // this will run instantly as the crawl is in the background
 </code></pre>
 <h2 id="headless-chrome"><a class="header" href="#headless-chrome">Headless Chrome</a></h2>
-<p>Headless Chrome rendering can be done by setting the third param in <code>crawl</code> or <code>scrape</code> to <code>true</code>. 
-It will attempt to connect to chrome running remotely if the <code>CHROME_URL</code> env variable is set with chrome launching as a fallback. Using a remote connection with <code>CHROME_URL</code> will 
-drastically speed up runs. </p>
+<p>Headless Chrome rendering can be done by setting the third param in <code>crawl</code> or <code>scrape</code> to <code>true</code>.
+It will attempt to connect to chrome running remotely if the <code>CHROME_URL</code> env variable is set with chrome launching as a fallback. Using a remote connection with <code>CHROME_URL</code> will
+drastically speed up runs.</p>
 <pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
 
 const website = new Website(&quot;https://rsseau.fr&quot;);
