@@ -1,5 +1,5 @@
 import test from "ava";
-import { crawl, Website, Page, type NPage, Cron } from "../index.js";
+import { crawl, Website, Page, type NPage, Cron, pageTitle } from "../index.js";
 
 const TEST_URL = "https://choosealicense.com";
 
@@ -82,6 +82,22 @@ test("new website native onPageEvent", async (t) => {
   t.assert(links.length > 1, "should be more than one page");
 });
 
+test("new website native with title selector", async (t) => {
+  const website = new Website(TEST_URL);
+
+  const links: { url: string; title: string }[] = [];
+
+  const onPageEvent = async (_err: Error | null, page: NPage) => {
+    const title = pageTitle(page);
+    links.push({ title, url: page.url });
+  };
+
+  await website.crawl(onPageEvent);
+
+  // should be valid unless new pages and routes are created.
+  t.assert(links.length > 1, "should be more than one page");
+});
+
 // experimental - does not work on all platforms most likely due to time differences.
 test.skip("new website native cron", async (t) => {
   const website = new Website(TEST_URL).withCron("1/5 * * * * *");
@@ -108,7 +124,6 @@ test.skip("new website native cron", async (t) => {
   t.assert(links.length > 1, "should be more than one page");
 });
 
-
 test("new website native with subscriptions", async (t) => {
   const website = new Website(TEST_URL);
 
@@ -119,7 +134,7 @@ test("new website native with subscriptions", async (t) => {
   };
 
   const id = website.subscribe(onPageEvent);
-  
+
   await website.crawl();
 
   website.unsubscribe(id);

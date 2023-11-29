@@ -10,6 +10,8 @@ export interface NPage {
   /** the content of the page found */
   content: string
 }
+/** get the page title */
+export function pageTitle(page: NPage): string
 /** crawl a website using HTTP gathering all links and html. */
 export function crawl(url: string): Promise<NWebsite>
 /** a simple page object */

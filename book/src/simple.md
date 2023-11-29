@@ -32,8 +32,28 @@ const website = new Website("https://choosealicense.com");
 
 const links: NPage[] = [];
 
-const onPageEvent = (err: Error | null, value: NPage) => {
-  links.push(value);
+const onPageEvent = async (err: Error | null, page: NPage) => {
+  links.push(page);
+};
+
+// params in order event, background, and headless chrome
+await website.crawl(onPageEvent);
+console.log(website.getLinks());
+```
+
+### Selector
+
+The `title` method allows you to extract the title of the page.
+
+```ts
+import { Website, pageTitle } from "@spider-rs/spider-rs";
+
+const website = new Website("https://choosealicense.com");
+
+const links = [];
+
+const onPageEvent = async (err: Error | null, page: NPage) => {
+  links.push( { title: pageTitle(page), url: page.url });
 };
 
 // params in order event, background, and headless chrome

@@ -1,7 +1,10 @@
 use compact_str::CompactString;
 use indexmap::IndexMap;
 use napi::{bindgen_prelude::Object, tokio::task::JoinHandle};
-use spider::lazy_static::lazy_static;
+use spider::{
+  lazy_static::lazy_static,
+  packages::scraper::{Html, Selector},
+};
 use std::time::Duration;
 
 lazy_static! {
@@ -16,6 +19,28 @@ pub struct NPage {
   pub url: String,
   /// the content of the page found
   pub content: String,
+}
+
+#[napi]
+/// get the page title
+pub fn page_title(page: NPage) -> String {
+  page.title()
+}
+
+#[napi]
+impl NPage {
+  #[napi]
+  /// the html page title
+  pub fn title(&self) -> String {
+    lazy_static! {
+      static ref TITLE_SELECTOR: Selector = Selector::parse("title").unwrap();
+    }
+    let fragment: Html = Html::parse_document(&self.content);
+    match fragment.select(&TITLE_SELECTOR).next() {
+      Some(title) => title.inner_html(),
+      _ => Default::default(),
+    }
+  }
 }
 
 #[napi]
