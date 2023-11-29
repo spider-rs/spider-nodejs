@@ -1,6 +1,6 @@
 {
   "name": "@spider-rs/spider-rs-android-arm-eabi",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "repository": "https://github.com/spider-rs/spider-nodejs",
   "os": [
     "android"
