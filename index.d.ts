@@ -21,7 +21,12 @@ export class NWebsite {
 }
 /** a website holding the inner spider::website::Website from Rust fit for nodejs */
 export class Website {
+  /** a new website */
   constructor(url: string)
+  /** subscribe and add an event listener */
+  subscribe(onPageEvent: (err: Error | null, value: NPage) => any): number
+  /** remove a subscription listener */
+  unsubscribe(id?: number | undefined | null): boolean
   /** crawl a website */
   crawl(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null, background?: boolean | undefined | null): Promise<void>
   /** run the cron */

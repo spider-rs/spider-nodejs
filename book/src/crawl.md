@@ -46,3 +46,25 @@ const onPageEvent = (err, value) => {
 await website.crawl(onPageEvent, true);
 // this will run instantly as the crawl is in the background
 ```
+
+
+## Subscriptions
+
+You can setup many subscriptions to run events when a crawl happens.
+
+```ts
+import { Website } from "@spider-rs/spider-rs";
+
+const website = new Website("https://rsseau.fr");
+
+const onPageEvent = (err, value) => {
+  console.log(value);
+};
+
+const subscriptionID = website.subscribe(onPageEvent);
+
+await website.crawl(onPageEvent);
+
+website.unsubscribe(subscriptionID);
+// this will run instantly as the crawl is in the background
+```

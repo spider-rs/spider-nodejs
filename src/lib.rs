@@ -7,7 +7,7 @@ use std::time::Duration;
 
 use compact_str::CompactString;
 use napi::{bindgen_prelude::Object, tokio::task::JoinHandle};
-use spider::lazy_static::lazy_static;
+use spider::{hashbrown::HashMap, lazy_static::lazy_static};
 
 lazy_static! {
   pub static ref BUFFER: usize = (num_cpus::get() * 20).max(88);
@@ -78,16 +78,78 @@ pub async fn crawl(url: String) -> NWebsite {
 pub struct Website {
   /// the website from spider
   inner: spider::website::Website,
+  /// spawn subscription handles
+  subscription_handles: HashMap<u32, JoinHandle<()>>,
 }
 
 #[napi]
 impl Website {
   #[napi(constructor)]
+  /// a new website
   pub fn new(url: String) -> Self {
     Website {
       inner: spider::website::Website::new(&url),
+      subscription_handles: HashMap::new(),
     }
   }
+
+  #[napi]
+  /// subscribe and add an event listener
+  pub fn subscribe(
+    &mut self,
+    on_page_event: napi::threadsafe_function::ThreadsafeFunction<NPage>,
+  ) -> u32 {
+    let mut rx2 = self
+      .inner
+      .subscribe(*BUFFER / 2)
+      .expect("sync feature should be enabled");
+
+    let handle = spider::tokio::spawn(async move {
+      while let Ok(res) = rx2.recv().await {
+        on_page_event.call(
+          Ok(NPage {
+            url: res.get_url().into(),
+            content: res.get_html().into(),
+          }),
+          napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
+        );
+      }
+    });
+
+    let id = self.subscription_handles.len() as u32;
+
+    self.subscription_handles.insert(id, handle);
+
+    id
+  }
+
+  #[napi]
+  /// remove a subscription listener
+  pub fn unsubscribe(&mut self, id: Option<u32>) -> bool {
+    match id {
+      Some(id) => {
+        let handle = self.subscription_handles.get(&id);
+
+        match handle {
+          Some(h) => {
+            h.abort();
+            self.subscription_handles.remove_entry(&id);
+            true
+          }
+          _ => false,
+        }
+      }
+      // we may want to get all subs and remove them
+      _ => {
+        let keys = self.subscription_handles.len();
+        for k in self.subscription_handles.drain() {
+          k.1.abort();
+        }
+        keys > 0
+      }
+    }
+  }
+
   #[napi]
   /// crawl a website
   pub async unsafe fn crawl(

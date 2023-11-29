@@ -107,3 +107,23 @@ test.skip("new website native cron", async (t) => {
   // should be valid unless new pages and routes are created.
   t.assert(links.length > 1, "should be more than one page");
 });
+
+
+test("new website native with subscriptions", async (t) => {
+  const website = new Website(TEST_URL);
+
+  const links: NPage[] = [];
+
+  const onPageEvent = (_err: Error | null, value: NPage) => {
+    links.push(value);
+  };
+
+  const id = website.subscribe(onPageEvent);
+  
+  await website.crawl();
+
+  website.unsubscribe(id);
+
+  // should be valid unless new pages and routes are created.
+  t.assert(links.length > 1, "should be more than one page");
+});
