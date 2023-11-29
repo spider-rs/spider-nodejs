@@ -7,9 +7,10 @@
 - [Getting started](./getting-started.md)
 - [A simple example](./simple.md)
 
-# Config
+# Configuration
 
 - [Website](./website.md)
+- [PAge](./page.md)
 
 # Usage
 

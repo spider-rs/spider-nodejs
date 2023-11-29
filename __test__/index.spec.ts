@@ -1,5 +1,5 @@
 import test from "ava";
-import { crawl, Website, type NPage, Cron } from "../index.js";
+import { crawl, Website, Page, type NPage, Cron } from "../index.js";
 
 const TEST_URL = "https://choosealicense.com";
 
@@ -126,4 +126,15 @@ test("new website native with subscriptions", async (t) => {
 
   // should be valid unless new pages and routes are created.
   t.assert(links.length > 1, "should be more than one page");
+});
+
+test("new single page", async (t) => {
+  const page = new Page(TEST_URL);
+  await page.fetch();
+  const links = await page.getLinks();
+
+  // should be valid unless new pages and routes are created.
+  t.assert(links.length > 1, "should be more than one link");
+  t.assert(page.getHtml().length >= 100, "should be valid html");
+  t.assert(page.getBytes().length >= 100, "should be valid bytes");
 });

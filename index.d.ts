@@ -12,6 +12,19 @@ export interface NPage {
 }
 /** crawl a website gathering all links to array */
 export function crawl(url: string): Promise<NWebsite>
+/** a simple page object */
+export class Page {
+  /** a new page */
+  constructor(url: string, subdomains?: boolean | undefined | null, tld?: boolean | undefined | null)
+  /** get the page content */
+  fetch(): Promise<this>
+  /** all links on the page */
+  getLinks(): Promise<Array<string>>
+  /** get the html for the page */
+  getHtml(): string
+  /** get the bytes for the page */
+  getBytes(): any
+}
 /** website main data from rust to node */
 export class NWebsite {
   /** all of the website links. */
