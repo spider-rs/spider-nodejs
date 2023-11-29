@@ -216,6 +216,7 @@ const onPageEvent = (err: Error | null, value: NPage) =&gt; {
   links.push(value);
 };
 
+// params in order event, background, and headless chrome
 await website.crawl(onPageEvent);
 console.log(website.getLinks());
 </code></pre>
