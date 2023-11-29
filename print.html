@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">User Guide</li><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li class="chapter-item expanded "><a href="simple.html"><strong aria-hidden="true">2.</strong> A simple example</a></li><li class="chapter-item expanded affix "><li class="part-title">Config</li><li class="chapter-item expanded "><a href="website.html"><strong aria-hidden="true">3.</strong> Website</a></li><li class="chapter-item expanded affix "><li class="part-title">Usage</li><li class="chapter-item expanded "><a href="crawl.html"><strong aria-hidden="true">4.</strong> Crawl</a></li><li class="chapter-item expanded "><a href="scrape.html"><strong aria-hidden="true">5.</strong> Scrape</a></li><li class="chapter-item expanded "><a href="cron-job.html"><strong aria-hidden="true">6.</strong> Cron Job</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">User Guide</li><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li class="chapter-item expanded "><a href="simple.html"><strong aria-hidden="true">2.</strong> A simple example</a></li><li class="chapter-item expanded affix "><li class="part-title">Configuration</li><li class="chapter-item expanded "><a href="website.html"><strong aria-hidden="true">3.</strong> Website</a></li><li class="chapter-item expanded "><a href="page.html"><strong aria-hidden="true">4.</strong> PAge</a></li><li class="chapter-item expanded affix "><li class="part-title">Usage</li><li class="chapter-item expanded "><a href="crawl.html"><strong aria-hidden="true">5.</strong> Crawl</a></li><li class="chapter-item expanded "><a href="scrape.html"><strong aria-hidden="true">6.</strong> Scrape</a></li><li class="chapter-item expanded "><a href="cron-job.html"><strong aria-hidden="true">7.</strong> Cron Job</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -329,6 +329,41 @@ const website = new Website(&quot;https://choosealicense.com&quot;);
   .withUserAgent(&quot;mybot/v1&quot;)
   .withRespectRobotsTxt(true)
   .build();
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="page"><a class="header" href="#page">Page</a></h1>
+<p>A single page on a website, useful if you just need one or the root url.</p>
+<h2 id="new-page"><a class="header" href="#new-page">New Page</a></h2>
+<p>Get a new page with content.</p>
+<p>The first param is the url, followed by if subdomains should be included, and last to include TLD's in links.</p>
+<p>Calling <code>page.fetch</code> is needed to get the content.</p>
+<pre><code class="language-ts">import { Page } from &quot;@spider-rs/spider-rs&quot;;
+
+const page = new Page(&quot;https://choosealicense.com&quot;, false, false);
+await page.fetch();
+</code></pre>
+<h2 id="page-links"><a class="header" href="#page-links">Page Links</a></h2>
+<p>get all the links related to a page.</p>
+<pre><code class="language-ts">
+const page = new Page(&quot;https://choosealicense.com&quot;, false, false);
+await page.fetch();
+const links = await page.getLinks();
+console.log(links);
+</code></pre>
+<h2 id="page-html"><a class="header" href="#page-html">Page Html</a></h2>
+<p>Get the markup for the page or HTML.</p>
+<pre><code class="language-ts">
+const page = new Page(&quot;https://choosealicense.com&quot;, false, false);
+await page.fetch();
+const html = page.getHtml();
+console.log(html);
+</code></pre>
+<h2 id="page-bytes"><a class="header" href="#page-bytes">Page Bytes</a></h2>
+<p>Get the raw bytes of a page to store the files in a database.</p>
+<pre><code class="language-ts">
+const page = new Page(&quot;https://choosealicense.com&quot;, false, false);
+await page.fetch();
+const bytes = page.getBytes();
+console.log(bytes);
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="crawl"><a class="header" href="#crawl">Crawl</a></h1>
 <p>Crawl a website concurrently.</p>
