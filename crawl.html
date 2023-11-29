@@ -208,6 +208,23 @@ const onPageEvent = (err, value) =&gt; {
 await website.crawl(onPageEvent, true);
 // this will run instantly as the crawl is in the background
 </code></pre>
+<h2 id="subscriptions"><a class="header" href="#subscriptions">Subscriptions</a></h2>
+<p>You can setup many subscriptions to run events when a crawl happens.</p>
+<pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
+
+const website = new Website(&quot;https://rsseau.fr&quot;);
+
+const onPageEvent = (err, value) =&gt; {
+  console.log(value);
+};
+
+const subscriptionID = website.subscribe(onPageEvent);
+
+await website.crawl(onPageEvent);
+
+website.unsubscribe(subscriptionID);
+// this will run instantly as the crawl is in the background
+</code></pre>
 
                     </main>
 
