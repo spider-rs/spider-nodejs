@@ -3,7 +3,7 @@ import { crawl, Website, Page, type NPage, Cron } from "../index.js";
 
 const TEST_URL = "https://choosealicense.com";
 
-test("crawl native", async (t) => {
+test("crawl shortcut native", async (t) => {
   const { links, pages } = await crawl(TEST_URL);
 
   t.assert(links.length > 1, "should be more than one link");
@@ -137,4 +137,11 @@ test("new single page", async (t) => {
   t.assert(links.length > 1, "should be more than one link");
   t.assert(page.getHtml().length >= 100, "should be valid html");
   t.assert(page.getBytes().length >= 100, "should be valid bytes");
+});
+
+test("new website native headless", async (t) => {
+  const website = new Website(TEST_URL);
+  await website.crawl(undefined, false, true);
+
+  t.assert(website.getLinks().length > 1, "should be more than one link");
 });

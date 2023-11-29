@@ -28,7 +28,7 @@ pub struct NWebsite {
 }
 
 #[napi]
-/// crawl a website gathering all links to array
+/// crawl a website using HTTP gathering all links and html.
 pub async fn crawl(url: String) -> NWebsite {
   let mut website = spider::website::Website::new(&url);
   let mut rx2 = website
@@ -54,7 +54,7 @@ pub async fn crawl(url: String) -> NWebsite {
   });
 
   spider::tokio::spawn(async move {
-    website.crawl().await;
+    website.crawl_raw().await;
   });
 
   let mut pages = Vec::new();
@@ -161,10 +161,14 @@ impl Website {
   pub async unsafe fn crawl(
     &mut self,
     on_page_event: Option<napi::threadsafe_function::ThreadsafeFunction<NPage>>,
+    // run the page in the background
     background: Option<bool>,
+    // headless chrome rendering
+    headless: Option<bool>,
   ) {
     // only run in background if on_page_event is handled for streaming.
-    let background = background.is_some() && background.unwrap_or_default() == true;
+    let background = background.is_some() && background.unwrap_or_default();
+    let headless = headless.is_some() && headless.unwrap_or_default();
 
     match on_page_event {
       Some(callback) => {
@@ -188,7 +192,11 @@ impl Website {
           });
 
           spider::tokio::spawn(async move {
-            website.crawl().await;
+            if headless {
+              website.crawl().await;
+            } else {
+              website.crawl_raw().await;
+            }
           });
         } else {
           let mut rx2 = self
@@ -207,10 +215,94 @@ impl Website {
               );
             }
           });
-          self.inner.crawl().await;
+
+          if headless {
+            self.inner.crawl().await;
+          } else {
+            self.inner.crawl_raw().await;
+          }
         }
       }
-      _ => self.inner.crawl().await,
+      _ => {
+        if headless {
+          self.inner.crawl().await;
+        } else {
+          self.inner.crawl_raw().await;
+        }
+      }
+    }
+  }
+
+  #[napi]
+  /// scrape a website
+  pub async unsafe fn scrape(
+    &mut self,
+    on_page_event: Option<napi::threadsafe_function::ThreadsafeFunction<NPage>>,
+    background: Option<bool>,
+    headless: Option<bool>,
+  ) {
+    let headless = headless.is_some() && headless.unwrap_or_default();
+
+    match on_page_event {
+      Some(callback) => {
+        if background.unwrap_or_default() {
+          let mut website = self.inner.clone();
+
+          let mut rx2 = website
+            .subscribe(*BUFFER / 2)
+            .expect("sync feature should be enabled");
+
+          spider::tokio::spawn(async move {
+            while let Ok(res) = rx2.recv().await {
+              callback.call(
+                Ok(NPage {
+                  url: res.get_url().into(),
+                  content: res.get_html().into(),
+                }),
+                napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
+              );
+            }
+          });
+
+          spider::tokio::spawn(async move {
+            if headless {
+              website.scrape().await;
+            } else {
+              website.scrape_raw().await;
+            }
+          });
+        } else {
+          let mut rx2 = self
+            .inner
+            .subscribe(*BUFFER / 2)
+            .expect("sync feature should be enabled");
+
+          spider::tokio::spawn(async move {
+            while let Ok(res) = rx2.recv().await {
+              callback.call(
+                Ok(NPage {
+                  url: res.get_url().into(),
+                  content: res.get_html().into(),
+                }),
+                napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
+              );
+            }
+          });
+
+          if headless {
+            self.inner.scrape().await;
+          } else {
+            self.inner.scrape_raw().await;
+          }
+        }
+      }
+      _ => {
+        if headless {
+          self.inner.scrape().await;
+        } else {
+          self.inner.scrape_raw().await;
+        }
+      }
     }
   }
 
@@ -247,37 +339,6 @@ impl Website {
     let inner = self.inner.run_cron().await;
 
     Cron { inner, cron_handle }
-  }
-
-  #[napi]
-  /// scrape a website
-  pub async unsafe fn scrape(
-    &mut self,
-    on_page_event: Option<napi::threadsafe_function::ThreadsafeFunction<NPage>>,
-  ) {
-    match on_page_event {
-      Some(callback) => {
-        let mut rx2 = self
-          .inner
-          .subscribe(*BUFFER / 2)
-          .expect("sync feature should be enabled");
-
-        spider::tokio::spawn(async move {
-          while let Ok(res) = rx2.recv().await {
-            callback.call(
-              Ok(NPage {
-                url: res.get_url().into(),
-                content: res.get_html().into(),
-              }),
-              napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
-            );
-          }
-        });
-
-        self.inner.scrape().await;
-      }
-      _ => self.inner.scrape().await,
-    }
   }
 
   #[napi]

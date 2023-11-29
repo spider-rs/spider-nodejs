@@ -24,9 +24,9 @@ impl Page {
   /// a new page
   pub fn new(url: String, subdomains: Option<bool>, tld: Option<bool>) -> Self {
     Page {
-        url,
-        subdomains,
-        tld,
+      url,
+      subdomains,
+      tld,
       ..Default::default()
     }
   }
@@ -34,7 +34,7 @@ impl Page {
   #[napi]
   /// get the page content
   pub async unsafe fn fetch(&mut self) -> &Self {
-    self.inner = Some(spider::page::Page::new(&self.url, &Default::default()).await);
+    self.inner = Some(spider::page::Page::new_page(&self.url, &Default::default()).await);
     self.selectors = spider::page::get_page_selectors(
       &self.url,
       self.subdomains.unwrap_or_default(),

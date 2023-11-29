@@ -1,6 +1,6 @@
 # spider-rs
 
-The [spider](https://github.com/spider-rs/spider) project ported to nodejs via napi.
+The [spider](https://github.com/spider-rs/spider) project ported to nodejs.
 
 ## Getting Started
 
@@ -19,7 +19,7 @@ await website.crawl(onPageEvent);
 console.log(website.getLinks());
 ```
 
-Collect the resources for a website. View [config](https://docs.rs/spider/latest/spider/website/struct.Website.html) for options, when using convert the method to camelCase.
+Collect the resources for a website.
 
 ```ts
 import { Website } from "@spider-rs/spider-rs";
@@ -37,6 +37,36 @@ const website = new Website("https://rsseau.fr")
 
 await website.scrape();
 console.log(website.getPages());
+```
+
+Run the crawls in the background on another thread.
+
+```ts
+import { Website } from "@spider-rs/spider-rs";
+
+const website = new Website("https://rsseau.fr");
+
+const onPageEvent = (_err, value) => {
+  console.log(value);
+};
+
+await website.crawl(onPageEvent, true);
+// runs immediately
+```
+
+Use headless Chrome rendering for crawls.
+
+```ts
+import { Website } from "@spider-rs/spider-rs";
+
+const website = new Website("https://rsseau.fr");
+
+const onPageEvent = (_err, value) => {
+  console.log(value);
+};
+
+await website.crawl(onPageEvent, false, true);
+console.log(website.getLinks());
 ```
 
 Cron jobs can be done with the following.

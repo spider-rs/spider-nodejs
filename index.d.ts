@@ -10,7 +10,7 @@ export interface NPage {
   /** the content of the page found */
   content: string
 }
-/** crawl a website gathering all links to array */
+/** crawl a website using HTTP gathering all links and html. */
 export function crawl(url: string): Promise<NWebsite>
 /** a simple page object */
 export class Page {
@@ -43,11 +43,11 @@ export class Website {
   /** remove a subscription listener */
   unsubscribe(id?: number | undefined | null): boolean
   /** crawl a website */
-  crawl(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null, background?: boolean | undefined | null): Promise<void>
+  crawl(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null, background?: boolean | undefined | null, headless?: boolean | undefined | null): Promise<void>
+  /** scrape a website */
+  scrape(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null, background?: boolean | undefined | null, headless?: boolean | undefined | null): Promise<void>
   /** run the cron */
   runCron(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null): Promise<Cron>
-  /** scrape a website */
-  scrape(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null): Promise<void>
   /** get all the links of a website */
   getLinks(): Array<string>
   /** get all the pages of a website - requires calling website.scrape */
