@@ -114,8 +114,8 @@ impl Website {
   }
 
   /// Get the crawl status
-  #[napi]
-  pub fn get_status(&self) -> String {
+  #[napi(getter)]
+  pub fn status(&self) -> String {
     use std::string::ToString;
     self.inner.get_status().to_string()
   }
