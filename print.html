@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">User Guide</li><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li class="chapter-item expanded "><a href="simple.html"><strong aria-hidden="true">2.</strong> A simple example</a></li><li class="chapter-item expanded affix "><li class="part-title">Configuration</li><li class="chapter-item expanded "><a href="website.html"><strong aria-hidden="true">3.</strong> Website</a></li><li class="chapter-item expanded "><a href="page.html"><strong aria-hidden="true">4.</strong> Page</a></li><li class="chapter-item expanded affix "><li class="part-title">Usage</li><li class="chapter-item expanded "><a href="crawl.html"><strong aria-hidden="true">5.</strong> Crawl</a></li><li class="chapter-item expanded "><a href="scrape.html"><strong aria-hidden="true">6.</strong> Scrape</a></li><li class="chapter-item expanded "><a href="cron-job.html"><strong aria-hidden="true">7.</strong> Cron Job</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">User Guide</li><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li class="chapter-item expanded "><a href="simple.html"><strong aria-hidden="true">2.</strong> A simple example</a></li><li class="chapter-item expanded affix "><li class="part-title">Configuration</li><li class="chapter-item expanded "><a href="website.html"><strong aria-hidden="true">3.</strong> Website</a></li><li class="chapter-item expanded "><a href="page.html"><strong aria-hidden="true">4.</strong> Page</a></li><li class="chapter-item expanded "><a href="env.html"><strong aria-hidden="true">5.</strong> Environment</a></li><li class="chapter-item expanded affix "><li class="part-title">Usage</li><li class="chapter-item expanded "><a href="crawl.html"><strong aria-hidden="true">6.</strong> Crawl</a></li><li class="chapter-item expanded "><a href="scrape.html"><strong aria-hidden="true">7.</strong> Scrape</a></li><li class="chapter-item expanded "><a href="cron-job.html"><strong aria-hidden="true">8.</strong> Cron Job</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -355,6 +355,12 @@ await page.fetch();
 const bytes = page.getBytes();
 console.log(bytes);
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="environment"><a class="header" href="#environment">Environment</a></h1>
+<p>Env variables to adjust the project.</p>
+<h2 id="chrome_url"><a class="header" href="#chrome_url">CHROME_URL</a></h2>
+<p>You can set the chrome URL to connect remotely.</p>
+<pre><code class="language-sh">CHROME_URL=http://localhost:9222
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="crawl"><a class="header" href="#crawl">Crawl</a></h1>
 <p>Crawl a website concurrently.</p>
 <pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
@@ -409,6 +415,21 @@ await website.crawl(onPageEvent);
 website.unsubscribe(subscriptionID);
 // this will run instantly as the crawl is in the background
 </code></pre>
+<h2 id="headless-chrome"><a class="header" href="#headless-chrome">Headless Chrome</a></h2>
+<p>Headless Chrome rendering can be done by setting the third param in <code>crawl</code> or <code>scrape</code> to <code>true</code>. 
+It will attempt to connect to chrome running remotely if the <code>CHROME_URL</code> env variable is set with chrome launching as a fallback. Using a remote connection with <code>CHROME_URL</code> will 
+drastically speed up runs. </p>
+<pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
+
+const website = new Website(&quot;https://rsseau.fr&quot;);
+
+const onPageEvent = (err, value) =&gt; {
+  console.log(value);
+};
+
+// all params are optional. The third param determines headless rendering.
+await website.crawl(onPageEvent, false, true);
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="scrape"><a class="header" href="#scrape">Scrape</a></h1>
 <p>Scape a website and collect the resource data.</p>
 <pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
@@ -420,6 +441,21 @@ await website.scrape();
 
 // [ { url: &quot;https://rsseau.fr/blog&quot;, html: &quot;&lt;html&gt;...&lt;/html&gt;&quot;}, ...]
 console.log(website.getPages());
+</code></pre>
+<h2 id="headless-chrome-1"><a class="header" href="#headless-chrome-1">Headless Chrome</a></h2>
+<p>Headless Chrome rendering can be done by setting the third param in <code>crawl</code> or <code>scrape</code> to <code>true</code>. 
+It will attempt to connect to chrome running remotely if the <code>CHROME_URL</code> env variable is set with chrome launching as a fallback. Using a remote connection with <code>CHROME_URL</code> will 
+drastically speed up runs.</p>
+<pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
+
+const website = new Website(&quot;https://rsseau.fr&quot;);
+
+const onPageEvent = (err, value) =&gt; {
+  console.log(value);
+};
+
+// all params are optional. The third param determines headless rendering.
+await website.scrape(onPageEvent, false, true);
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cron-jobs"><a class="header" href="#cron-jobs">Cron Jobs</a></h1>
 <p>Use a cron job that can run any time of day to gather website data.</p>
