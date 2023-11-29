@@ -193,8 +193,24 @@ const website = new Website(&quot;https://choosealicense.com&quot;);
 
 const links: NPage[] = [];
 
-const onPageEvent = (err: Error | null, value: NPage) =&gt; {
-  links.push(value);
+const onPageEvent = async (err: Error | null, page: NPage) =&gt; {
+  links.push(page);
+};
+
+// params in order event, background, and headless chrome
+await website.crawl(onPageEvent);
+console.log(website.getLinks());
+</code></pre>
+<h3 id="selector"><a class="header" href="#selector">Selector</a></h3>
+<p>The <code>title</code> method allows you to extract the title of the page.</p>
+<pre><code class="language-ts">import { Website, pageTitle } from &quot;@spider-rs/spider-rs&quot;;
+
+const website = new Website(&quot;https://choosealicense.com&quot;);
+
+const links = [];
+
+const onPageEvent = async (err: Error | null, page: NPage) =&gt; {
+  links.push( { title: pageTitle(page), url: page.url });
 };
 
 // params in order event, background, and headless chrome
