@@ -180,16 +180,7 @@
 <p>A basic example.</p>
 <pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
 
-const website = new Website(&quot;https://rsseau.fr&quot;)
-  .withHeaders({
-    authorization: &quot;somerandomjwt&quot;,
-  })
-  .withBudget({
-    // limit up to 200 pages crawled for the entire website
-    &quot;*&quot;: 200,
-  })
-  .withBlacklistUrl([new RegExp(&quot;/books&quot;).source, &quot;/resume&quot;])
-  .build();
+const website = new Website(&quot;https://rsseau.fr&quot;);
 
 await website.crawl();
 console.log(website.getLinks());
