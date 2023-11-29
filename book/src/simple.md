@@ -52,11 +52,10 @@ const website = new Website("https://choosealicense.com");
 
 const links = [];
 
-const onPageEvent = async (err: Error | null, page: NPage) => {
+const onPageEvent = async (err, page) => {
   links.push( { title: pageTitle(page), url: page.url });
 };
 
 // params in order event, background, and headless chrome
 await website.crawl(onPageEvent);
-console.log(website.getLinks());
 ```
