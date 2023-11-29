@@ -1,6 +1,6 @@
 {
   "name": "@spider-rs/spider-rs-win32-x64-msvc",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "repository": "https://github.com/spider-rs/spider-nodejs",
   "os": [
     "win32"

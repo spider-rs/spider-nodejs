@@ -10,7 +10,7 @@
 # Configuration
 
 - [Website](./website.md)
-- [PAge](./page.md)
+- [Page](./page.md)
 
 # Usage
 
