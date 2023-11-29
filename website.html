@@ -176,7 +176,6 @@
 <h2 id="builder-pattern"><a class="header" href="#builder-pattern">Builder pattern</a></h2>
 <p>We use the builder pattern to configure the website for crawling.</p>
 <p>*note: Replace <code>https://choosealicense.com</code> from the examples below with your website target URL.</p>
-<p>All of the examples use typescript by default.</p>
 <pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
 
 const website = new Website(&quot;https://choosealicense.com&quot;);
@@ -235,7 +234,7 @@ const website = new Website(&quot;https://choosealicense.com&quot;);
   .build();
 </code></pre>
 <h3 id="delays"><a class="header" href="#delays">Delays</a></h3>
-<p>Add delays between pages.</p>
+<p>Add delays between pages. Defaults to none.</p>
 <pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
   .withDelays(200)
   .build();
@@ -262,6 +261,15 @@ const website = new Website(&quot;https://choosealicense.com&quot;);
 <p>Use http2 to connect if you know the website servers supports this.</p>
 <pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
   .withHttp2PriorKnowledge(true)
+  .build();
+</code></pre>
+<h2 id="chaining"><a class="header" href="#chaining">Chaining</a></h2>
+<p>You can chain all of the configs together for simple configuration.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
+  .withSubdomains(true)
+  .withTlds(true)
+  .withUserAgent(&quot;mybot/v1&quot;)
+  .withRespectRobotsTxt(true)
   .build();
 </code></pre>
 
