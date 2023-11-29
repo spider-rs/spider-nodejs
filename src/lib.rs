@@ -7,7 +7,7 @@ use std::time::Duration;
 
 use compact_str::CompactString;
 use napi::{bindgen_prelude::Object, tokio::task::JoinHandle};
-use spider::{hashbrown::HashMap, lazy_static::lazy_static};
+use spider::{hashbrown::HashMap, lazy_static::lazy_static, website::CrawlStatus};
 
 lazy_static! {
   pub static ref BUFFER: usize = (num_cpus::get() * 20).max(88);
@@ -91,6 +91,13 @@ impl Website {
       inner: spider::website::Website::new(&url),
       subscription_handles: HashMap::new(),
     }
+  }
+
+  /// Get the crawl status
+  #[napi]
+  pub fn get_status(&self) -> String {
+    use std::string::ToString;
+    self.inner.get_status().to_string()
   }
 
   #[napi]
