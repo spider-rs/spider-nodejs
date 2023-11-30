@@ -1,6 +1,6 @@
 # spider-rs
 
-The [spider](https://github.com/spider-rs/spider) project ported to nodejs.
+The [spider](https://github.com/spider-rs/spider) project ported to Node.js
 
 ## Getting Started
 
@@ -16,6 +16,8 @@ const onPageEvent = (_err, page) => {
 };
 
 await website.crawl(onPageEvent);
+
+// retreive all links for the website across all pages.
 console.log(website.getLinks());
 ```
 
@@ -29,12 +31,13 @@ const website = new Website("https://rsseau.fr")
     authorization: "somerandomjwt",
   })
   .withBudget({
-    // limit up to 200 pages crawled for the entire website
-    "*": 200,
-    // limit only 10 pages on the docs page
+    // max request 20 pages for the website
+    "*": 20,
+    // limit only 10 pages on the docs paths
     "/docs": 10
   })
-  .withBlacklistUrl([new RegExp("/books").source, "/resume"])
+  // you can use regex or string matches to ignore paths
+  .withBlacklistUrl(["/resume"]) 
   .build();
 
 await website.scrape();
