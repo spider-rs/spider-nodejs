@@ -409,6 +409,24 @@ impl Website {
   }
 
   #[napi]
+  /// drain all links from storing
+  pub fn drain_links(&mut self) -> Vec<String> {
+    let links = self
+      .inner
+      .drain_links()
+      .map(|x| x.as_ref().to_string())
+      .collect::<Vec<String>>();
+
+    links
+  }
+
+  #[napi]
+  /// clear all links and page data
+  pub fn clear(&mut self) {
+    self.inner.clear();
+  }
+
+  #[napi]
   /// Set HTTP headers for request using [reqwest::header::HeaderMap](https://docs.rs/reqwest/latest/reqwest/header/struct.HeaderMap.html).
   pub fn with_headers(&mut self, headers: Option<Object>) -> &Self {
     use std::str::FromStr;
@@ -601,7 +619,7 @@ impl Website {
 #[napi]
 pub struct Cron {
   /// the runner task
-  inner: spider::features::cron::Runner,
+  inner: spider::async_job::Runner,
   /// inner cron handle
   cron_handle: Option<JoinHandle<()>>,
 }

@@ -162,3 +162,17 @@ const website = new Website("https://choosealicense.com")
   .withRespectRobotsTxt(true)
   .build();
 ```
+
+## Clearing Data
+
+Use `website.clear` to remove the links visited and page data or `website.drainLinks` to drain the links visited.
+
+```ts
+const website = new Website("https://choosealicense.com")
+await website.crawl();
+// links found ["https://...", "..."]
+console.log(website.getLinks());
+website.clear();
+// links will be empty
+console.log(website.getLinks());
+```
