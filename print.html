@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">User Guide</li><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li class="chapter-item expanded "><a href="simple.html"><strong aria-hidden="true">2.</strong> A simple example</a></li><li class="chapter-item expanded affix "><li class="part-title">Configuration</li><li class="chapter-item expanded "><a href="website.html"><strong aria-hidden="true">3.</strong> Website</a></li><li class="chapter-item expanded "><a href="page.html"><strong aria-hidden="true">4.</strong> Page</a></li><li class="chapter-item expanded "><a href="env.html"><strong aria-hidden="true">5.</strong> Environment</a></li><li class="chapter-item expanded affix "><li class="part-title">Usage</li><li class="chapter-item expanded "><a href="crawl.html"><strong aria-hidden="true">6.</strong> Crawl</a></li><li class="chapter-item expanded "><a href="scrape.html"><strong aria-hidden="true">7.</strong> Scrape</a></li><li class="chapter-item expanded "><a href="cron-job.html"><strong aria-hidden="true">8.</strong> Cron Job</a></li><li class="chapter-item expanded affix "><li class="part-title">Benchmarks</li><li class="chapter-item expanded "><a href="benchmarks.html"><strong aria-hidden="true">9.</strong> Compare</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">User Guide</li><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li class="chapter-item expanded "><a href="simple.html"><strong aria-hidden="true">2.</strong> A simple example</a></li><li class="chapter-item expanded affix "><li class="part-title">Configuration</li><li class="chapter-item expanded "><a href="website.html"><strong aria-hidden="true">3.</strong> Website</a></li><li class="chapter-item expanded "><a href="page.html"><strong aria-hidden="true">4.</strong> Page</a></li><li class="chapter-item expanded "><a href="env.html"><strong aria-hidden="true">5.</strong> Environment</a></li><li class="chapter-item expanded affix "><li class="part-title">Usage</li><li class="chapter-item expanded "><a href="crawl.html"><strong aria-hidden="true">6.</strong> Crawl</a></li><li class="chapter-item expanded "><a href="scrape.html"><strong aria-hidden="true">7.</strong> Scrape</a></li><li class="chapter-item expanded "><a href="cron-job.html"><strong aria-hidden="true">8.</strong> Cron Job</a></li><li class="chapter-item expanded "><a href="storing-data.html"><strong aria-hidden="true">9.</strong> Storing Data</a></li><li class="chapter-item expanded affix "><li class="part-title">Benchmarks</li><li class="chapter-item expanded "><a href="benchmarks.html"><strong aria-hidden="true">10.</strong> Compare</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -349,9 +349,16 @@ const website = new Website(&quot;https://choosealicense.com&quot;);
   .withRespectRobotsTxt(true)
   .build();
 </code></pre>
+<h2 id="raw-content"><a class="header" href="#raw-content">Raw Content</a></h2>
+<p>Set the second param of the website constructor to <code>true</code> to return content without UTF-8.
+This will return <code>rawContent</code> and leave <code>content</code> when using subscriptions or the Page Object.</p>
+<pre><code class="language-ts">const rawContent = true;
+const website = new Website(&quot;https://choosealicense.com&quot;, rawContent);
+await website.scrape();
+</code></pre>
 <h2 id="clearing-data"><a class="header" href="#clearing-data">Clearing Data</a></h2>
 <p>Use <code>website.clear</code> to remove the links visited and page data or <code>website.drainLinks</code> to drain the links visited.</p>
-<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;);
 await website.crawl();
 // links found [&quot;https://...&quot;, &quot;...&quot;]
 console.log(website.getLinks());
@@ -507,6 +514,25 @@ const onPageEvent = (err, value) =&gt; {
 };
 
 const handle = await website.runCron(onPageEvent);
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="storing-data"><a class="header" href="#storing-data">Storing Data</a></h1>
+<p>Storing data can be done to collect the raw content for a website.</p>
+<p>This allows you to upload and download the content without UTF-8 conversion. The property only appears when
+setting the second param of the <code>Website</code> class constructor to true.</p>
+<pre><code class="language-ts">const rawContent = true;
+
+const links: Buffer[] = [];
+
+const onPageEvent = (_err: Error | null, page: NPage) =&gt; {
+    if (page.rawContent) {
+        // we can download or store the content now to disk.
+        links.push(page.rawContent);
+    }
+};
+
+await website.crawl(onPageEvent);
+
+const website = new Website(&quot;https://choosealicense.com&quot;, rawContent);
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="benchmarks"><a class="header" href="#benchmarks">Benchmarks</a></h1>
 <p>The speed of Spider-RS ported compared to other tools.</p>
