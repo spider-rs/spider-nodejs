@@ -13,9 +13,10 @@ pub struct Page {
     spider::smallvec::SmallVec<[CompactString; 2]>,
   )>,
   /// the url for the page
-  url: String,
-  subdomains: Option<bool>,
-  tld: Option<bool>,
+  pub url: String,
+  pub subdomains: Option<bool>,
+  pub tld: Option<bool>,
+  pub status_code: u16
 }
 
 #[napi]
@@ -34,7 +35,9 @@ impl Page {
   #[napi]
   /// get the page content
   pub async unsafe fn fetch(&mut self) -> &Self {
-    self.inner = Some(spider::page::Page::new_page(&self.url, &Default::default()).await);
+    let page = spider::page::Page::new_page(&self.url, &Default::default()).await;
+    self.status_code = page.status_code.into();
+    self.inner = Some(page);
     self.selectors = spider::page::get_page_selectors(
       &self.url,
       self.subdomains.unwrap_or_default(),

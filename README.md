@@ -11,8 +11,8 @@ import { Website } from "@spider-rs/spider-rs";
 
 const website = new Website("https://rsseau.fr");
 
-const onPageEvent = (_err, value) => {
-  console.log(value);
+const onPageEvent = (_err, page) => {
+  console.log(page);
 };
 
 await website.crawl(onPageEvent);
@@ -48,8 +48,8 @@ import { Website } from "@spider-rs/spider-rs";
 
 const website = new Website("https://rsseau.fr");
 
-const onPageEvent = (_err, value) => {
-  console.log(value);
+const onPageEvent = (_err, page) => {
+  console.log(page);
 };
 
 await website.crawl(onPageEvent, true);
@@ -63,8 +63,8 @@ import { Website } from "@spider-rs/spider-rs";
 
 const website = new Website("https://rsseau.fr");
 
-const onPageEvent = (_err, value) => {
-  console.log(value);
+const onPageEvent = (_err, page) => {
+  console.log(page);
 };
 
 await website.crawl(onPageEvent, false, true);

@@ -15,14 +15,16 @@ lazy_static! {
 #[derive(Default, Clone)]
 #[napi(object)]
 pub struct NPage {
-  /// the url found
+  /// the url found.
   pub url: String,
-  /// the content of the page found
+  /// the content of the page found.
   pub content: String,
+  /// the HTTP status code.
+  pub status_code: u16
 }
 
 #[napi]
-/// get the page title
+/// get the page title.
 pub fn page_title(page: NPage) -> String {
   page.title()
 }
@@ -30,7 +32,7 @@ pub fn page_title(page: NPage) -> String {
 #[napi]
 impl NPage {
   #[napi]
-  /// the html page title
+  /// the html page title.
   pub fn title(&self) -> String {
     lazy_static! {
       static ref TITLE_SELECTOR: Selector = Selector::parse("title").unwrap();
@@ -44,11 +46,11 @@ impl NPage {
 }
 
 #[napi]
-/// website main data from rust to node
+/// website main data from rust to node.
 pub struct NWebsite {
   /// all of the website links.
   pub links: Vec<String>,
-  /// the pages found
+  /// the pages found.
   pub pages: Vec<NPage>,
 }
 
@@ -69,6 +71,7 @@ pub async fn crawl(url: String) -> NWebsite {
         .send(NPage {
           url: url.into(),
           content: res.get_html(),
+          status_code: res.status_code.as_u16()
         })
         .await
       {
@@ -94,18 +97,18 @@ pub async fn crawl(url: String) -> NWebsite {
 }
 
 #[napi]
-/// a website holding the inner spider::website::Website from Rust fit for nodejs
+/// a website holding the inner spider::website::Website from Rust fit for nodejs.
 pub struct Website {
-  /// the website from spider
+  /// the website from spider.
   inner: spider::website::Website,
-  /// spawn subscription handles
+  /// spawn subscription handles.
   subscription_handles: IndexMap<u32, JoinHandle<()>>,
 }
 
 #[napi]
 impl Website {
   #[napi(constructor)]
-  /// a new website
+  /// a new website.
   pub fn new(url: String) -> Self {
     Website {
       inner: spider::website::Website::new(&url),
@@ -113,7 +116,7 @@ impl Website {
     }
   }
 
-  /// Get the crawl status
+  /// Get the crawl status.
   #[napi(getter)]
   pub fn status(&self) -> String {
     use std::string::ToString;
@@ -121,7 +124,7 @@ impl Website {
   }
 
   #[napi]
-  /// subscribe and add an event listener
+  /// subscribe and add an event listener.
   pub fn subscribe(
     &mut self,
     on_page_event: napi::threadsafe_function::ThreadsafeFunction<NPage>,
@@ -137,6 +140,7 @@ impl Website {
           Ok(NPage {
             url: res.get_url().into(),
             content: res.get_html().into(),
+            status_code: res.status_code.as_u16()
           }),
           napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
         );
@@ -155,7 +159,7 @@ impl Website {
   }
 
   #[napi]
-  /// remove a subscription listener
+  /// remove a subscription listener.
   pub fn unsubscribe(&mut self, id: Option<u32>) -> bool {
     match id {
       Some(id) => {
@@ -210,6 +214,7 @@ impl Website {
                 Ok(NPage {
                   url: res.get_url().into(),
                   content: res.get_html().into(),
+                  status_code: res.status_code.as_u16()
                 }),
                 napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
               );
@@ -235,6 +240,7 @@ impl Website {
                 Ok(NPage {
                   url: res.get_url().into(),
                   content: res.get_html().into(),
+                  status_code: res.status_code.as_u16()
                 }),
                 napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
               );
@@ -283,6 +289,7 @@ impl Website {
                 Ok(NPage {
                   url: res.get_url().into(),
                   content: res.get_html().into(),
+                  status_code: res.status_code.as_u16()
                 }),
                 napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
               );
@@ -308,6 +315,7 @@ impl Website {
                 Ok(NPage {
                   url: res.get_url().into(),
                   content: res.get_html().into(),
+                  status_code: res.status_code.as_u16()
                 }),
                 napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
               );
@@ -350,6 +358,7 @@ impl Website {
               Ok(NPage {
                 url: res.get_url().into(),
                 content: res.get_html().into(),
+                status_code: res.status_code.as_u16()
               }),
               napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
             );
@@ -389,6 +398,7 @@ impl Website {
           pages.push(NPage {
             url: page.get_url().into(),
             content: page.get_html(),
+            status_code: page.status_code.as_u16()
           });
         }
       }
