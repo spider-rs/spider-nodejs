@@ -20,7 +20,7 @@ pub struct NPage {
   /// the content of the page found.
   pub content: String,
   /// the HTTP status code.
-  pub status_code: u16
+  pub status_code: u16,
 }
 
 #[napi]
@@ -31,6 +31,15 @@ pub fn page_title(page: NPage) -> String {
 
 #[napi]
 impl NPage {
+  /// establish a new page
+  pub fn new(res: &spider::page::Page) -> NPage {
+    NPage {
+      url: res.get_url().into(),
+      content: res.get_html(),
+      status_code: res.status_code.as_u16()
+    }
+  }
+
   #[napi]
   /// the html page title.
   pub fn title(&self) -> String {
@@ -65,14 +74,8 @@ pub async fn crawl(url: String) -> NWebsite {
 
   spider::tokio::spawn(async move {
     while let Ok(res) = rx2.recv().await {
-      let url = res.get_url();
-
       if let Err(_) = tx
-        .send(NPage {
-          url: url.into(),
-          content: res.get_html(),
-          status_code: res.status_code.as_u16()
-        })
+        .send(NPage::new(&res))
         .await
       {
         println!("receiver dropped");
@@ -137,11 +140,7 @@ impl Website {
     let handle = spider::tokio::spawn(async move {
       while let Ok(res) = rx2.recv().await {
         on_page_event.call(
-          Ok(NPage {
-            url: res.get_url().into(),
-            content: res.get_html().into(),
-            status_code: res.status_code.as_u16()
-          }),
+          Ok(NPage::new(&res)),
           napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
         );
       }
@@ -211,11 +210,7 @@ impl Website {
           spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
               callback.call(
-                Ok(NPage {
-                  url: res.get_url().into(),
-                  content: res.get_html().into(),
-                  status_code: res.status_code.as_u16()
-                }),
+                Ok(NPage::new(&res)),
                 napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
               );
             }
@@ -237,11 +232,7 @@ impl Website {
           spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
               callback.call(
-                Ok(NPage {
-                  url: res.get_url().into(),
-                  content: res.get_html().into(),
-                  status_code: res.status_code.as_u16()
-                }),
+                Ok(NPage::new(&res)),
                 napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
               );
             }
@@ -286,11 +277,7 @@ impl Website {
           spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
               callback.call(
-                Ok(NPage {
-                  url: res.get_url().into(),
-                  content: res.get_html().into(),
-                  status_code: res.status_code.as_u16()
-                }),
+                Ok(NPage::new(&res)),
                 napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
               );
             }
@@ -312,11 +299,7 @@ impl Website {
           spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
               callback.call(
-                Ok(NPage {
-                  url: res.get_url().into(),
-                  content: res.get_html().into(),
-                  status_code: res.status_code.as_u16()
-                }),
+                Ok(NPage::new(&res)),
                 napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
               );
             }
@@ -355,11 +338,7 @@ impl Website {
         let handler = spider::tokio::spawn(async move {
           while let Ok(res) = rx2.recv().await {
             callback.call(
-              Ok(NPage {
-                url: res.get_url().into(),
-                content: res.get_html().into(),
-                status_code: res.status_code.as_u16()
-              }),
+              Ok(NPage::new(&res)),
               napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
             );
           }
@@ -395,11 +374,7 @@ impl Website {
     match self.inner.get_pages() {
       Some(p) => {
         for page in p.iter() {
-          pages.push(NPage {
-            url: page.get_url().into(),
-            content: page.get_html(),
-            status_code: page.status_code.as_u16()
-          });
+          pages.push(NPage::new(page));
         }
       }
       _ => (),

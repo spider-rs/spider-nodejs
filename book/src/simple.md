@@ -59,3 +59,18 @@ const onPageEvent = async (err, page) => {
 // params in order event, background, and headless chrome
 await website.crawl(onPageEvent);
 ```
+
+## Shortcut
+
+You can use the `crawl` shortcut method to collect contents quickly without configuration.
+
+```ts
+import { crawl } from "@spider-rs/spider-rs";
+
+const { links, pages } = await crawl("https://choosealicense.com");
+
+console.log([
+  links,
+  pages
+])
+```

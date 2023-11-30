@@ -16,7 +16,7 @@ pub struct Page {
   pub url: String,
   pub subdomains: Option<bool>,
   pub tld: Option<bool>,
-  pub status_code: u16
+  pub status_code: u16,
 }
 
 #[napi]
