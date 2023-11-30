@@ -1,6 +1,9 @@
 use compact_str::CompactString;
 use indexmap::IndexMap;
-use napi::{bindgen_prelude::Object, tokio::task::JoinHandle};
+use napi::{
+  bindgen_prelude::{Buffer, Object},
+  tokio::task::JoinHandle,
+};
 use spider::{
   lazy_static::lazy_static,
   packages::scraper::{Html, Selector},
@@ -21,6 +24,8 @@ pub struct NPage {
   pub content: String,
   /// the HTTP status code.
   pub status_code: u16,
+  /// the raw content
+  pub raw_content: Option<Buffer>,
 }
 
 #[napi]
@@ -32,11 +37,20 @@ pub fn page_title(page: NPage) -> String {
 #[napi]
 impl NPage {
   /// establish a new page
-  pub fn new(res: &spider::page::Page) -> NPage {
+  pub fn new(res: &spider::page::Page, raw: bool) -> NPage {
     NPage {
       url: res.get_url().into(),
-      content: res.get_html(),
-      status_code: res.status_code.as_u16()
+      status_code: res.status_code.as_u16(),
+      content: if raw {
+        Default::default()
+      } else {
+        res.get_html()
+      },
+      raw_content: if raw {
+        Some(res.get_html_bytes_u8().into())
+      } else {
+        None
+      },
     }
   }
 
@@ -65,19 +79,17 @@ pub struct NWebsite {
 
 #[napi]
 /// crawl a website using HTTP gathering all links and html.
-pub async fn crawl(url: String) -> NWebsite {
+pub async fn crawl(url: String, raw_content: Option<bool>) -> NWebsite {
   let mut website = spider::website::Website::new(&url);
   let mut rx2 = website
     .subscribe(*BUFFER / 2)
     .expect("sync feature should be enabled");
   let (tx, mut rx) = spider::tokio::sync::mpsc::channel(*BUFFER);
+  let raw_content = raw_content.unwrap_or_default();
 
   spider::tokio::spawn(async move {
     while let Ok(res) = rx2.recv().await {
-      if let Err(_) = tx
-        .send(NPage::new(&res))
-        .await
-      {
+      if let Err(_) = tx.send(NPage::new(&res, raw_content)).await {
         println!("receiver dropped");
         return;
       }
@@ -106,16 +118,19 @@ pub struct Website {
   inner: spider::website::Website,
   /// spawn subscription handles.
   subscription_handles: IndexMap<u32, JoinHandle<()>>,
+  /// do not convert content to UT8.
+  raw_content: bool,
 }
 
 #[napi]
 impl Website {
   #[napi(constructor)]
   /// a new website.
-  pub fn new(url: String) -> Self {
+  pub fn new(url: String, raw_content: Option<bool>) -> Self {
     Website {
       inner: spider::website::Website::new(&url),
       subscription_handles: IndexMap::new(),
+      raw_content: raw_content.unwrap_or_default(),
     }
   }
 
@@ -136,11 +151,12 @@ impl Website {
       .inner
       .subscribe(*BUFFER / 2)
       .expect("sync feature should be enabled");
+    let raw_content = self.raw_content;
 
     let handle = spider::tokio::spawn(async move {
       while let Ok(res) = rx2.recv().await {
         on_page_event.call(
-          Ok(NPage::new(&res)),
+          Ok(NPage::new(&res, raw_content)),
           napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
         );
       }
@@ -197,6 +213,7 @@ impl Website {
     // only run in background if on_page_event is handled for streaming.
     let background = background.is_some() && background.unwrap_or_default();
     let headless = headless.is_some() && headless.unwrap_or_default();
+    let raw_content = self.raw_content;
 
     match on_page_event {
       Some(callback) => {
@@ -210,7 +227,7 @@ impl Website {
           spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
               callback.call(
-                Ok(NPage::new(&res)),
+                Ok(NPage::new(&res, raw_content)),
                 napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
               );
             }
@@ -232,7 +249,7 @@ impl Website {
           spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
               callback.call(
-                Ok(NPage::new(&res)),
+                Ok(NPage::new(&res, raw_content)),
                 napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
               );
             }
@@ -264,6 +281,7 @@ impl Website {
     headless: Option<bool>,
   ) {
     let headless = headless.is_some() && headless.unwrap_or_default();
+    let raw_content = self.raw_content;
 
     match on_page_event {
       Some(callback) => {
@@ -277,7 +295,7 @@ impl Website {
           spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
               callback.call(
-                Ok(NPage::new(&res)),
+                Ok(NPage::new(&res, raw_content)),
                 napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
               );
             }
@@ -299,7 +317,7 @@ impl Website {
           spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
               callback.call(
-                Ok(NPage::new(&res)),
+                Ok(NPage::new(&res, raw_content)),
                 napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
               );
             }
@@ -334,11 +352,12 @@ impl Website {
           .inner
           .subscribe(*BUFFER / 2)
           .expect("sync feature should be enabled");
+        let raw_content = self.raw_content;
 
         let handler = spider::tokio::spawn(async move {
           while let Ok(res) = rx2.recv().await {
             callback.call(
-              Ok(NPage::new(&res)),
+              Ok(NPage::new(&res, raw_content)),
               napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
             );
           }
@@ -370,11 +389,12 @@ impl Website {
   #[napi]
   pub fn get_pages(&self) -> Vec<NPage> {
     let mut pages: Vec<NPage> = Vec::new();
+    let raw_content = self.raw_content;
 
     match self.inner.get_pages() {
       Some(p) => {
         for page in p.iter() {
-          pages.push(NPage::new(page));
+          pages.push(NPage::new(page, raw_content));
         }
       }
       _ => (),

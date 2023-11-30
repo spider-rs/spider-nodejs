@@ -5,17 +5,26 @@
 
 /** a simple page object */
 export interface NPage {
-  /** the url found */
+  /** the url found. */
   url: string
-  /** the content of the page found */
+  /** the content of the page found. */
   content: string
+  /** the HTTP status code. */
+  statusCode: number
+  /** the raw content */
+  rawContent?: Buffer
 }
-/** get the page title */
+/** get the page title. */
 export function pageTitle(page: NPage): string
 /** crawl a website using HTTP gathering all links and html. */
-export function crawl(url: string): Promise<NWebsite>
+export function crawl(url: string, rawContent?: boolean | undefined | null): Promise<NWebsite>
 /** a simple page object */
 export class Page {
+  /** the url for the page */
+  url: string
+  subdomains?: boolean
+  tld?: boolean
+  statusCode: number
   /** a new page */
   constructor(url: string, subdomains?: boolean | undefined | null, tld?: boolean | undefined | null)
   /** get the page content */
@@ -27,22 +36,22 @@ export class Page {
   /** get the bytes for the page */
   getBytes(): any
 }
-/** website main data from rust to node */
+/** website main data from rust to node. */
 export class NWebsite {
   /** all of the website links. */
   links: Array<string>
-  /** the pages found */
+  /** the pages found. */
   pages: Array<NPage>
 }
-/** a website holding the inner spider::website::Website from Rust fit for nodejs */
+/** a website holding the inner spider::website::Website from Rust fit for nodejs. */
 export class Website {
-  /** a new website */
-  constructor(url: string)
-  /** Get the crawl status */
+  /** a new website. */
+  constructor(url: string, rawContent?: boolean | undefined | null)
+  /** Get the crawl status. */
   get status(): string
-  /** subscribe and add an event listener */
+  /** subscribe and add an event listener. */
   subscribe(onPageEvent: (err: Error | null, value: NPage) => any): number
-  /** remove a subscription listener */
+  /** remove a subscription listener. */
   unsubscribe(id?: number | undefined | null): boolean
   /** crawl a website */
   crawl(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null, background?: boolean | undefined | null, headless?: boolean | undefined | null): Promise<void>
@@ -54,6 +63,10 @@ export class Website {
   getLinks(): Array<string>
   /** get all the pages of a website - requires calling website.scrape */
   getPages(): Array<NPage>
+  /** drain all links from storing */
+  drainLinks(): Array<string>
+  /** clear all links and page data */
+  clear(): void
   /** Set HTTP headers for request using [reqwest::header::HeaderMap](https://docs.rs/reqwest/latest/reqwest/header/struct.HeaderMap.html). */
   withHeaders(headers?: object | undefined | null): this
   /** Add user agent to request. */

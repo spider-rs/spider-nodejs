@@ -163,12 +163,23 @@ const website = new Website("https://choosealicense.com")
   .build();
 ```
 
+## Raw Content
+
+Set the second param of the website constructor to `true` to return content without UTF-8.
+This will return `rawContent` and leave `content` when using subscriptions or the Page Object.
+
+```ts
+const rawContent = true;
+const website = new Website("https://choosealicense.com", rawContent);
+await website.scrape();
+```
+
 ## Clearing Data
 
 Use `website.clear` to remove the links visited and page data or `website.drainLinks` to drain the links visited.
 
 ```ts
-const website = new Website("https://choosealicense.com")
+const website = new Website("https://choosealicense.com");
 await website.crawl();
 // links found ["https://...", "..."]
 console.log(website.getLinks());

@@ -160,3 +160,16 @@ test.skip("new website native headless", async (t) => {
 
   t.assert(website.getLinks().length > 1, "should be more than one link");
 });
+
+test("new website native raw content", async (t) => {
+  const website = new Website(TEST_URL, true);
+
+  const links: Buffer[] = [];
+
+  const onPageEvent = (_err: Error | null, page: NPage) =>
+    page.rawContent && links.push(page.rawContent);
+
+  await website.crawl(onPageEvent);
+
+  t.assert(links.length > 1, "should be more than one page");
+});
