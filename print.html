@@ -237,6 +237,17 @@ const onPageEvent = async (err, page) =&gt; {
 // params in order event, background, and headless chrome
 await website.crawl(onPageEvent);
 </code></pre>
+<h2 id="shortcut"><a class="header" href="#shortcut">Shortcut</a></h2>
+<p>You can use the <code>crawl</code> shortcut method to collect contents quickly without configuration.</p>
+<pre><code class="language-ts">import { crawl } from &quot;@spider-rs/spider-rs&quot;;
+
+const { links, pages } = await crawl(&quot;https://choosealicense.com&quot;);
+
+console.log([
+  links,
+  pages
+])
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="website"><a class="header" href="#website">Website</a></h1>
 <p>The Website class is the foundations to the spider.</p>
 <h2 id="builder-pattern"><a class="header" href="#builder-pattern">Builder pattern</a></h2>
