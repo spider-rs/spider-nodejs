@@ -13,3 +13,8 @@ __test__
 renovate.json
 book
 examples
+build.rs
+src
+Cargo.toml
+.vscode
+tsconfig.json
