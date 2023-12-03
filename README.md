@@ -14,29 +14,26 @@ const website = new Website("https://rsseau.fr")
     authorization: "somerandomjwt",
   })
   .withBudget({
-    // max request 20 pages for the website
-    "*": 20,
-    // limit only 10 pages on the `/docs` paths
-    "/docs": 10
+    "*": 20, // limit max request 20 pages for the website
+    "/docs": 10 // limit only 10 pages on the `/docs` paths
   })
-  // you can use regex or string matches to ignore paths
-  .withBlacklistUrl(["/resume"]) 
+  .withBlacklistUrl(["/resume"]) // regex or pattern matching to ignore paths
   .build();
 
 // optional: page event handler
 const onPageEvent = (_err, page) => {
   const title = pageTitle(page); // comment out to increase performance if title not needed
   console.info(`Title of ${page.url} is '${title}'`);
-  // website.pushData({
-  //   status: page.statusCode,
-  //   html: page.content,
-  //   url: page.url,
-  //   title
-  // });
+  website.pushData({
+    status: page.statusCode,
+    html: page.content,
+    url: page.url,
+    title
+  });
 };
 
 await website.crawl(onPageEvent);
-// await website.exportJsonlData("./storage/rsseau.jsonl");
+await website.exportJsonlData("./storage/rsseau.jsonl");
 console.log(website.getLinks());
 ```
 
@@ -84,6 +81,7 @@ const onPageEvent = (_err, page) => {
   console.log(page);
 };
 
+// the third param determines headless chrome usage.
 await website.crawl(onPageEvent, false, true);
 console.log(website.getLinks());
 ```
