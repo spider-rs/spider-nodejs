@@ -202,3 +202,5 @@ __test__/*.js
 
 /storage
 /bench/*.js
+/bench/case/**.js
+/bench/storage/

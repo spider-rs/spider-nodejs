@@ -33,8 +33,11 @@ jobs:
       - name: Install yarn
         run: corepack enable && corepack prepare yarn@stable --activate
 
-      - name: Install and build locales
-        run: yarn --no-immutable && yarn build
+      - name: Install Deps
+        run: yarn --no-immutable && yarn build && cd bench npm i &&
 
       - name: Run Bench @spider-rs/spider-rs
         run: yarn bench
+
+      - name: Run Bench OSS
+        run: yarn bench:oss

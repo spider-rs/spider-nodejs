@@ -1,18 +1,11 @@
+use crate::{NPage, BUFFER};
 use compact_str::CompactString;
 use indexmap::IndexMap;
 use napi::{
   bindgen_prelude::{Buffer, Object},
   tokio::task::JoinHandle,
 };
-use spider::{
-  lazy_static::lazy_static,
-  packages::scraper::{Html, Selector},
-};
 use std::time::Duration;
-
-lazy_static! {
-  pub static ref BUFFER: usize = (num_cpus::get() * 20).max(88);
-}
 
 /// build an object to jsonl - can be switched between json with changes
 fn object_to_u8(
@@ -76,103 +69,6 @@ fn object_to_u8(
     ss.extend(b"\n");
   }
   Ok(ss)
-}
-
-/// a simple page object
-#[derive(Default, Clone)]
-#[napi(object)]
-pub struct NPage {
-  /// the url found.
-  pub url: String,
-  /// the content of the page found.
-  pub content: String,
-  /// the HTTP status code.
-  pub status_code: u16,
-  /// the raw content
-  pub raw_content: Option<Buffer>,
-}
-
-#[napi]
-/// get the page title.
-pub fn page_title(page: NPage) -> String {
-  page.title()
-}
-
-#[napi]
-impl NPage {
-  /// establish a new page
-  pub fn new(res: &spider::page::Page, raw: bool) -> NPage {
-    NPage {
-      url: res.get_url().into(),
-      status_code: res.status_code.as_u16(),
-      content: if raw {
-        Default::default()
-      } else {
-        res.get_html()
-      },
-      raw_content: if raw {
-        Some(res.get_html_bytes_u8().into())
-      } else {
-        None
-      },
-    }
-  }
-
-  #[napi]
-  /// the html page title.
-  pub fn title(&self) -> String {
-    lazy_static! {
-      static ref TITLE_SELECTOR: Selector = Selector::parse("title").unwrap();
-    }
-    let fragment: Html = Html::parse_document(&self.content);
-    match fragment.select(&TITLE_SELECTOR).next() {
-      Some(title) => title.inner_html(),
-      _ => Default::default(),
-    }
-  }
-}
-
-#[napi]
-/// website main data from rust to node.
-pub struct NWebsite {
-  /// all of the website links.
-  pub links: Vec<String>,
-  /// the pages found.
-  pub pages: Vec<NPage>,
-}
-
-#[napi]
-/// crawl a website using HTTP gathering all links and html.
-pub async fn crawl(url: String, raw_content: Option<bool>) -> NWebsite {
-  let mut website = spider::website::Website::new(&url);
-  let mut rx2 = website
-    .subscribe(*BUFFER / 2)
-    .expect("sync feature should be enabled");
-  let (tx, mut rx) = spider::tokio::sync::mpsc::channel(*BUFFER);
-  let raw_content = raw_content.unwrap_or_default();
-
-  spider::tokio::spawn(async move {
-    while let Ok(res) = rx2.recv().await {
-      if let Err(_) = tx.send(NPage::new(&res, raw_content)).await {
-        println!("receiver dropped");
-        return;
-      }
-    }
-  });
-
-  spider::tokio::spawn(async move {
-    website.crawl_raw().await;
-  });
-
-  let mut pages = Vec::new();
-
-  while let Some(i) = rx.recv().await {
-    pages.push(i)
-  }
-
-  let links = pages.iter().map(|x| x.url.clone()).collect::<Vec<String>>();
-
-  NWebsite { links, pages }
 }
 
 #[napi]
@@ -355,12 +251,11 @@ impl Website {
       Some(callback) => {
         if background {
           let mut website = self.inner.clone();
-
           let mut rx2 = website
             .subscribe(*BUFFER / 2)
             .expect("sync feature should be enabled");
 
-          spider::tokio::spawn(async move {
+          let handle = spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
               callback.call(
                 Ok(NPage::new(&res, raw_content)),
@@ -376,13 +271,20 @@ impl Website {
               website.crawl_raw().await;
             }
           });
+
+          let id = match self.subscription_handles.last() {
+            Some(handle) => handle.0 + 1,
+            _ => 0,
+          };
+
+          self.subscription_handles.insert(id, handle);
         } else {
           let mut rx2 = self
             .inner
             .subscribe(*BUFFER / 2)
             .expect("sync feature should be enabled");
 
-          spider::tokio::spawn(async move {
+          let handle = spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
               callback.call(
                 Ok(NPage::new(&res, raw_content)),
@@ -396,6 +298,13 @@ impl Website {
           } else {
             self.inner.crawl_raw().await;
           }
+
+          let id = match self.subscription_handles.last() {
+            Some(handle) => handle.0 + 1,
+            _ => 0,
+          };
+
+          self.subscription_handles.insert(id, handle);
         }
       }
       _ => {
@@ -423,12 +332,11 @@ impl Website {
       Some(callback) => {
         if background.unwrap_or_default() {
           let mut website = self.inner.clone();
-
           let mut rx2 = website
             .subscribe(*BUFFER / 2)
             .expect("sync feature should be enabled");
 
-          spider::tokio::spawn(async move {
+          let handle = spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
               callback.call(
                 Ok(NPage::new(&res, raw_content)),
@@ -444,13 +352,20 @@ impl Website {
               website.scrape_raw().await;
             }
           });
+
+          let id = match self.subscription_handles.last() {
+            Some(handle) => handle.0 + 1,
+            _ => 0,
+          };
+
+          self.subscription_handles.insert(id, handle);
         } else {
           let mut rx2 = self
             .inner
             .subscribe(*BUFFER / 2)
             .expect("sync feature should be enabled");
 
-          spider::tokio::spawn(async move {
+          let handle = spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
               callback.call(
                 Ok(NPage::new(&res, raw_content)),
@@ -464,6 +379,13 @@ impl Website {
           } else {
             self.inner.scrape_raw().await;
           }
+
+          let id = match self.subscription_handles.last() {
+            Some(handle) => handle.0 + 1,
+            _ => 0,
+          };
+
+          self.subscription_handles.insert(id, handle);
         }
       }
       _ => {

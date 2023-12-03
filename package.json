@@ -41,7 +41,8 @@
   },
   "scripts": {
     "artifacts": "napi artifacts",
-    "bench": "tsc && node ./bench/compare.js",
+    "bench": "cd bench && npm run bench",
+    "bench:oss": "cd bench && npm run bench:oss",
     "build": "napi build --platform --release",
     "build:debug": "napi build --platform",
     "build:test": "yarn build && yarn test",

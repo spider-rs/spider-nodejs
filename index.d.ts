@@ -39,21 +39,16 @@ export class Page {
   /** get the bytes for the page */
   getBytes(): any
 }
-/** website main data from rust to node. */
-export class NWebsite {
-  /** all of the website links. */
-  links: Array<string>
-  /** the pages found. */
-  pages: Array<NPage>
-}
 /** a website holding the inner spider::website::Website from Rust fit for nodejs. */
 export class Website {
   /** a new website. */
   constructor(url: string, rawContent?: boolean | undefined | null)
   /** Get the crawl status. */
   get status(): string
-  /** store data to memory for fast access. */
+  /** store data to heap memory. Use `website.export_jsonl_data` to store to disk. */
   pushData(obj: object): void
+  /** read the data from the heap memory. */
+  readData(): Array<number>
   /** store data to memory for disk storing. This will create the path if not exist and defaults to ./storage. */
   exportJsonlData(exportPath?: string | undefined | null): Promise<void>
   /** subscribe and add an event listener. */
@@ -107,4 +102,11 @@ export class Website {
 export class Cron {
   /** stop the cron instance */
   stop(): Promise<void>
+}
+/** website main data from rust to node. */
+export class NWebsite {
+  /** all of the website links. */
+  links: Array<string>
+  /** the pages found. */
+  pages: Array<NPage>
 }

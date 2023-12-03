@@ -85,4 +85,6 @@ const onPageEvent = (err, value) => {
 
 // all params are optional. The third param determines headless rendering.
 await website.crawl(onPageEvent, false, true);
+// make sure to call unsubscribe when finished or else the instance is kept alive when events are setup.
+website.unsubscribe();
 ```
