@@ -182,10 +182,10 @@ setting the second param of the <code>Website</code> class constructor to true.<
 const links: Buffer[] = [];
 
 const onPageEvent = (_err: Error | null, page: NPage) =&gt; {
-    if (page.rawContent) {
-        // we can download or store the content now to disk.
-        links.push(page.rawContent);
-    }
+  if (page.rawContent) {
+    // we can download or store the content now to disk.
+    links.push(page.rawContent);
+  }
 };
 
 await website.crawl(onPageEvent);

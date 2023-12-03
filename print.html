@@ -231,7 +231,7 @@ const website = new Website(&quot;https://choosealicense.com&quot;);
 const links = [];
 
 const onPageEvent = async (err, page) =&gt; {
-  links.push( { title: pageTitle(page), url: page.url });
+  links.push({ title: pageTitle(page), url: page.url });
 };
 
 // params in order event, background, and headless chrome
@@ -243,10 +243,7 @@ await website.crawl(onPageEvent);
 
 const { links, pages } = await crawl(&quot;https://choosealicense.com&quot;);
 
-console.log([
-  links,
-  pages
-])
+console.log([links, pages]);
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="website"><a class="header" href="#website">Website</a></h1>
 <p>The Website class is the foundations to the spider.</p>
@@ -356,7 +353,7 @@ This will return <code>rawContent</code> and leave <code>content</code> when usi
 const website = new Website(&quot;https://choosealicense.com&quot;, rawContent);
 await website.scrape();
 </code></pre>
-<h2 id="clearing-data"><a class="header" href="#clearing-data">Clearing Data</a></h2>
+<h2 id="clearing-crawl-data"><a class="header" href="#clearing-crawl-data">Clearing Crawl Data</a></h2>
 <p>Use <code>website.clear</code> to remove the links visited and page data or <code>website.drainLinks</code> to drain the links visited.</p>
 <pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;);
 await website.crawl();
@@ -365,6 +362,22 @@ console.log(website.getLinks());
 website.clear();
 // links will be empty
 console.log(website.getLinks());
+</code></pre>
+<h2 id="storing-and-exporting-data"><a class="header" href="#storing-and-exporting-data">Storing and Exporting Data</a></h2>
+<p>Collecting data to store can be done with <code>website.pushData()</code> and <code>website.exportJsonlData()</code>.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;);
+
+const onPageEvent = (_err, page) =&gt; {
+  website.pushData(page);
+};
+
+await website.crawl(onPageEvent);
+
+// uncomment to read the data.
+// console.log(website.readData());
+
+// we only have one export method atm. Optional file path. All data by default goes to storage
+await website.exportJsonlData(&quot;./storage/test.jsonl&quot;);
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="page"><a class="header" href="#page">Page</a></h1>
 <p>A single page on a website, useful if you just the root url.</p>
@@ -524,10 +537,10 @@ setting the second param of the <code>Website</code> class constructor to true.<
 const links: Buffer[] = [];
 
 const onPageEvent = (_err: Error | null, page: NPage) =&gt; {
-    if (page.rawContent) {
-        // we can download or store the content now to disk.
-        links.push(page.rawContent);
-    }
+  if (page.rawContent) {
+    // we can download or store the content now to disk.
+    links.push(page.rawContent);
+  }
 };
 
 await website.crawl(onPageEvent);

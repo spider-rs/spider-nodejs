@@ -212,7 +212,7 @@ const website = new Website(&quot;https://choosealicense.com&quot;);
 const links = [];
 
 const onPageEvent = async (err, page) =&gt; {
-  links.push( { title: pageTitle(page), url: page.url });
+  links.push({ title: pageTitle(page), url: page.url });
 };
 
 // params in order event, background, and headless chrome
@@ -224,10 +224,7 @@ await website.crawl(onPageEvent);
 
 const { links, pages } = await crawl(&quot;https://choosealicense.com&quot;);
 
-console.log([
-  links,
-  pages
-])
+console.log([links, pages]);
 </code></pre>
 
                     </main>
