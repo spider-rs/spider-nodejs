@@ -173,3 +173,24 @@ test("new website native raw content", async (t) => {
 
   t.assert(links.length > 1, "should be more than one page");
 });
+
+
+test("new website data store and export", async (t) => {
+  const { promises } = await import('node:fs');
+  const readFile = promises.readFile;
+  
+  const website = new Website(TEST_URL, true);
+  const outputFile = "./storage/test.jsonl";
+
+  const onPageEvent = (_err: Error | null, page: NPage) => {
+    website.pushData(page);
+  };
+
+  await website.crawl(onPageEvent);
+  await website.exportJsonlData(outputFile);
+
+  const data = await readFile(outputFile);
+
+  t.assert(!!data, "should contain valid json file");
+});
+

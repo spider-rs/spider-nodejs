@@ -174,7 +174,7 @@ const website = new Website("https://choosealicense.com", rawContent);
 await website.scrape();
 ```
 
-## Clearing Data
+## Clearing Crawl Data
 
 Use `website.clear` to remove the links visited and page data or `website.drainLinks` to drain the links visited.
 
@@ -186,4 +186,24 @@ console.log(website.getLinks());
 website.clear();
 // links will be empty
 console.log(website.getLinks());
+```
+
+## Storing and Exporting Data
+
+Collecting data to store can be done with `website.pushData()` and `website.exportJsonlData()`.
+
+```ts
+const website = new Website("https://choosealicense.com");
+
+const onPageEvent = (_err, page) => {
+  website.pushData(page);
+};
+
+await website.crawl(onPageEvent);
+
+// uncomment to read the data.
+// console.log(website.readData());
+
+// we only have one export method atm. Optional file path. All data by default goes to storage
+await website.exportJsonlData("./storage/test.jsonl");
 ```

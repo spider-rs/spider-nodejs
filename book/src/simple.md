@@ -53,7 +53,7 @@ const website = new Website("https://choosealicense.com");
 const links = [];
 
 const onPageEvent = async (err, page) => {
-  links.push( { title: pageTitle(page), url: page.url });
+  links.push({ title: pageTitle(page), url: page.url });
 };
 
 // params in order event, background, and headless chrome
@@ -69,8 +69,5 @@ import { crawl } from "@spider-rs/spider-rs";
 
 const { links, pages } = await crawl("https://choosealicense.com");
 
-console.log([
-  links,
-  pages
-])
+console.log([links, pages]);
 ```

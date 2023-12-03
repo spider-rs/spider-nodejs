@@ -18,6 +18,9 @@ export interface NPage {
 export function pageTitle(page: NPage): string
 /** crawl a website using HTTP gathering all links and html. */
 export function crawl(url: string, rawContent?: boolean | undefined | null): Promise<NWebsite>
+export interface PageEvent {
+  page: NPage
+}
 /** a simple page object */
 export class Page {
   /** the url for the page */
@@ -49,6 +52,10 @@ export class Website {
   constructor(url: string, rawContent?: boolean | undefined | null)
   /** Get the crawl status. */
   get status(): string
+  /** store data to memory for fast access. */
+  pushData(obj: object): void
+  /** store data to memory for disk storing. This will create the path if not exist and defaults to ./storage. */
+  exportJsonlData(exportPath?: string | undefined | null): Promise<void>
   /** subscribe and add an event listener. */
   subscribe(onPageEvent: (err: Error | null, value: NPage) => any): number
   /** remove a subscription listener. */

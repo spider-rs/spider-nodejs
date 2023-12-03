@@ -199,3 +199,5 @@ Cargo.lock
 # index.d.ts
 # index.js
 __test__/*.js
+
+/storage

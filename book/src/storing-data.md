@@ -11,10 +11,10 @@ const rawContent = true;
 const links: Buffer[] = [];
 
 const onPageEvent = (_err: Error | null, page: NPage) => {
-    if (page.rawContent) {
-        // we can download or store the content now to disk.
-        links.push(page.rawContent);
-    }
+  if (page.rawContent) {
+    // we can download or store the content now to disk.
+    links.push(page.rawContent);
+  }
 };
 
 await website.crawl(onPageEvent);

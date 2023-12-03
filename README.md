@@ -7,17 +7,26 @@ The [spider](https://github.com/spider-rs/spider) project ported to Node.js
 1. `npm i @spider-rs/spider-rs --save`
 
 ```ts
-import { Website } from "@spider-rs/spider-rs";
+import { Website, pageTitle } from "@spider-rs/spider-rs";
 
 const website = new Website("https://rsseau.fr");
 
+// optional: page event handler
 const onPageEvent = (_err, page) => {
-  console.log(page);
+  console.log(page)
+  // getting the page title and pushing data takes a performance hit for the bindings.
+  const title = pageTitle(page);
+  // only strings, and numbers are allowed for collecting. Arrays and Objects to come.
+  website.pushData({
+    status: page.statusCode,
+    html: page.content,
+    url: page.url,
+    title
+  });
 };
 
 await website.crawl(onPageEvent);
-
-// retreive all links for the website across all pages.
+await website.exportJsonlData("./storage/rsseau.jsonl");
 console.log(website.getLinks());
 ```
 

@@ -14,6 +14,70 @@ lazy_static! {
   pub static ref BUFFER: usize = (num_cpus::get() * 20).max(88);
 }
 
+/// build an object to jsonl - can be switched between json with changes
+fn object_to_u8(
+  obj: Object,
+  collected_size: usize,
+  inner_collected_size: usize,
+) -> Result<Vec<u8>, napi::Error> {
+  let o = Object::keys(&obj)?;
+  let o_size = o.len();
+  let mut ss = vec![];
+
+  ss.push(b'{');
+
+  for (i, key) in o.iter().enumerate() {
+    ss.push(b'"');
+    ss.extend(key.as_bytes());
+    ss.push(b'"');
+    ss.push(b':');
+
+    // todo: method to go through all napi values to get types
+    match obj.get::<&String, String>(&key) {
+      Ok(s) => {
+        ss.push(b'"');
+
+        ss.extend(s.unwrap_or_default().as_bytes());
+        ss.push(b'"');
+      }
+      _ => match obj.get::<&String, u32>(&key) {
+        Ok(s) => {
+          ss.push(b'"');
+          ss.extend(s.unwrap_or_default().to_string().as_bytes());
+          ss.push(b'"');
+        }
+        _ => match obj.get::<&String, i32>(&key) {
+          Ok(s) => {
+            ss.push(b'"');
+            ss.extend(s.unwrap_or_default().to_string().as_bytes());
+            ss.push(b'"');
+          }
+          _ => match obj.get::<&String, Buffer>(&key) {
+            Ok(s) => {
+              let d = serde_json::to_string(
+                &String::from_utf8(s.unwrap_or_default().as_ref().into()).unwrap_or_default(),
+              )?;
+
+              ss.extend(d.as_bytes());
+            }
+            _ => (),
+          },
+        },
+      },
+    }
+
+    if i != o_size - 1 {
+      ss.push(b',');
+    }
+  }
+
+  ss.push(b'}');
+  if collected_size > 0 && collected_size + 1 < inner_collected_size {
+    ss.extend(b"\n");
+  }
+  Ok(ss)
+}
+
 /// a simple page object
 #[derive(Default, Clone)]
 #[napi(object)]
@@ -120,6 +184,14 @@ pub struct Website {
   subscription_handles: IndexMap<u32, JoinHandle<()>>,
   /// do not convert content to UT8.
   raw_content: bool,
+  /// the dataset collected
+  collected_data: Box<Vec<u8>>, // /// the file handle for storing data
+                                // file_handle: Option<spider::tokio::fs::File>,
+}
+
+#[napi(object)]
+struct PageEvent {
+  pub page: NPage,
 }
 
 #[napi]
@@ -131,6 +203,8 @@ impl Website {
       inner: spider::website::Website::new(&url),
       subscription_handles: IndexMap::new(),
       raw_content: raw_content.unwrap_or_default(),
+      collected_data: Box::new(Vec::new()),
+      // file_handle: None,
     }
   }
 
@@ -139,6 +213,68 @@ impl Website {
   pub fn status(&self) -> String {
     use std::string::ToString;
     self.inner.get_status().to_string()
+  }
+
+  #[napi]
+  /// store data to heap memory. Use `website.export_jsonl_data` to store to disk.
+  pub fn push_data(&mut self, obj: Object) -> napi::Result<()> {
+    self.collected_data.extend(object_to_u8(
+      obj,
+      self.collected_data.len(),
+      self.inner.get_links().len(),
+    )?);
+
+    Ok(())
+  }
+
+  #[napi]
+  /// read the data from the heap memory.
+  pub fn read_data(&mut self) -> &Vec<u8> {
+    &self.collected_data
+  }
+
+  #[napi]
+  /// store data to memory for disk storing. This will create the path if not exist and defaults to ./storage.
+  pub async fn export_jsonl_data(&self, export_path: Option<String>) -> napi::Result<()> {
+    use napi::tokio::io::AsyncWriteExt;
+    let file = match export_path {
+      Some(p) => {
+        let base_dir = p
+          .split("/")
+          .into_iter()
+          .map(|f| {
+            if f.contains(".") {
+              "".to_string()
+            } else {
+              f.to_string()
+            }
+          })
+          .collect::<String>();
+
+        spider::tokio::fs::create_dir_all(&base_dir).await?;
+
+        if !p.contains(".") {
+          p + ".jsonl"
+        } else {
+          p
+        }
+      }
+      _ => {
+        spider::tokio::fs::create_dir_all("./storage").await?;
+        "./storage/".to_owned()
+          + &self
+            .inner
+            .get_domain()
+            .inner()
+            .replace("http://", "")
+            .replace("https://", "")
+          + "jsonl"
+      }
+    };
+    let mut file = spider::tokio::fs::File::create(file).await?;
+    // transform data step needed to auto convert type ..
+    file.write_all(&self.collected_data).await?;
+    Ok(())
   }
 
   #[napi]
