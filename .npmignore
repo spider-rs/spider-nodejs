@@ -18,3 +18,4 @@ src
 Cargo.toml
 .vscode
 tsconfig.json
+bench

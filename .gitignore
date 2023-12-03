@@ -201,3 +201,4 @@ Cargo.lock
 __test__/*.js
 
 /storage
+/bench/*.js

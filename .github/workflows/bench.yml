@@ -1,0 +1,40 @@
+name: Bench Compare
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  checkout_and_test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - node-version: 18.x
+          - node-version: latest
+
+    steps:
+      - name: Checkout code from ${{ github.repository }}
+        uses: actions/checkout@v4
+
+      - name: Install
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      - name: Install yarn
+        run: corepack enable && corepack prepare yarn@stable --activate
+
+      - name: Install and build locales
+        run: yarn --no-immutable && yarn build
+
+      - name: Run Bench @spider-rs/spider-rs
+        run: yarn bench
