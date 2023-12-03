@@ -9,24 +9,34 @@ The [spider](https://github.com/spider-rs/spider) project ported to Node.js
 ```ts
 import { Website, pageTitle } from "@spider-rs/spider-rs";
 
-const website = new Website("https://rsseau.fr");
+const website = new Website("https://rsseau.fr")
+  .withHeaders({
+    authorization: "somerandomjwt",
+  })
+  .withBudget({
+    // max request 20 pages for the website
+    "*": 20,
+    // limit only 10 pages on the `/docs` paths
+    "/docs": 10
+  })
+  // you can use regex or string matches to ignore paths
+  .withBlacklistUrl(["/resume"]) 
+  .build();
 
 // optional: page event handler
 const onPageEvent = (_err, page) => {
-  console.log(page)
-  // getting the page title and pushing data takes a performance hit for the bindings.
-  const title = pageTitle(page);
-  // only strings, and numbers are allowed for collecting. Arrays and Objects to come.
-  website.pushData({
-    status: page.statusCode,
-    html: page.content,
-    url: page.url,
-    title
-  });
+  const title = pageTitle(page); // comment out to increase performance if title not needed
+  console.info(`Title of ${page.url} is '${title}'`);
+  // website.pushData({
+  //   status: page.statusCode,
+  //   html: page.content,
+  //   url: page.url,
+  //   title
+  // });
 };
 
 await website.crawl(onPageEvent);
-await website.exportJsonlData("./storage/rsseau.jsonl");
+// await website.exportJsonlData("./storage/rsseau.jsonl");
 console.log(website.getLinks());
 ```
 
@@ -36,13 +46,8 @@ Collect the resources for a website.
 import { Website } from "@spider-rs/spider-rs";
 
 const website = new Website("https://rsseau.fr")
-  .withHeaders({
-    authorization: "somerandomjwt",
-  })
   .withBudget({
-    // max request 20 pages for the website
     "*": 20,
-    // limit only 10 pages on the docs paths
     "/docs": 10
   })
   // you can use regex or string matches to ignore paths
