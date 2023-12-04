@@ -3,3 +3,10 @@ export const iterations = process.env.BENCH_COUNT
   : 20;
 
 export const TEST_URL = "https://choosealicense.com";
+export const TEST_URL_MEDIUM = "https://rsseau.fr";
+
+export enum BenchSizes {
+  SMALL = "SMALL",
+  MEDIUM = "MEDIUM",
+  LARGE = "LARGE"
+}

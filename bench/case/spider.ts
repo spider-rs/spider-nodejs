@@ -1,8 +1,8 @@
-import { Website, NPage } from "../../index.js";
-import { TEST_URL, iterations } from "../base"
+import { Website } from "../../index.js";
+import { TEST_URL, iterations } from "../base";
 
-export async function bench() {
-  const website = new Website(TEST_URL);
+export async function bench(url = TEST_URL, size = "SMALL") {
+  const website = new Website(url);
 
   let duration = 0;
 
@@ -20,11 +20,11 @@ export async function bench() {
   };
 
   await bm(run);
-  
+
   console.log(
     JSON.stringify([
       {
-        name: "@spider-rs/spider-rs - OPS/S [SMALL:PAGE]",
+        name: `@spider-rs/spider-rs - OPS/S [${size}:PAGE]`,
         unit: "OPS/S",
         value: 1000 / (duration / iterations),
       },

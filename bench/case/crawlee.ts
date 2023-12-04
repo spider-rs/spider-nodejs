@@ -1,21 +1,21 @@
-import { CheerioCrawler } from 'crawlee';
-import { TEST_URL, iterations } from "../base"
+import { CheerioCrawler } from "crawlee";
+import { TEST_URL, iterations } from "../base";
 
-export async function bench() {
-    const crawler = new CheerioCrawler({
-        async requestHandler({ enqueueLinks, request }) {
-          await enqueueLinks();
-        }
-    });
-    
+export async function bench(url = TEST_URL, size = "SMALL") {
+  const crawler = new CheerioCrawler({
+    async requestHandler({ enqueueLinks }) {
+      await enqueueLinks();
+    },
+  });
+
   let duration = 0;
 
   const run = async () => {
     const startTime = performance.now();
-    await crawler.run([TEST_URL]);
+    await crawler.run([url]);
     duration += performance.now() - startTime;
   };
-  
+
   const bm = async (cb: () => Promise<void>, i = 0) => {
     await cb();
     if (i < iterations) {
@@ -28,7 +28,7 @@ export async function bench() {
   console.log(
     JSON.stringify([
       {
-        name: "crawlee - OPS/S [SMALL:PAGE]",
+        name: `crawlee - OPS/S [${size}:PAGE]`,
         unit: "OPS/S",
         value: 1000 / (duration / iterations),
       },

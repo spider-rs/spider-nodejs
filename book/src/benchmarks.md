@@ -1,5 +1,7 @@
 # Benchmarks
 
+View the latest runs on [github](https://github.com/spider-rs/spider-nodejs/actions/workflows/bench.yml).
+
 ```sh
 Linux
 8-core CPU
