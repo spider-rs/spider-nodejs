@@ -5,6 +5,7 @@ use napi::{
   bindgen_prelude::{Buffer, Object},
   tokio::task::JoinHandle,
 };
+use spider::utils::shutdown;
 use std::time::Duration;
 
 /// build an object to jsonl - can be switched between json with changes
@@ -82,8 +83,11 @@ pub struct Website {
   crawl_handles: IndexMap<u32, JoinHandle<()>>,
   /// do not convert content to UT8.
   raw_content: bool,
-  /// the dataset collected
-  collected_data: Box<Vec<u8>>, // /// the file handle for storing data
+  /// the data collected.
+  collected_data: Box<Vec<u8>>,
+  /// is the crawl running in the background.
+  running_in_background: bool
+   // /// the file handle for storing data
                                 // file_handle: Option<spider::tokio::fs::File>,
 }
 
@@ -103,6 +107,7 @@ impl Website {
       crawl_handles: IndexMap::new(),
       raw_content: raw_content.unwrap_or_default(),
       collected_data: Box::new(Vec::new()),
+      running_in_background: false
       // file_handle: None,
     }
   }
@@ -239,7 +244,14 @@ impl Website {
   /// stop a crawl
   pub async unsafe fn stop(&mut self, id: Option<u32>) -> bool {
     self.inner.stop();
-    
+
+    // prevent the last background run
+    if self.running_in_background {
+      // we may want ID's to be used as an option along with urls for complete shutdowns.
+      shutdown(self.inner.get_domain().inner()).await;
+      self.running_in_background = false;
+    }
+
     match id {
       Some(id) => {
         let handle = self.crawl_handles.get(&id);
@@ -262,21 +274,23 @@ impl Website {
       }
     }
   }
-  
+
   #[napi]
   /// crawl a website
   pub async unsafe fn crawl(
     &mut self,
     on_page_event: Option<napi::threadsafe_function::ThreadsafeFunction<NPage>>,
-    // run the page in the background
     background: Option<bool>,
-    // headless chrome rendering
     headless: Option<bool>,
   ) {
     // only run in background if on_page_event is handled for streaming.
     let background = background.is_some() && background.unwrap_or_default();
     let headless = headless.is_some() && headless.unwrap_or_default();
     let raw_content = self.raw_content;
+    
+    if background {
+      self.running_in_background = background;
+    }
 
     match on_page_event {
       Some(callback) => {
@@ -345,10 +359,29 @@ impl Website {
         }
       }
       _ => {
-        if headless {
-          self.inner.crawl().await;
+        if background {
+          let mut website = self.inner.clone();
+
+          let crawl_id = match self.crawl_handles.last() {
+            Some(handle) => handle.0 + 1,
+            _ => 0,
+          };
+
+          let crawl_handle = spider::tokio::spawn(async move {
+            if headless {
+              website.crawl().await;
+            } else {
+              website.crawl_raw().await;
+            }
+          });
+
+          self.crawl_handles.insert(crawl_id, crawl_handle);
         } else {
-          self.inner.crawl_raw().await;
+          if headless {
+            self.inner.crawl().await;
+          } else {
+            self.inner.crawl_raw().await;
+          }
         }
       }
     }
@@ -364,10 +397,15 @@ impl Website {
   ) {
     let headless = headless.is_some() && headless.unwrap_or_default();
     let raw_content = self.raw_content;
+    let background = background.is_some() && background.unwrap_or_default();
+
+    if background {
+      self.running_in_background = background;
+    }
 
     match on_page_event {
       Some(callback) => {
-        if background.unwrap_or_default() {
+        if background {
           let mut website = self.inner.clone();
           let mut rx2 = website
             .subscribe(*BUFFER / 2)
@@ -432,10 +470,29 @@ impl Website {
         }
       }
       _ => {
-        if headless {
-          self.inner.scrape().await;
+        if background {
+          let mut website = self.inner.clone();
+
+          let crawl_id = match self.crawl_handles.last() {
+            Some(handle) => handle.0 + 1,
+            _ => 0,
+          };
+
+          let crawl_handle = spider::tokio::spawn(async move {
+            if headless {
+              website.scrape().await;
+            } else {
+              website.scrape_raw().await;
+            }
+          });
+
+          self.crawl_handles.insert(crawl_id, crawl_handle);
         } else {
-          self.inner.scrape_raw().await;
+          if headless {
+            self.inner.scrape().await;
+          } else {
+            self.inner.scrape_raw().await;
+          }
         }
       }
     }

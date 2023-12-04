@@ -194,17 +194,44 @@ test("new website data store and export", async (t) => {
   t.assert(!!data, "should contain valid json file");
 });
 
-test("new website stop background", async (t) => {  
+test("new website stop", async (t) => {  
   const website = new Website(TEST_URL);
 
-  const onPageEvent = (_err: Error | null, page: NPage) => {
+  const onPageEvent = async (_err: Error | null, page: NPage) => {
     if (website.size >= 8) {
-      website.stop();
+      await website.stop();
     }
   };
 
   await website.crawl(onPageEvent);
 
   t.assert(website.size < 15, "should only have crawled a couple pages concurrently");
+});
+
+test("new website stop background", async (t) => {
+  const sleep = (time: number) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(true);
+      }, time);
+    });
+  };
+
+  const website = new Website(TEST_URL);
+  let count = 0;
+
+  const onPageEvent = async (_err: Error | null, page: NPage) => {
+    if (count) {
+      await website.stop();
+    }
+    count++;
+  };
+
+  // lets wait for all other test since background shutsdown all crawls matching the url
+  await sleep(2000);
+  await website.crawl(onPageEvent, true);
+  await sleep(2000);
+
+  t.assert(count < 15, "should only have crawled a couple pages concurrently in the background");
 });
 
