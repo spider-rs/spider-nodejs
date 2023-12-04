@@ -2,7 +2,7 @@
 
 We use the node-addon to port the Rust project over with napi to target node.js.
 
-There are some performance drawbacks from the addon, even still the crawls are lightning fast and performant.
+There are some performance drawbacks from the addon, even still the crawls are lightning fast and efficient.
 
 ## Usage
 
@@ -36,7 +36,6 @@ const onPageEvent = async (err: Error | null, page: NPage) => {
   links.push(page);
 };
 
-// params in order event, background, and headless chrome
 await website.crawl(onPageEvent);
 console.log(website.getLinks());
 ```
