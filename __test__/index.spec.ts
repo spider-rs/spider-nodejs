@@ -3,7 +3,7 @@ import { crawl, Website, Page, type NPage, Cron, pageTitle } from "../index.js";
 
 const TEST_URL = "https://choosealicense.com";
 
-test("crawl shortcut native", async (t) => {
+test("shortcut crawl native", async (t) => {
   const { links, pages } = await crawl(TEST_URL);
 
   t.assert(links.length > 1, "should be more than one link");
@@ -192,5 +192,19 @@ test("new website data store and export", async (t) => {
   const data = await readFile(outputFile);
 
   t.assert(!!data, "should contain valid json file");
+});
+
+test("new website stop background", async (t) => {  
+  const website = new Website(TEST_URL);
+
+  const onPageEvent = (_err: Error | null, page: NPage) => {
+    if (website.size >= 8) {
+      website.stop();
+    }
+  };
+
+  await website.crawl(onPageEvent);
+
+  t.assert(website.size < 15, "should only have crawled a couple pages concurrently");
 });
 

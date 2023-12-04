@@ -252,11 +252,11 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { pageTitle, Page, crawl, Website, Cron, NWebsite } = nativeBinding
+const { pageTitle, NWebsite, Page, crawl, Website, Cron } = nativeBinding
 
 module.exports.pageTitle = pageTitle
+module.exports.NWebsite = NWebsite
 module.exports.Page = Page
 module.exports.crawl = crawl
 module.exports.Website = Website
 module.exports.Cron = Cron
-module.exports.NWebsite = NWebsite

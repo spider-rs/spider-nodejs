@@ -76,8 +76,10 @@ fn object_to_u8(
 pub struct Website {
   /// the website from spider.
   inner: spider::website::Website,
-  /// spawn subscription handles.
+  /// spawned subscription handles.
   subscription_handles: IndexMap<u32, JoinHandle<()>>,
+  /// spawned crawl handles.
+  crawl_handles: IndexMap<u32, JoinHandle<()>>,
   /// do not convert content to UT8.
   raw_content: bool,
   /// the dataset collected
@@ -98,6 +100,7 @@ impl Website {
     Website {
       inner: spider::website::Website::new(&url),
       subscription_handles: IndexMap::new(),
+      crawl_handles: IndexMap::new(),
       raw_content: raw_content.unwrap_or_default(),
       collected_data: Box::new(Vec::new()),
       // file_handle: None,
@@ -233,6 +236,34 @@ impl Website {
   }
 
   #[napi]
+  /// stop a crawl
+  pub async unsafe fn stop(&mut self, id: Option<u32>) -> bool {
+    self.inner.stop();
+    
+    match id {
+      Some(id) => {
+        let handle = self.crawl_handles.get(&id);
+
+        match handle {
+          Some(h) => {
+            h.abort();
+            self.crawl_handles.remove_entry(&id);
+            true
+          }
+          _ => false,
+        }
+      }
+      _ => {
+        let keys = self.crawl_handles.len();
+        for k in self.crawl_handles.drain(..) {
+          k.1.abort();
+        }
+        keys > 0
+      }
+    }
+  }
+  
+  #[napi]
   /// crawl a website
   pub async unsafe fn crawl(
     &mut self,
@@ -264,7 +295,12 @@ impl Website {
             }
           });
 
-          spider::tokio::spawn(async move {
+          let crawl_id = match self.crawl_handles.last() {
+            Some(handle) => handle.0 + 1,
+            _ => 0,
+          };
+
+          let crawl_handle = spider::tokio::spawn(async move {
             if headless {
               website.crawl().await;
             } else {
@@ -277,6 +313,7 @@ impl Website {
             _ => 0,
           };
 
+          self.crawl_handles.insert(crawl_id, crawl_handle);
           self.subscription_handles.insert(id, handle);
         } else {
           let mut rx2 = self
@@ -345,7 +382,12 @@ impl Website {
             }
           });
 
-          spider::tokio::spawn(async move {
+          let crawl_id = match self.crawl_handles.last() {
+            Some(handle) => handle.0 + 1,
+            _ => 0,
+          };
+
+          let crawl_handle = spider::tokio::spawn(async move {
             if headless {
               website.scrape().await;
             } else {
@@ -358,6 +400,7 @@ impl Website {
             _ => 0,
           };
 
+          self.crawl_handles.insert(crawl_id, crawl_handle);
           self.subscription_handles.insert(id, handle);
         } else {
           let mut rx2 = self
@@ -398,7 +441,7 @@ impl Website {
     }
   }
 
-  /// run the cron
+  /// run a cron job
   #[napi]
   pub async unsafe fn run_cron(
     &mut self,
@@ -441,6 +484,12 @@ impl Website {
       .map(|x| x.as_ref().to_string())
       .collect::<Vec<String>>();
     links
+  }
+
+  #[napi(getter)]
+  /// get the size of the website in amount of pages crawled. If you ran the page in the background, this value will not update.
+  pub fn size(&mut self) -> u32 {
+    self.inner.size() as u32
   }
 
   /// get all the pages of a website - requires calling website.scrape

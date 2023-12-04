@@ -21,6 +21,13 @@ export function crawl(url: string, rawContent?: boolean | undefined | null): Pro
 export interface PageEvent {
   page: NPage
 }
+/** website main data from rust to node. */
+export class NWebsite {
+  /** all of the website links. */
+  links: Array<string>
+  /** the pages found. */
+  pages: Array<NPage>
+}
 /** a simple page object */
 export class Page {
   /** the url for the page */
@@ -55,14 +62,18 @@ export class Website {
   subscribe(onPageEvent: (err: Error | null, value: NPage) => any): number
   /** remove a subscription listener. */
   unsubscribe(id?: number | undefined | null): boolean
+  /** stop a crawl */
+  stop(id?: number | undefined | null): Promise<boolean>
   /** crawl a website */
   crawl(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null, background?: boolean | undefined | null, headless?: boolean | undefined | null): Promise<void>
   /** scrape a website */
   scrape(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null, background?: boolean | undefined | null, headless?: boolean | undefined | null): Promise<void>
-  /** run the cron */
+  /** run a cron job */
   runCron(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null): Promise<Cron>
   /** get all the links of a website */
   getLinks(): Array<string>
+  /** get the size of the website in amount of pages crawled. If you ran the page in the background, this value will not update. */
+  get size(): number
   /** get all the pages of a website - requires calling website.scrape */
   getPages(): Array<NPage>
   /** drain all links from storing */
@@ -102,11 +113,4 @@ export class Website {
 export class Cron {
   /** stop the cron instance */
   stop(): Promise<void>
-}
-/** website main data from rust to node. */
-export class NWebsite {
-  /** all of the website links. */
-  links: Array<string>
-  /** the pages found. */
-  pages: Array<NPage>
 }
