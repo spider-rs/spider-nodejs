@@ -307,6 +307,20 @@ await website.crawl(onPageEvent);
 // we only have one export method atm. Optional file path. All data by default goes to storage
 await website.exportJsonlData(&quot;./storage/test.jsonl&quot;);
 </code></pre>
+<h2 id="stop-crawl"><a class="header" href="#stop-crawl">Stop crawl</a></h2>
+<p>To stop a crawl you can use <code>website.stopCrawl(id)</code>, pass in the crawl id to stop a run or leave empty for all crawls to stop.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;);
+
+const onPageEvent = (_err, page) =&gt; {
+  console.log(page)
+  // stop the concurrent crawl when 8 pages are found.
+  if (website.size &gt;= 8) {
+    website.stop();
+  }
+};
+
+await website.crawl(onPageEvent);
+</code></pre>
 
                     </main>
 
