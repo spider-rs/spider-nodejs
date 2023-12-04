@@ -194,7 +194,7 @@ npm install @spider-rs/spider-rs
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="a-simple-example"><a class="header" href="#a-simple-example">A simple example</a></h1>
 <p>We use the node-addon to port the Rust project over with napi to target node.js.</p>
-<p>There are some performance drawbacks from the addon, even still the crawls are lightning fast and performant.</p>
+<p>There are some performance drawbacks from the addon, even still the crawls are lightning fast and efficient.</p>
 <h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
 <p>The examples below can help get started with spider.</p>
 <h3 id="basic"><a class="header" href="#basic">Basic</a></h3>
@@ -218,7 +218,6 @@ const onPageEvent = async (err: Error | null, page: NPage) =&gt; {
   links.push(page);
 };
 
-// params in order event, background, and headless chrome
 await website.crawl(onPageEvent);
 console.log(website.getLinks());
 </code></pre>
