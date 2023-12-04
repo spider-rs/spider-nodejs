@@ -566,13 +566,29 @@ await website.crawl(onPageEvent);
 const website = new Website(&quot;https://choosealicense.com&quot;, rawContent);
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="benchmarks"><a class="header" href="#benchmarks">Benchmarks</a></h1>
-<p>The speed of Spider-RS ported compared to other tools.</p>
-<p>Spider is about 1,000x (small websites) 10,000x (medium websites), and 100,000x (production grade websites) times faster than the popular crawlee library even with the node port performance hits.</p>
+<pre><code class="language-sh">Linux
+8-core CPU
+32 GB of RAM memory
+-----------------------
+</code></pre>
+<p>Test url: <code>https://choosealicense.com</code> (small)
+32 pages</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left"><code>libraries</code></th><th style="text-align: left"><code>speed</code></th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong><code>spider-rs: crawl 10 samples</code></strong></td><td style="text-align: left"><code>76ms</code>(✅ <strong>1.00x</strong>)</td></tr>
+<tr><td style="text-align: left"><strong><code>crawlee: crawl 10 samples</code></strong></td><td style="text-align: left"><code>1.6s</code> (✅ <strong>1.00x</strong>)</td></tr>
+</tbody></table>
+</div>
+<p>Test url: <code>https://rsseau.fr</code> (medium)
+211 pages</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left"><code>libraries</code></th><th style="text-align: left"><code>speed</code></th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong><code>spider-rs: crawl 10 samples</code></strong></td><td style="text-align: left"><code>1s</code> (✅ <strong>1.00x</strong>)</td></tr>
+<tr><td style="text-align: left"><strong><code>crawlee: crawl 10 samples</code></strong></td><td style="text-align: left"><code>72s</code> (✅ <strong>1.00x</strong>)</td></tr>
+</tbody></table>
+</div>
 <pre><code class="language-sh">----------------------
 mac Apple M1 Max
 10-core CPU
 64 GB of RAM memory
-1 TB of SSD disk space
 -----------------------
 </code></pre>
 <p>Test url: <code>https://choosealicense.com</code> (small)
@@ -589,8 +605,7 @@ mac Apple M1 Max
 <tr><td style="text-align: left"><strong><code>crawlee: crawl 10 samples</code></strong></td><td style="text-align: left"><code>75s</code> (✅ <strong>1.00x</strong>)</td></tr>
 </tbody></table>
 </div>
-<p>The performance scales the larger the website and if throttling is needed.</p>
-<p>Linux benchmarks are about 10x faster than macOS for spider-rs.</p>
+<p>The performance scales the larger the website and if throttling is needed. Linux benchmarks are about 10x faster than macOS for spider-rs.</p>
 
                     </main>
 
