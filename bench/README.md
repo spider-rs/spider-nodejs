@@ -13,14 +13,14 @@ Test url: `https://choosealicense.com` (small)
 | `libraries`                       | `speed`               |
 | :-------------------------------- | :-------------------- |
 | **`spider-rs: crawl 10 samples`** | `76ms`(✅ **1.00x**)  |
-| **`crawlee: crawl 10 samples`**   | `1.6s` (✅ **1.00x**) |
+| **`crawlee: crawl 10 samples`**   | `1s` (✅ **1.00x**) |
 
 Test url: `https://rsseau.fr` (medium)
 211 pages
 
 | `libraries`                       | `speed`              |
 | :-------------------------------- | :------------------- |
-| **`spider-rs: crawl 10 samples`** | `1s` (✅ **1.00x**)  |
+| **`spider-rs: crawl 10 samples`** | `0.5s` (✅ **1.00x**)  |
 | **`crawlee: crawl 10 samples`**   | `72s` (✅ **1.00x**) |
 
 ```sh

@@ -1,6 +1,10 @@
 [book]
-authors = ["j-mendez"]
+authors = ["Jeff Mendez"]
 language = "en"
 multilingual = false
 src = "src"
 title = "spider-rs"
+
+[output.html]
+git-repository-url = "https://github.com/spider-rs/spider-nodejs/tree/main/book"
+edit-url-template  = "https://github.com/spider-rs/spider-nodejs/edit/main/book/{path}"

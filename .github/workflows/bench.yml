@@ -34,7 +34,7 @@ jobs:
         run: corepack enable && corepack prepare yarn@stable --activate
 
       - name: Install Deps
-        run: yarn --no-immutable && yarn build && cd bench npm i
+        run: yarn --no-immutable && yarn build && cd bench && npm i
 
       - name: Run Bench @spider-rs/spider-rs
         run: yarn bench
