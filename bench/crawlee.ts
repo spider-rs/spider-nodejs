@@ -4,4 +4,4 @@ import { bench } from "./case/crawlee";
 // small
 bench();
 // small/medium
-bench(TEST_URL_MEDIUM, BenchSizes.MEDIUM)
+bench(TEST_URL_MEDIUM, BenchSizes.MEDIUM);

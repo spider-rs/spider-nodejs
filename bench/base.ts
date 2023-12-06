@@ -8,5 +8,5 @@ export const TEST_URL_MEDIUM = "https://rsseau.fr";
 export enum BenchSizes {
   SMALL = "SMALL",
   MEDIUM = "MEDIUM",
-  LARGE = "LARGE"
+  LARGE = "LARGE",
 }

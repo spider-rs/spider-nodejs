@@ -216,7 +216,7 @@ To stop a crawl you can use `website.stopCrawl(id)`, pass in the crawl id to sto
 const website = new Website("https://choosealicense.com");
 
 const onPageEvent = (_err, page) => {
-  console.log(page)
+  console.log(page);
   // stop the concurrent crawl when 8 pages are found.
   if (website.size >= 8) {
     website.stop();
