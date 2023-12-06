@@ -318,7 +318,7 @@ await website.exportJsonlData(&quot;./storage/test.jsonl&quot;);
 <pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;);
 
 const onPageEvent = (_err, page) =&gt; {
-  console.log(page)
+  console.log(page);
   // stop the concurrent crawl when 8 pages are found.
   if (website.size &gt;= 8) {
     website.stop();

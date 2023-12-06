@@ -397,7 +397,7 @@ await website.exportJsonlData(&quot;./storage/test.jsonl&quot;);
 <pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;);
 
 const onPageEvent = (_err, page) =&gt; {
-  console.log(page)
+  console.log(page);
   // stop the concurrent crawl when 8 pages are found.
   if (website.size &gt;= 8) {
     website.stop();
@@ -586,15 +586,15 @@ const website = new Website(&quot;https://choosealicense.com&quot;, rawContent);
 <p>Test url: <code>https://choosealicense.com</code> (small)
 32 pages</p>
 <div class="table-wrapper"><table><thead><tr><th style="text-align: left"><code>libraries</code></th><th style="text-align: left"><code>speed</code></th></tr></thead><tbody>
-<tr><td style="text-align: left"><strong><code>spider-rs: crawl 10 samples</code></strong></td><td style="text-align: left"><code>76ms</code>(✅ <strong>1.00x</strong>)</td></tr>
-<tr><td style="text-align: left"><strong><code>crawlee: crawl 10 samples</code></strong></td><td style="text-align: left"><code>1s</code> (✅ <strong>1.00x</strong>)</td></tr>
+<tr><td style="text-align: left"><strong><code>spider-rs: crawl 10 samples</code></strong></td><td style="text-align: left"><code>76ms</code></td></tr>
+<tr><td style="text-align: left"><strong><code>crawlee: crawl 10 samples</code></strong></td><td style="text-align: left"><code>1s</code></td></tr>
 </tbody></table>
 </div>
 <p>Test url: <code>https://rsseau.fr</code> (medium)
 211 pages</p>
 <div class="table-wrapper"><table><thead><tr><th style="text-align: left"><code>libraries</code></th><th style="text-align: left"><code>speed</code></th></tr></thead><tbody>
-<tr><td style="text-align: left"><strong><code>spider-rs: crawl 10 samples</code></strong></td><td style="text-align: left"><code>0.5s</code> (✅ <strong>1.00x</strong>)</td></tr>
-<tr><td style="text-align: left"><strong><code>crawlee: crawl 10 samples</code></strong></td><td style="text-align: left"><code>72s</code> (✅ <strong>1.00x</strong>)</td></tr>
+<tr><td style="text-align: left"><strong><code>spider-rs: crawl 10 samples</code></strong></td><td style="text-align: left"><code>0.5s</code></td></tr>
+<tr><td style="text-align: left"><strong><code>crawlee: crawl 10 samples</code></strong></td><td style="text-align: left"><code>72s</code></td></tr>
 </tbody></table>
 </div>
 <pre><code class="language-sh">----------------------
@@ -606,15 +606,15 @@ mac Apple M1 Max
 <p>Test url: <code>https://choosealicense.com</code> (small)
 32 pages</p>
 <div class="table-wrapper"><table><thead><tr><th style="text-align: left"><code>libraries</code></th><th style="text-align: left"><code>speed</code></th></tr></thead><tbody>
-<tr><td style="text-align: left"><strong><code>spider-rs: crawl 10 samples</code></strong></td><td style="text-align: left"><code>286ms</code>(✅ <strong>1.00x</strong>)</td></tr>
-<tr><td style="text-align: left"><strong><code>crawlee: crawl 10 samples</code></strong></td><td style="text-align: left"><code>1.7s</code> (✅ <strong>1.00x</strong>)</td></tr>
+<tr><td style="text-align: left"><strong><code>spider-rs: crawl 10 samples</code></strong></td><td style="text-align: left"><code>286ms</code></td></tr>
+<tr><td style="text-align: left"><strong><code>crawlee: crawl 10 samples</code></strong></td><td style="text-align: left"><code>1.7s</code></td></tr>
 </tbody></table>
 </div>
 <p>Test url: <code>https://rsseau.fr</code> (medium)
 211 pages</p>
 <div class="table-wrapper"><table><thead><tr><th style="text-align: left"><code>libraries</code></th><th style="text-align: left"><code>speed</code></th></tr></thead><tbody>
-<tr><td style="text-align: left"><strong><code>spider-rs: crawl 10 samples</code></strong></td><td style="text-align: left"><code>2.5s</code> (✅ <strong>1.00x</strong>)</td></tr>
-<tr><td style="text-align: left"><strong><code>crawlee: crawl 10 samples</code></strong></td><td style="text-align: left"><code>75s</code> (✅ <strong>1.00x</strong>)</td></tr>
+<tr><td style="text-align: left"><strong><code>spider-rs: crawl 10 samples</code></strong></td><td style="text-align: left"><code>2.5s</code></td></tr>
+<tr><td style="text-align: left"><strong><code>crawlee: crawl 10 samples</code></strong></td><td style="text-align: left"><code>75s</code></td></tr>
 </tbody></table>
 </div>
 <p>The performance scales the larger the website and if throttling is needed. Linux benchmarks are about 10x faster than macOS for spider-rs.</p>
