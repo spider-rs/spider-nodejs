@@ -271,6 +271,12 @@ const website = new Website(&quot;https://choosealicense.com&quot;);
   .withHttp2PriorKnowledge(true)
   .build();
 </code></pre>
+<h3 id="chrome-network-interception"><a class="header" href="#chrome-network-interception">Chrome Network Interception</a></h3>
+<p>Enable Network interception when using chrome to speed up request.</p>
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
+  .withChromeIntercept(true, true)
+  .build();
+</code></pre>
 <h2 id="chaining"><a class="header" href="#chaining">Chaining</a></h2>
 <p>You can chain all of the configs together for simple configuration.</p>
 <pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
