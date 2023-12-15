@@ -1,6 +1,6 @@
 {
   "name": "@spider-rs/spider-rs-freebsd-x64",
-  "version": "0.0.40",
+  "version": "0.0.41",
   "repository": "https://github.com/spider-rs/spider-nodejs",
   "os": [
     "freebsd"
