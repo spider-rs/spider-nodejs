@@ -161,6 +161,20 @@ test.skip("new website native headless", async (t) => {
   t.assert(website.getLinks().length > 1, "should be more than one link");
 });
 
+test.skip("new website native smart mode", async (t) => {
+  const website = new Website(TEST_URL);
+  await website.crawlSmart(undefined, false);
+
+  t.assert(website.getLinks().length > 1, "should be more than one link");
+});
+
+test.skip("new website native headless request interception", async (t) => {
+  const website = new Website(TEST_URL).withChromeIntercept(true, true);
+  await website.crawl(undefined, false, true);
+
+  t.assert(website.getLinks().length > 1, "should be more than one link");
+});
+
 test("new website native raw content", async (t) => {
   const website = new Website(TEST_URL, true);
 

@@ -150,6 +150,16 @@ const website = new Website("https://choosealicense.com")
   .build();
 ```
 
+### Chrome Network Interception
+
+Enable Network interception when using chrome to speed up request.
+
+```ts
+const website = new Website("https://choosealicense.com")
+  .withChromeIntercept(true, true)
+  .build();
+```
+
 ## Chaining
 
 You can chain all of the configs together for simple configuration.

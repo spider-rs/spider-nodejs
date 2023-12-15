@@ -66,6 +66,8 @@ export class Website {
   stop(id?: number | undefined | null): Promise<boolean>
   /** crawl a website */
   crawl(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null, background?: boolean | undefined | null, headless?: boolean | undefined | null): Promise<void>
+  /** Start to crawl website with async concurrency smart. Use HTTP first and JavaScript Rendering as needed. */
+  crawlSmart(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null, background?: boolean | undefined | null): Promise<void>
   /** scrape a website */
   scrape(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null, background?: boolean | undefined | null, headless?: boolean | undefined | null): Promise<void>
   /** run a cron job */
@@ -86,6 +88,8 @@ export class Website {
   withUserAgent(userAgent?: string | undefined | null): this
   /** Respect robots.txt file. */
   withRespectRobotsTxt(respectRobotsTxt: boolean): this
+  /** Use request intercept for the request to only allow content that matches the host. If the content is from a 3rd party it needs to be part of our include list. This method does nothing if the [chrome_intercept] is not enabled. */
+  withChromeIntercept(chromeIntercept: boolean, blockImages: boolean): this
   /** Include subdomains detection. */
   withSubdomains(subdomains: boolean): this
   /** Include tld detection. */

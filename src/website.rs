@@ -86,9 +86,8 @@ pub struct Website {
   /// the data collected.
   collected_data: Box<Vec<u8>>,
   /// is the crawl running in the background.
-  running_in_background: bool
-   // /// the file handle for storing data
-                                // file_handle: Option<spider::tokio::fs::File>,
+  running_in_background: bool, // /// the file handle for storing data
+                               // file_handle: Option<spider::tokio::fs::File>,
 }
 
 #[napi(object)]
@@ -107,8 +106,7 @@ impl Website {
       crawl_handles: IndexMap::new(),
       raw_content: raw_content.unwrap_or_default(),
       collected_data: Box::new(Vec::new()),
-      running_in_background: false
-      // file_handle: None,
+      running_in_background: false, // file_handle: None,
     }
   }
 
@@ -287,7 +285,7 @@ impl Website {
     let background = background.is_some() && background.unwrap_or_default();
     let headless = headless.is_some() && headless.unwrap_or_default();
     let raw_content = self.raw_content;
-    
+
     if background {
       self.running_in_background = background;
     }
@@ -388,6 +386,94 @@ impl Website {
   }
 
   #[napi]
+  /// Start to crawl website with async concurrency smart. Use HTTP first and JavaScript Rendering as needed.
+  pub async unsafe fn crawl_smart(
+    &mut self,
+    on_page_event: Option<napi::threadsafe_function::ThreadsafeFunction<NPage>>,
+    background: Option<bool>,
+  ) {
+    // only run in background if on_page_event is handled for streaming.
+    let background = background.is_some() && background.unwrap_or_default();
+    let raw_content = self.raw_content;
+
+    if background {
+      self.running_in_background = background;
+    }
+
+    match on_page_event {
+      Some(callback) => {
+        if background {
+          let mut website = self.inner.clone();
+          let mut rx2 = website
+            .subscribe(*BUFFER / 2)
+            .expect("sync feature should be enabled");
+
+          let handle = spider::tokio::spawn(async move {
+            while let Ok(res) = rx2.recv().await {
+              callback.call(
+                Ok(NPage::new(&res, raw_content)),
+                napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
+              );
+            }
+          });
+
+          let crawl_id = match self.crawl_handles.last() {
+            Some(handle) => handle.0 + 1,
+            _ => 0,
+          };
+
+          let crawl_handle = spider::tokio::spawn(async move {
+            website.crawl_smart().await;
+          });
+
+          let id = match self.subscription_handles.last() {
+            Some(handle) => handle.0 + 1,
+            _ => 0,
+          };
+
+          self.crawl_handles.insert(crawl_id, crawl_handle);
+          self.subscription_handles.insert(id, handle);
+        } else {
+          let mut rx2 = self
+            .inner
+            .subscribe(*BUFFER / 2)
+            .expect("sync feature should be enabled");
+
+          let handle = spider::tokio::spawn(async move {
+            while let Ok(res) = rx2.recv().await {
+              callback.call(
+                Ok(NPage::new(&res, raw_content)),
+                napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking,
+              );
+            }
+          });
+
+          self.inner.crawl_smart().await;
+          let _ = handle.await;
+        }
+      }
+      _ => {
+        if background {
+          let mut website = self.inner.clone();
+
+          let crawl_id = match self.crawl_handles.last() {
+            Some(handle) => handle.0 + 1,
+            _ => 0,
+          };
+
+          let crawl_handle = spider::tokio::spawn(async move {
+            website.crawl_smart().await;
+          });
+
+          self.crawl_handles.insert(crawl_id, crawl_handle);
+        } else {
+          self.inner.crawl_smart().await;
+        }
+      }
+    }
+  }
+
+  #[napi]
   /// scrape a website
   pub async unsafe fn scrape(
     &mut self,
@@ -461,12 +547,7 @@ impl Website {
             self.inner.scrape_raw().await;
           }
 
-          let id = match self.subscription_handles.last() {
-            Some(handle) => handle.0 + 1,
-            _ => 0,
-          };
-
-          self.subscription_handles.insert(id, handle);
+          let _ = handle.await;
         }
       }
       _ => {
@@ -639,6 +720,15 @@ impl Website {
       .inner
       .configuration
       .with_respect_robots_txt(respect_robots_txt);
+    self
+  }
+
+  /// Use network interception for the request to only allow content that matches the host. If the content is from a 3rd party it needs to be part of our include list.
+  #[napi]
+  pub fn with_chrome_intercept(&mut self, chrome_intercept: bool, block_images: bool) -> &Self {
+    self
+      .inner
+      .with_chrome_intercept(chrome_intercept, block_images);
     self
   }
 
