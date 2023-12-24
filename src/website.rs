@@ -5,7 +5,7 @@ use napi::{
   bindgen_prelude::{Buffer, Object},
   tokio::task::JoinHandle,
 };
-use spider::utils::shutdown;
+use spider::{configuration::RedirectPolicy, utils::shutdown};
 use std::time::Duration;
 
 /// build an object to jsonl - can be switched between json with changes
@@ -779,6 +779,16 @@ impl Website {
     self
   }
 
+  /// Use stealth mode for the request. This does nothing without chrome.
+  #[napi]
+  pub fn with_stealth(&mut self, stealth_mode: Option<bool>) -> &Self {
+    self.inner.with_stealth(match stealth_mode {
+      Some(ext) => ext,
+      _ => false,
+    });
+    self
+  }
+
   #[napi]
   /// Set the crawling budget
   pub fn with_budget(&mut self, budget: Option<std::collections::HashMap<String, u32>>) -> &Self {
@@ -802,6 +812,24 @@ impl Website {
       _ => (),
     }
 
+    self
+  }
+
+  /// Set the max redirects allowed for request.
+  #[napi]
+  pub fn with_redirect_limit(&mut self, redirect_limit: u32) -> &Self {
+    self.inner.with_redirect_limit(redirect_limit as usize);
+    self
+  }
+
+  /// Set the redirect policy to use, either Strict or Loose by default.
+  #[napi]
+  pub fn with_redirect_policy(&mut self, strict: bool) -> &Self {
+    self.inner.with_redirect_policy(if strict {
+      RedirectPolicy::Strict
+    } else {
+      RedirectPolicy::Loose
+    });
     self
   }
 
