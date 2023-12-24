@@ -160,6 +160,26 @@ const website = new Website("https://choosealicense.com")
   .build();
 ```
 
+### Redirect Limit
+
+Set the redirect limit for request.
+
+```ts
+const website = new Website("https://choosealicense.com")
+  .withRedirectLimit(2)
+  .build();
+```
+
+### Redirect Policy
+
+Set the redirect policy for request, either strict or loose(default). Strict only allows redirects that match the domain.
+
+```ts
+const website = new Website("https://choosealicense.com")
+  .withRedirectPolicy(true)
+  .build();
+```
+
 ## Chaining
 
 You can chain all of the configs together for simple configuration.

@@ -804,7 +804,7 @@ impl Website {
           .split(",")
           .collect::<Vec<_>>()
           .chunks(2)
-          .map(|x| (x[0], x[1].parse::<u32>().unwrap_or_default()))
+          .map(|x: &[&str]| (x[0], x[1].parse::<u32>().unwrap_or_default()))
           .collect::<HashMap<&str, u32>>();
 
         self.inner.with_budget(Some(v));
