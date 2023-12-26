@@ -876,7 +876,7 @@ impl Website {
 
   /// Set the sitemap url.
   #[napi]
-  pub fn with_sitemap(&mut self, sitemap: bool) -> &Self {
+  pub fn with_sitemap(&mut self, sitemap: Option<&str>) -> &Self {
     self.inner.configuration.with_sitemap(sitemap);
     self
   }
