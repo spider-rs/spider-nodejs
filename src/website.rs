@@ -874,6 +874,13 @@ impl Website {
     self
   }
 
+  /// Set the sitemap url.
+  #[napi]
+  pub fn with_sitemap(&mut self, sitemap: bool) -> &Self {
+    self.inner.configuration.with_sitemap(sitemap);
+    self
+  }
+
   /// Use proxies for request.
   #[napi]
   pub fn with_proxies(&mut self, proxies: Option<Vec<String>>) -> &Self {
