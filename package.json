@@ -51,5 +51,8 @@
     "universal": "napi universal",
     "version": "napi version"
   },
-  "packageManager": "yarn@4.0.2"
+  "packageManager": "yarn@4.0.2",
+  "dependencies": {
+    "@spider-rs/spider-rs": "^0.0.43"
+  }
 }

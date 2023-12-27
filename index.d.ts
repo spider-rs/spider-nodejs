@@ -88,7 +88,7 @@ export class Website {
   withUserAgent(userAgent?: string | undefined | null): this
   /** Respect robots.txt file. */
   withRespectRobotsTxt(respectRobotsTxt: boolean): this
-  /** Use request intercept for the request to only allow content that matches the host. If the content is from a 3rd party it needs to be part of our include list. This method does nothing if the [chrome_intercept] is not enabled. */
+  /** Use network interception for the request to only allow content that matches the host. If the content is from a 3rd party it needs to be part of our include list. */
   withChromeIntercept(chromeIntercept: boolean, blockImages: boolean): this
   /** Include subdomains detection. */
   withSubdomains(subdomains: boolean): this
@@ -100,14 +100,22 @@ export class Website {
   withRequestTimeout(requestTimeout?: number | undefined | null): this
   /** add external domains */
   withExternalDomains(externalDomains?: Array<string> | undefined | null): this
+  /** Use stealth mode for the request. This does nothing without chrome. */
+  withStealth(stealthMode?: boolean | undefined | null): this
   /** Set the crawling budget */
   withBudget(budget?: Record<string, number> | undefined | null): this
+  /** Set the max redirects allowed for request. */
+  withRedirectLimit(redirectLimit: number): this
+  /** Set the redirect policy to use, either Strict or Loose by default. */
+  withRedirectPolicy(strict: boolean): this
   /** Regex black list urls from the crawl */
   withBlacklistUrl(blacklistUrl?: Array<string> | undefined | null): this
   /** Setup cron jobs to run */
   withCron(cronStr: string, cronType?: string | undefined | null): this
   /** Delay between request as ms. */
   withDelay(delay: number): this
+  /** Set the sitemap url. */
+  withSitemap(sitemap?: string | undefined | null): this
   /** Use proxies for request. */
   withProxies(proxies?: Array<string> | undefined | null): this
   /** build the inner website - not required for all builder_steps */
