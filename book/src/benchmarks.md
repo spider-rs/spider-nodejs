@@ -3,9 +3,10 @@
 View the latest runs on [github](https://github.com/spider-rs/spider-nodejs/actions/workflows/bench.yml).
 
 ```sh
+-----------------------
 Linux
-8-core CPU
-32 GB of RAM memory
+2-core CPU
+7 GB of RAM memory
 -----------------------
 ```
 

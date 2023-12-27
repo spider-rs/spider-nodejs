@@ -62,7 +62,7 @@ const onPageEvent = (err, value) => {
 
 const subscriptionID = website.subscribe(onPageEvent);
 
-await website.crawl(onPageEvent);
+await website.crawl();
 
 website.unsubscribe(subscriptionID);
 // this will run instantly as the crawl is in the background
