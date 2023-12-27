@@ -170,6 +170,26 @@ const website = new Website("https://choosealicense.com")
   .build();
 ```
 
+### Depth Limit
+
+Set the depth limit for the amount of forward pages.
+
+```ts
+const website = new Website("https://choosealicense.com")
+  .withDepth(3)
+  .build();
+```
+
+### Cache
+
+Enable HTTP caching, this useful when using the spider on a server.
+
+```ts
+const website = new Website("https://choosealicense.com")
+  .withCaching(true)
+  .build();
+```
+
 ### Redirect Policy
 
 Set the redirect policy for request, either strict or loose(default). Strict only allows redirects that match the domain.

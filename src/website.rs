@@ -874,6 +874,20 @@ impl Website {
     self
   }
 
+  /// Set a crawl depth limit. If the value is 0 there is no limit.
+  #[napi]
+  pub fn with_depth(&mut self, depth: u32) -> &Self {
+    self.inner.configuration.with_depth(depth as usize);
+    self
+  }
+
+  /// Cache the page following HTTP rules.
+  #[napi]
+  pub fn with_caching(&mut self, cache: bool) -> &Self {
+    self.inner.configuration.with_caching(cache);
+    self
+  }
+
   /// Set the sitemap url.
   #[napi]
   pub fn with_sitemap(&mut self, sitemap: Option<&str>) -> &Self {
