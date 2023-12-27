@@ -84,12 +84,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@spider-rs/spider-rs@npm:^0.0.43, @spider-rs/spider-rs@workspace:.":
+"@spider-rs/spider-rs@workspace:.":
   version: 0.0.0-use.local
   resolution: "@spider-rs/spider-rs@workspace:."
   dependencies:
     "@napi-rs/cli": "npm:^2.16.5"
-    "@spider-rs/spider-rs": "npm:^0.0.43"
     "@types/node": "npm:^20.10.0"
     ava: "npm:^5.1.1"
     typescript: "npm:^5.3.2"

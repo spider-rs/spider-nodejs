@@ -1,6 +1,6 @@
 {
   "name": "@spider-rs/spider-rs",
-  "version": "0.0.43",
+  "version": "0.0.44",
   "main": "index.js",
   "types": "index.d.ts",
   "napi": {
@@ -51,8 +51,5 @@
     "universal": "napi universal",
     "version": "napi version"
   },
-  "packageManager": "yarn@4.0.2",
-  "dependencies": {
-    "@spider-rs/spider-rs": "^0.0.43"
-  }
+  "packageManager": "yarn@4.0.2"
 }
