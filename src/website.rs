@@ -1,76 +1,10 @@
+use crate::conversions::object_to_u8;
 use crate::{NPage, BUFFER};
 use compact_str::CompactString;
 use indexmap::IndexMap;
-use napi::{
-  bindgen_prelude::{Buffer, Object},
-  tokio::task::JoinHandle,
-};
+use napi::{bindgen_prelude::Object, tokio::task::JoinHandle};
 use spider::{configuration::RedirectPolicy, utils::shutdown};
 use std::time::Duration;
-
-/// build an object to jsonl - can be switched between json with changes
-fn object_to_u8(
-  obj: Object,
-  collected_size: usize,
-  inner_collected_size: usize,
-) -> Result<Vec<u8>, napi::Error> {
-  let o = Object::keys(&obj)?;
-  let o_size = o.len();
-  let mut ss = vec![];
-
-  ss.push(b'{');
-
-  for (i, key) in o.iter().enumerate() {
-    ss.push(b'"');
-    ss.extend(key.as_bytes());
-    ss.push(b'"');
-    ss.push(b':');
-
-    // todo: method to go through all napi values to get types
-    match obj.get::<&String, String>(&key) {
-      Ok(s) => {
-        ss.push(b'"');
-
-        ss.extend(s.unwrap_or_default().as_bytes());
-        ss.push(b'"');
-      }
-      _ => match obj.get::<&String, u32>(&key) {
-        Ok(s) => {
-          ss.push(b'"');
-          ss.extend(s.unwrap_or_default().to_string().as_bytes());
-          ss.push(b'"');
-        }
-        _ => match obj.get::<&String, i32>(&key) {
-          Ok(s) => {
-            ss.push(b'"');
-            ss.extend(s.unwrap_or_default().to_string().as_bytes());
-            ss.push(b'"');
-          }
-          _ => match obj.get::<&String, Buffer>(&key) {
-            Ok(s) => {
-              let d = serde_json::to_string(
-                &String::from_utf8(s.unwrap_or_default().as_ref().into()).unwrap_or_default(),
-              )?;
-
-              ss.extend(d.as_bytes());
-            }
-            _ => (),
-          },
-        },
-      },
-    }
-
-    if i != o_size - 1 {
-      ss.push(b',');
-    }
-  }
-
-  ss.push(b'}');
-  if collected_size > 0 && collected_size + 1 < inner_collected_size {
-    ss.extend(b"\n");
-  }
-  Ok(ss)
-}
 
 #[napi]
 /// a website holding the inner spider::website::Website from Rust fit for nodejs.
@@ -118,7 +52,7 @@ impl Website {
   }
 
   #[napi]
-  /// store data to heap memory. Use `website.export_jsonl_data` to store to disk.
+  /// Store data to heap memory. The data must be an object. Use `website.export_jsonl_data` to store to disk.
   pub fn push_data(&mut self, obj: Object) -> napi::Result<()> {
     self.collected_data.extend(object_to_u8(
       obj,

@@ -52,7 +52,7 @@ export class Website {
   constructor(url: string, rawContent?: boolean | undefined | null)
   /** Get the crawl status. */
   get status(): string
-  /** store data to heap memory. Use `website.export_jsonl_data` to store to disk. */
+  /** Store data to heap memory. The data must be an object. Use `website.export_jsonl_data` to store to disk. */
   pushData(obj: object): void
   /** read the data from the heap memory. */
   readData(): Array<number>
@@ -114,6 +114,10 @@ export class Website {
   withCron(cronStr: string, cronType?: string | undefined | null): this
   /** Delay between request as ms. */
   withDelay(delay: number): this
+  /** Set a crawl depth limit. If the value is 0 there is no limit. */
+  withDepth(depth: number): this
+  /** Cache the page following HTTP rules. */
+  withCaching(cache: boolean): this
   /** Set the sitemap url. */
   withSitemap(sitemap?: string | undefined | null): this
   /** Use proxies for request. */

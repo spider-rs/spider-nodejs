@@ -19,3 +19,5 @@ pub use nwebsite::NWebsite;
 pub use page::Page;
 pub use shortcut::crawl;
 pub use website::Website;
+/// convert types to different types
+mod conversions;
