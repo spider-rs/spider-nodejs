@@ -1,9 +1,5 @@
 use compact_str::CompactString;
 use napi;
-use spider::{
-  lazy_static::lazy_static, reqwest::Client, reqwest_middleware::ClientWithMiddleware,
-  ClientBuilder,
-};
 
 /// a simple page object
 #[napi]
@@ -39,6 +35,10 @@ impl Page {
   #[napi]
   /// get the page content
   pub async unsafe fn fetch(&mut self) -> &Self {
+    use spider::{
+      lazy_static::lazy_static, reqwest::Client, reqwest_middleware::ClientWithMiddleware,
+      ClientBuilder,
+    };
     lazy_static! {
       /// top level single page client to re-use.
       pub static ref PAGE_CLIENT: ClientWithMiddleware = {
