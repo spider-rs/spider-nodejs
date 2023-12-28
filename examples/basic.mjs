@@ -1,14 +1,20 @@
 
 // npm i @spider-rs/spider-rs
 // node basic.mjs
-import { Website } from "@spider-rs/spider-rs";
+import { Website } from "../index.js";
 
-const website = new Website("https://choosealicense.com");
+const url = process.argv[2] || "https://choosealicense.com";
+
+const website = new Website(url);
 
 const onPageEvent = (_err, value) => {
-  console.log(value);
+  console.log(`Found: ${value.url}`);
 };
+
+const startTime = performance.now();
 
 await website.crawl(onPageEvent);
 
-console.log(website.getLinks());
+const duration = performance.now() - startTime;
+
+console.log("Finished", url, "pages found " + website.getLinks().length, "elasped duration " + duration + "ms")

@@ -75,7 +75,10 @@ Use headless Chrome rendering for crawls.
 ```ts
 import { Website } from "@spider-rs/spider-rs";
 
-const website = new Website("https://rsseau.fr").withChromeIntercept(true, true);
+const website = new Website("https://rsseau.fr").withChromeIntercept(
+  true,
+  true,
+);
 
 const onPageEvent = (_err, page) => {
   console.log(page);
@@ -127,6 +130,18 @@ console.log(pages);
 ## Benchmarks
 
 View the [benchmarks](./bench/README.md) to see a breakdown between libs and platforms.
+
+Test url: `https://espn.com`
+
+| `libraries`                  | `pages`   | `speed` |
+| :--------------------------- | :-------- | :------ |
+| **`spider(rust): crawl`**    | `150,387` | `1m`    |
+| **`spider(nodejs): crawl`**  | `150,387` | `153s`  |
+| **`spider(python): crawl`**  | `150,387` | `186s`  |
+| **`scrapy(python): crawl`**  | `49,598`  | `1h`    |
+| **`crawlee(nodejs): crawl`** | `18,779`  | `30m`   |
+
+The benches above were ran on a mac m1, spider on linux arm machines performs about 2-10x faster.
 
 ## Development
 

@@ -175,9 +175,7 @@ const website = new Website("https://choosealicense.com")
 Set the depth limit for the amount of forward pages.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withDepth(3)
-  .build();
+const website = new Website("https://choosealicense.com").withDepth(3).build();
 ```
 
 ### Cache
