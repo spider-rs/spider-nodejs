@@ -364,9 +364,7 @@ const website = new Website(&quot;https://choosealicense.com&quot;);
 </code></pre>
 <h3 id="depth-limit"><a class="header" href="#depth-limit">Depth Limit</a></h3>
 <p>Set the depth limit for the amount of forward pages.</p>
-<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;)
-  .withDepth(3)
-  .build();
+<pre><code class="language-ts">const website = new Website(&quot;https://choosealicense.com&quot;).withDepth(3).build();
 </code></pre>
 <h3 id="cache"><a class="header" href="#cache">Cache</a></h3>
 <p>Enable HTTP caching, this useful when using the spider on a server.</p>
@@ -610,9 +608,9 @@ const website = new Website(&quot;https://choosealicense.com&quot;, rawContent);
 <p>Test url: <code>https://espn.com</code>
 Mac M1 64gb 10-core CPU</p>
 <div class="table-wrapper"><table><thead><tr><th style="text-align: left"><code>libraries</code></th><th style="text-align: left"><code>pages</code></th><th style="text-align: left"><code>speed</code></th></tr></thead><tbody>
-<tr><td style="text-align: left"><strong><code>spider-rs(rust): crawl</code></strong></td><td style="text-align: left"><code>150,387</code></td><td style="text-align: left"><code>1m</code></td></tr>
-<tr><td style="text-align: left"><strong><code>spider-rs(nodejs): crawl</code></strong></td><td style="text-align: left"><code>150,387</code></td><td style="text-align: left"><code>153s</code></td></tr>
-<tr><td style="text-align: left"><strong><code>spider-rs(python): crawl</code></strong></td><td style="text-align: left"><code>150,387</code></td><td style="text-align: left"><code>186s</code></td></tr>
+<tr><td style="text-align: left"><strong><code>spider(rust): crawl</code></strong></td><td style="text-align: left"><code>150,387</code></td><td style="text-align: left"><code>1m</code></td></tr>
+<tr><td style="text-align: left"><strong><code>spider(nodejs): crawl</code></strong></td><td style="text-align: left"><code>150,387</code></td><td style="text-align: left"><code>153s</code></td></tr>
+<tr><td style="text-align: left"><strong><code>spider(python): crawl</code></strong></td><td style="text-align: left"><code>150,387</code></td><td style="text-align: left"><code>186s</code></td></tr>
 <tr><td style="text-align: left"><strong><code>scrapy(python): crawl</code></strong></td><td style="text-align: left"><code>49,598</code></td><td style="text-align: left"><code>1h</code></td></tr>
 </tbody></table>
 </div>
