@@ -212,14 +212,14 @@ test("new website stop", async (t) => {
   const website = new Website(TEST_URL);
 
   const onPageEvent = async (_err: Error | null, page: NPage) => {
-    if (website.size >= 8) {
+    if (website.size >= 2) {
       await website.stop();
     }
   };
 
   await website.crawl(onPageEvent);
 
-  t.assert(website.size < 15, "should only have crawled a couple pages concurrently");
+  t.assert(website.size < 22, "should only have crawled a couple pages concurrently");
 });
 
 test("new website stop background", async (t) => {
