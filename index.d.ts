@@ -53,9 +53,9 @@ export class Website {
   /** Get the crawl status. */
   get status(): string
   /** Store data to heap memory. The data must be an object. Use `website.export_jsonl_data` to store to disk. */
-  pushData(obj: object): void
+  pushData(obj: unknown): void
   /** read the data from the heap memory. */
-  readData(): Array<number>
+  readData(): any
   /** store data to memory for disk storing. This will create the path if not exist and defaults to ./storage. */
   exportJsonlData(exportPath?: string | undefined | null): Promise<void>
   /** subscribe and add an event listener. */

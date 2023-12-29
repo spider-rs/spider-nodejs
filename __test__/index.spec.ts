@@ -196,9 +196,7 @@ test("new website data store and export", async (t) => {
   const website = new Website(TEST_URL, true);
   const outputFile = "./storage/test.jsonl";
 
-  const onPageEvent = (_err: Error | null, page: NPage) => {
-    website.pushData(page);
-  };
+  const onPageEvent = (_err: Error | null, page: NPage) => website.pushData(page);
 
   await website.crawl(onPageEvent);
   await website.exportJsonlData(outputFile);

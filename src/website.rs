@@ -1,8 +1,9 @@
-use crate::conversions::object_to_u8;
+use crate::conversions::{object_to_u8, ObjectConvert};
 use crate::{NPage, BUFFER};
 use compact_str::CompactString;
 use indexmap::IndexMap;
 use napi::{bindgen_prelude::Object, tokio::task::JoinHandle};
+use napi::{Env, JsUnknown};
 use spider::{configuration::RedirectPolicy, utils::shutdown};
 use std::time::Duration;
 
@@ -18,7 +19,7 @@ pub struct Website {
   /// do not convert content to UT8.
   raw_content: bool,
   /// the data collected.
-  collected_data: Box<Vec<u8>>,
+  collected_data: Box<Vec<Vec<u8>>>,
   /// is the crawl running in the background.
   running_in_background: bool, // /// the file handle for storing data
                                // file_handle: Option<spider::tokio::fs::File>,
@@ -52,21 +53,42 @@ impl Website {
   }
 
   #[napi]
-  /// Store data to heap memory. The data must be an object. Use `website.export_jsonl_data` to store to disk.
-  pub fn push_data(&mut self, obj: Object) -> napi::Result<()> {
-    self.collected_data.extend(object_to_u8(
-      obj,
-      self.collected_data.len(),
-      self.inner.get_links().len(),
-    )?);
+  /// Store data to heap memory. The data must be an object. Use `website.export_jsonl_data` to store to disk. When using this method test occordingly since only certain primitives are supported.
+  pub fn push_data(&mut self, env: Env, obj: JsUnknown) -> napi::Result<()> {
+    match env.from_js_value::<serde_json::Value, &JsUnknown>(&obj) {
+      Ok(deserialized) => {
+        self
+          .collected_data
+          .push(object_to_u8(ObjectConvert::Val(deserialized))?);
+      }
+      _ => match obj.coerce_to_object() {
+        Ok(obj) => {
+          self
+            .collected_data
+            .push(object_to_u8(ObjectConvert::Obj(obj))?);
+        }
+        _ => (),
+      },
+    }
 
     Ok(())
   }
 
   #[napi]
+  /// Clear the collected data from heap memory. This only handles the data from `website.pushData`.
+  pub fn clear_data(&mut self) -> napi::Result<()> {
+    self.collected_data.clear();
+    Ok(())
+  }
+
+  #[napi]
   /// read the data from the heap memory.
-  pub fn read_data(&mut self) -> &Vec<u8> {
-    &self.collected_data
+  pub fn read_data(&mut self) -> serde_json::Value {
+    self
+      .collected_data
+      .iter()
+      .map(|d| serde_json::from_slice::<serde_json::Value>(d).unwrap_or_default())
+      .collect()
   }
 
   #[napi]
@@ -108,8 +130,15 @@ impl Website {
       }
     };
     let mut file = spider::tokio::fs::File::create(file).await?;
-    // transform data step needed to auto convert type ..
-    file.write_all(&self.collected_data).await?;
+
+    for (index, data) in self.collected_data.iter().enumerate() {
+      if index > 0 {
+        file.write_all(b"\n").await?;
+      }
+      // transform data step needed to auto convert type ..
+      file.write_all(&data).await?;
+    }
+
     Ok(())
   }
 
