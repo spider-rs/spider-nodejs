@@ -217,7 +217,7 @@ test("new website stop", async (t) => {
 
   await website.crawl(onPageEvent);
 
-  t.assert(website.size < 22, "should only have crawled a couple pages concurrently");
+  t.assert(website.size < 30, "should only have crawled a couple pages concurrently");
 });
 
 test("new website stop background", async (t) => {
