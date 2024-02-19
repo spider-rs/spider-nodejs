@@ -185,28 +185,28 @@
 <p>Get a new page with content.</p>
 <p>The first param is the url, followed by if subdomains should be included, and last to include TLD's in links.</p>
 <p>Calling <code>page.fetch</code> is needed to get the content.</p>
-<pre><code class="language-ts">import { Page } from &quot;@spider-rs/spider-rs&quot;;
+<pre><code class="language-ts">import { Page } from "@spider-rs/spider-rs";
 
-const page = new Page(&quot;https://choosealicense.com&quot;, false, false);
+const page = new Page("https://choosealicense.com", false, false);
 await page.fetch();
 </code></pre>
 <h2 id="page-links"><a class="header" href="#page-links">Page Links</a></h2>
 <p>get all the links related to a page.</p>
-<pre><code class="language-ts">const page = new Page(&quot;https://choosealicense.com&quot;, false, false);
+<pre><code class="language-ts">const page = new Page("https://choosealicense.com", false, false);
 await page.fetch();
 const links = await page.getLinks();
 console.log(links);
 </code></pre>
 <h2 id="page-html"><a class="header" href="#page-html">Page Html</a></h2>
 <p>Get the markup for the page or HTML.</p>
-<pre><code class="language-ts">const page = new Page(&quot;https://choosealicense.com&quot;, false, false);
+<pre><code class="language-ts">const page = new Page("https://choosealicense.com", false, false);
 await page.fetch();
 const html = page.getHtml();
 console.log(html);
 </code></pre>
 <h2 id="page-bytes"><a class="header" href="#page-bytes">Page Bytes</a></h2>
 <p>Get the raw bytes of a page to store the files in a database.</p>
-<pre><code class="language-ts">const page = new Page(&quot;https://choosealicense.com&quot;, false, false);
+<pre><code class="language-ts">const page = new Page("https://choosealicense.com", false, false);
 await page.fetch();
 const bytes = page.getBytes();
 console.log(bytes);

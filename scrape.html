@@ -181,23 +181,23 @@
                     <main>
                         <h1 id="scrape"><a class="header" href="#scrape">Scrape</a></h1>
 <p>Scape a website and collect the resource data.</p>
-<pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
+<pre><code class="language-ts">import { Website } from "@spider-rs/spider-rs";
 
 // pass in the website url
-const website = new Website(&quot;https://rsseau.fr&quot;);
+const website = new Website("https://rsseau.fr");
 
 await website.scrape();
 
-// [ { url: &quot;https://rsseau.fr/blog&quot;, html: &quot;&lt;html&gt;...&lt;/html&gt;&quot;}, ...]
+// [ { url: "https://rsseau.fr/blog", html: "&lt;html&gt;...&lt;/html&gt;"}, ...]
 console.log(website.getPages());
 </code></pre>
 <h2 id="headless-chrome"><a class="header" href="#headless-chrome">Headless Chrome</a></h2>
 <p>Headless Chrome rendering can be done by setting the third param in <code>crawl</code> or <code>scrape</code> to <code>true</code>.
 It will attempt to connect to chrome running remotely if the <code>CHROME_URL</code> env variable is set with chrome launching as a fallback. Using a remote connection with <code>CHROME_URL</code> will
 drastically speed up runs.</p>
-<pre><code class="language-ts">import { Website } from &quot;@spider-rs/spider-rs&quot;;
+<pre><code class="language-ts">import { Website } from "@spider-rs/spider-rs";
 
-const website = new Website(&quot;https://rsseau.fr&quot;);
+const website = new Website("https://rsseau.fr");
 
 const onPageEvent = (err, value) =&gt; {
   console.log(value);
