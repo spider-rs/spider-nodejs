@@ -5,7 +5,7 @@ import { Website } from "../index.js";
 
 const url = process.argv[2] || "https://choosealicense.com";
 
-const website = new Website(url);
+const website = new Website(url).withBudget({ '*': 300, 'licenses': 0 });
 
 const onPageEvent = (_err, value) => {
   console.log(`Found: ${value.url}`);

@@ -52,26 +52,28 @@ export class Website {
   constructor(url: string, rawContent?: boolean | undefined | null)
   /** Get the crawl status. */
   get status(): string
-  /** Store data to heap memory. The data must be an object. Use `website.export_jsonl_data` to store to disk. */
+  /** Store data to heap memory. The data must be an object. Use `website.export_jsonl_data` to store to disk. When using this method test occordingly since only certain primitives are supported. */
   pushData(obj: unknown): void
+  /** Clear the collected data from heap memory. This only handles the data from `website.pushData`. */
+  clearData(): void
   /** read the data from the heap memory. */
   readData(): any
   /** store data to memory for disk storing. This will create the path if not exist and defaults to ./storage. */
   exportJsonlData(exportPath?: string | undefined | null): Promise<void>
   /** subscribe and add an event listener. */
-  subscribe(onPageEvent: (err: Error | null, value: NPage) => any): number
+  subscribe(onPageEvent: (err: Error | null, arg: NPage) => any): number
   /** remove a subscription listener. */
   unsubscribe(id?: number | undefined | null): boolean
   /** stop a crawl */
   stop(id?: number | undefined | null): Promise<boolean>
   /** crawl a website */
-  crawl(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null, background?: boolean | undefined | null, headless?: boolean | undefined | null): Promise<void>
+  crawl(onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null, background?: boolean | undefined | null, headless?: boolean | undefined | null): Promise<void>
   /** Start to crawl website with async concurrency smart. Use HTTP first and JavaScript Rendering as needed. */
-  crawlSmart(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null, background?: boolean | undefined | null): Promise<void>
+  crawlSmart(onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null, background?: boolean | undefined | null): Promise<void>
   /** scrape a website */
-  scrape(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null, background?: boolean | undefined | null, headless?: boolean | undefined | null): Promise<void>
+  scrape(onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null, background?: boolean | undefined | null, headless?: boolean | undefined | null): Promise<void>
   /** run a cron job */
-  runCron(onPageEvent?: (err: Error | null, value: NPage) => any | undefined | null): Promise<Cron>
+  runCron(onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null): Promise<Cron>
   /** get all the links of a website */
   getLinks(): Array<string>
   /** get the size of the website in amount of pages crawled. If you ran the page in the background, this value will not update. */
