@@ -253,6 +253,16 @@ const website = new Website("https://choosealicense.com");
   .withUserAgent("mybot/v1")
   .build();
 </code></pre>
+<h3 id="openai"><a class="header" href="#openai">OpenAI</a></h3>
+<p>Use OpenAI to generate dynamic scripts to use with headless. Make sure to set the <code>OPENAI_API_KEY</code> env variable.</p>
+<pre><code class="language-ts">const website = new Website("https://google.com")
+  .withOpenAI({
+    model: "gpt-3.5-turbo",
+    prompt: "Search for movies",
+    maxTokens: 300
+  })
+  .build();
+</code></pre>
 <h3 id="request-timeout"><a class="header" href="#request-timeout">Request Timeout</a></h3>
 <p>Add a request timeout per page in miliseconds. Example shows 30 seconds.</p>
 <pre><code class="language-ts">const website = new Website("https://choosealicense.com")
