@@ -1,4 +1,3 @@
-
 // npm i @spider-rs/spider-rs
 // node cron.mjs
 import { Website } from "@spider-rs/spider-rs";
@@ -16,5 +15,5 @@ const handle = await website.runCron(onPageEvent);
 console.log("Starting the Runner for 40 seconds");
 
 setTimeout(async () => {
-    await handle.stop()
-}, 40000)
+  await handle.stop();
+}, 40000);

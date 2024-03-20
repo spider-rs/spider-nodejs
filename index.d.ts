@@ -44,7 +44,7 @@ export class Page {
   /** get the html for the page */
   getHtml(): string
   /** get the bytes for the page */
-  getBytes(): any
+  getBytes(): Uint8Array
 }
 /** a website holding the inner spider::website::Website from Rust fit for nodejs. */
 export class Website {
@@ -114,6 +114,10 @@ export class Website {
   withBlacklistUrl(blacklistUrl?: Array<string> | undefined | null): this
   /** Setup cron jobs to run */
   withCron(cronStr: string, cronType?: string | undefined | null): this
+  /** Use OpenAI to generate dynamic javascript snippets. Make sure to set the `OPENAI_API_KEY` env variable. */
+  withOpenai(openaiConfigs?: object | undefined | null): this
+  /** Take screenshots of web pages using chrome. */
+  withScreenshot(screenshotConfigs?: object | undefined | null): this
   /** Delay between request as ms. */
   withDelay(delay: number): this
   /** Set a crawl depth limit. If the value is 0 there is no limit. */

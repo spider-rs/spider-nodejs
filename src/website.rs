@@ -184,7 +184,7 @@ impl Website {
         match handle {
           Some(h) => {
             h.abort();
-            self.subscription_handles.remove_entry(&id);
+            self.subscription_handles.shift_remove_entry(&id);
             true
           }
           _ => false,
@@ -220,7 +220,7 @@ impl Website {
         match handle {
           Some(h) => {
             h.abort();
-            self.crawl_handles.remove_entry(&id);
+            self.crawl_handles.shift_remove_entry(&id);
             true
           }
           _ => false,
@@ -823,50 +823,54 @@ impl Website {
     self
   }
 
-  /// Use OpenAI to generate dynamic javascript snippets.
+  /// Use OpenAI to generate dynamic javascript snippets. Make sure to set the `OPENAI_API_KEY` env variable.
   #[napi]
-  pub fn with_openai(&mut self, openai_configs: Option<Object>) -> &Self {
-    match openai_configs {
-      Some(obj) => {
-        let keys = Object::keys(&obj).unwrap_or_default();
-        let mut model = String::new();
-        let mut prompt = String::new();
-        let mut max_tokens = 1;
-
-        // todo: get the urlmap for explicit routes.
-        for key in keys.into_iter() {
-          if key == "model" {
-            let value = obj
-              .get::<String, String>(key)
-              .unwrap_or_default()
-              .unwrap_or_default();
-
-            model = value;
-          } else if key == "prompt" {
-            let value = obj
-              .get::<String, String>(key)
-              .unwrap_or_default()
-              .unwrap_or_default();
-
-            prompt = value;
-          } else if key == "maxTokens" {
-            let value = obj
-              .get::<String, u16>(key)
-              .unwrap_or_default()
-              .unwrap_or_default();
-
-            max_tokens = value;
-          }
-        }
-
-        let gpt_configs = spider::configuration::GPTConfigs::new(&model, &prompt, max_tokens);
-
-        self.inner.with_openai(Some(gpt_configs));
-      }
-      _ => {
-        self.inner.with_openai(None);
-      }
+  pub fn with_openai(&mut self, env: Env, openai_configs: Option<napi::JsObject>) -> &Self {
+    use serde_json::Value;
+    use spider::configuration::GPTConfigs;
+    let openai_configs: Option<Value> = match openai_configs {
+      Some(obj) => match env.from_js_value(obj) {
+        Ok(e) => Some(e),
+        _ => None,
+      },
+      None => None,
     };
+
+    if let Some(configs) = openai_configs {
+      let configs: GPTConfigs =
+        serde_json::from_value(configs).unwrap_or_else(|_| GPTConfigs::default());
+
+      if !configs.model.is_empty() || configs.prompt_url_map.is_some() {
+        self.inner.with_openai(Some(configs));
+      }
+    }
+
+    self
+  }
+
+  /// Take screenshots of web pages using chrome.
+  #[napi]
+  pub fn with_screenshot(
+    &mut self,
+    env: Env,
+    screenshot_configs: Option<napi::JsObject>,
+  ) -> &Self {
+    use serde_json::Value;
+    use spider::configuration::ScreenShotConfig;
+    let screenshot_configs: Option<Value> = match screenshot_configs {
+      Some(obj) => match env.from_js_value(obj) {
+        Ok(e) => Some(e),
+        _ => None,
+      },
+      None => None,
+    };
+
+    if let Some(configs) = screenshot_configs {
+      let configs: ScreenShotConfig =
+        serde_json::from_value(configs).unwrap_or_else(|_| ScreenShotConfig::default());
+
+      self.inner.with_screenshot(Some(configs));
+    }
 
     self
   }

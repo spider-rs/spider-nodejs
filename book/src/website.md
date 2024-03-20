@@ -132,6 +132,30 @@ const website = new Website("https://google.com")
     maxTokens: 300
   })
   .build();
+
+// make sure to crawl or scrape with the headless param set to true.
+```
+
+
+### Screenshots
+
+Take a screenshot of the pages on crawl when using headless chrome.
+
+```ts
+const website = new Website("https://google.com")
+  .withScreenshot({
+    params: {
+        cdp_params: null,
+        full_page: true,
+        omit_background: false
+    },
+    bytes: false,
+    save: true,
+    output_dir: null
+  })
+  .build();
+
+// make sure to crawl or scrape with the headless param set to true.
 ```
 
 ### Request Timeout
