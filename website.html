@@ -262,6 +262,25 @@ const website = new Website("https://choosealicense.com");
     maxTokens: 300
   })
   .build();
+
+// make sure to crawl or scrape with the headless param set to true.
+</code></pre>
+<h3 id="screenshots"><a class="header" href="#screenshots">Screenshots</a></h3>
+<p>Take a screenshot of the pages on crawl when using headless chrome.</p>
+<pre><code class="language-ts">const website = new Website("https://google.com")
+  .withScreenshot({
+    params: {
+        cdp_params: null,
+        full_page: true,
+        omit_background: false
+    },
+    bytes: false,
+    save: true,
+    output_dir: null
+  })
+  .build();
+
+// make sure to crawl or scrape with the headless param set to true.
 </code></pre>
 <h3 id="request-timeout"><a class="header" href="#request-timeout">Request Timeout</a></h3>
 <p>Add a request timeout per page in miliseconds. Example shows 30 seconds.</p>
