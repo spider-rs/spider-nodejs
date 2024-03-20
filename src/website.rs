@@ -823,6 +823,54 @@ impl Website {
     self
   }
 
+  /// Use OpenAI to generate dynamic javascript snippets.
+  #[napi]
+  pub fn with_openai(&mut self, openai_configs: Option<Object>) -> &Self {
+    match openai_configs {
+      Some(obj) => {
+        let keys = Object::keys(&obj).unwrap_or_default();
+        let mut model = String::new();
+        let mut prompt = String::new();
+        let mut max_tokens = 1;
+
+        // todo: get the urlmap for explicit routes.
+        for key in keys.into_iter() {
+          if key == "model" {
+            let value = obj
+              .get::<String, String>(key)
+              .unwrap_or_default()
+              .unwrap_or_default();
+
+            model = value;
+          } else if key == "prompt" {
+            let value = obj
+              .get::<String, String>(key)
+              .unwrap_or_default()
+              .unwrap_or_default();
+
+            prompt = value;
+          } else if key == "maxTokens" {
+            let value = obj
+              .get::<String, u16>(key)
+              .unwrap_or_default()
+              .unwrap_or_default();
+
+            max_tokens = value;
+          }
+        }
+
+        let gpt_configs = spider::configuration::GPTConfigs::new(&model, &prompt, max_tokens);
+
+        self.inner.with_openai(Some(gpt_configs));
+      }
+      _ => {
+        self.inner.with_openai(None);
+      }
+    };
+
+    self
+  }
+
   /// Delay between request as ms.
   #[napi]
   pub fn with_delay(&mut self, delay: u32) -> &Self {

@@ -120,6 +120,20 @@ const website = new Website("https://choosealicense.com")
   .build();
 ```
 
+### OpenAI
+
+Use OpenAI to generate dynamic scripts to use with headless. Make sure to set the `OPENAI_API_KEY` env variable.
+
+```ts
+const website = new Website("https://google.com")
+  .withOpenAI({
+    model: "gpt-3.5-turbo",
+    prompt: "Search for movies",
+    maxTokens: 300
+  })
+  .build();
+```
+
 ### Request Timeout
 
 Add a request timeout per page in miliseconds. Example shows 30 seconds.
