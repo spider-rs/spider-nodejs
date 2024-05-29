@@ -122,7 +122,7 @@ impl Website {
         "./storage/".to_owned()
           + &self
             .inner
-            .get_domain()
+            .get_url()
             .inner()
             .replace("http://", "")
             .replace("https://", "")
@@ -209,7 +209,7 @@ impl Website {
     // prevent the last background run
     if self.running_in_background {
       // we may want ID's to be used as an option along with urls for complete shutdowns.
-      shutdown(self.inner.get_domain().inner()).await;
+      shutdown(self.inner.get_url().inner()).await;
       self.running_in_background = false;
     }
 
