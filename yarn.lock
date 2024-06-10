@@ -19,12 +19,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@napi-rs/cli@npm:^2.16.5":
-  version: 2.17.0
-  resolution: "@napi-rs/cli@npm:2.17.0"
+"@napi-rs/cli@npm:^2.18.3":
+  version: 2.18.3
+  resolution: "@napi-rs/cli@npm:2.18.3"
   bin:
     napi: scripts/index.js
-  checksum: da50d466da7dadf92d818431b4e903189424280d0060f847f8b45a62a7fc54912207200b844e7e7d3e060528bf8a61c1afc72cfad2fe06fd2d8345b7593b225f
+  checksum: 4d91fe84551a3775cbf93f6340c8b6a87dc653248f90c459fb996ea689ff52ba698a7620ad08713b3b97baf0a675fe2d4cac83a9e842e56cdfbf204c7f5f01d5
   languageName: node
   linkType: hard
 
@@ -88,7 +88,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@spider-rs/spider-rs@workspace:."
   dependencies:
-    "@napi-rs/cli": "npm:^2.16.5"
+    "@napi-rs/cli": "npm:^2.18.3"
     "@types/node": "npm:^20.10.0"
     ava: "npm:^5.1.1"
     typescript: "npm:^5.3.2"
