@@ -10,10 +10,10 @@ authors = ["j-mendez <jeff@a11ywatch.com>"]
 crate-type = ["cdylib"]
 
 [dependencies]
-compact_str = "0.7.1"
+compact_str = "0.7"
 indexmap = "2"
-napi = { version = "3.0.0-alpha.2", default-features = false, features = ["napi4", "async", "tokio_rt", "serde-json"] }
-napi-derive = "3.0.0-alpha.1"
+napi = { version = "2", default-features = false, features = ["napi4", "async", "tokio_rt", "serde-json"] }
+napi-derive = "2"
 num_cpus = "1.16.0"
 serde = "1"
 serde_json = "1"
