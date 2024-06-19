@@ -790,7 +790,7 @@ impl Website {
   }
 
   #[napi]
-  /// Regex black list urls from the crawl
+  /// Regex blacklist urls from the crawl
   pub fn with_blacklist_url(&mut self, blacklist_url: Option<Vec<String>>) -> &Self {
     self
       .inner
@@ -802,6 +802,26 @@ impl Website {
             blacklist.push(CompactString::new(item));
           }
           Some(blacklist)
+        }
+        _ => None,
+      });
+
+    self
+  }
+
+  #[napi]
+  /// Regex whitelist urls from the crawl
+  pub fn with_whitelist_url(&mut self, whitelist_url: Option<Vec<String>>) -> &Self {
+    self
+      .inner
+      .configuration
+      .with_whitelist_url(match whitelist_url {
+        Some(v) => {
+          let mut whitelist: Vec<CompactString> = Vec::new();
+          for item in v {
+            whitelist.push(CompactString::new(item));
+          }
+          Some(whitelist)
         }
         _ => None,
       });
@@ -850,11 +870,7 @@ impl Website {
 
   /// Take screenshots of web pages using chrome.
   #[napi]
-  pub fn with_screenshot(
-    &mut self,
-    env: Env,
-    screenshot_configs: Option<napi::JsObject>,
-  ) -> &Self {
+  pub fn with_screenshot(&mut self, env: Env, screenshot_configs: Option<napi::JsObject>) -> &Self {
     use serde_json::Value;
     use spider::configuration::ScreenShotConfig;
     let screenshot_configs: Option<Value> = match screenshot_configs {

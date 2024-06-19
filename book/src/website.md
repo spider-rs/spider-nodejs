@@ -36,6 +36,16 @@ const website = new Website("https://choosealicense.com")
   .build();
 ```
 
+### Whitelist
+
+Only crawl set paths, url, or pattern with Regex.
+
+```ts
+const website = new Website("https://choosealicense.com")
+  .withWhitelistUrl(["/blog", new RegExp("/books").source, "/resume"])
+  .build();
+```
+
 ### Crons
 
 Setup a cron job that can run at any time in the background using cron-syntax.
