@@ -43,10 +43,15 @@ jobs:
             target: x86_64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
             build: yarn build --target x86_64-unknown-linux-gnu
+            setup: |
+              apt-get update
+              apt-get install -y libssl-dev
           - host: ubuntu-latest
             target: x86_64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
             build: yarn build --target x86_64-unknown-linux-musl
+            setup: |
+              apk add openssl-dev
           - host: macos-latest
             target: aarch64-apple-darwin
             build: yarn build --target aarch64-apple-darwin
@@ -54,19 +59,28 @@ jobs:
             target: aarch64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
             build: yarn build --target aarch64-unknown-linux-gnu
+            setup: |
+              apt-get update
+              apt-get install -y libssl-dev
           - host: ubuntu-latest
             target: armv7-unknown-linux-gnueabihf
             setup: |
               sudo apt-get update
-              sudo apt-get install gcc-arm-linux-gnueabihf -y
+              sudo apt-get install gcc-arm-linux-gnueabihf libssl-dev -y
             build: |
               yarn build --target armv7-unknown-linux-gnueabihf
           - host: ubuntu-latest
             target: aarch64-linux-android
             build: yarn build --target aarch64-linux-android
+            setup: |
+              apt-get update
+              apt-get install -y libssl-dev
           - host: ubuntu-latest
             target: armv7-linux-androideabi
             build: yarn build --target armv7-linux-androideabi
+            setup: |
+              apt-get update
+              apt-get install -y libssl-dev
           - host: ubuntu-latest
             target: aarch64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
@@ -74,6 +88,8 @@ jobs:
               set -e &&
               rustup target add aarch64-unknown-linux-musl &&
               yarn build --target aarch64-unknown-linux-musl
+            setup: |
+              apk add openssl-dev
           - host: windows-latest
             target: aarch64-pc-windows-msvc
             build: yarn build --target aarch64-pc-windows-msvc
@@ -130,7 +146,7 @@ jobs:
         with:
           image: ${{ matrix.settings.docker }}
           options: '--user 0:0 -v ${{ github.workspace }}/.cargo-cache/git/db:/usr/local/cargo/git/db -v ${{ github.workspace }}/.cargo/registry/cache:/usr/local/cargo/registry/cache -v ${{ github.workspace }}/.cargo/registry/index:/usr/local/cargo/registry/index -v ${{ github.workspace }}:/build -w /build'
-          run: ${{ matrix.settings.build }}
+          run: ${{ matrix.settings.setup && matrix.settings.build || matrix.settings.build }}
       - name: Build
         run: ${{ matrix.settings.build }}
         if: ${{ !matrix.settings.docker }}
