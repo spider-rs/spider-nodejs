@@ -1,76 +1,76 @@
 {
-          "name": "@spider-rs/spider-rs",
-          "version": "0.0.84",
-          "main": "index.js",
-          "types": "index.d.ts",
-          "napi": {
-                  "name": "spider-rs",
-                  "triples": {
-                          "additional": [
-                                  "aarch64-apple-darwin",
-                                  "aarch64-linux-android",
-                                  "aarch64-unknown-linux-gnu",
-                                  "aarch64-unknown-linux-musl",
-                                  "aarch64-pc-windows-msvc",
-                                  "armv7-unknown-linux-gnueabihf",
-                                  "x86_64-unknown-linux-musl",
-                                  "x86_64-unknown-freebsd",
-                                  "i686-pc-windows-msvc",
-                                  "armv7-linux-androideabi",
-                                  "universal-apple-darwin"
-                          ]
-                  }
-          },
-          "license": "MIT",
-          "keywords": [
-                  "spider",
-                  "crawler"
-          ],
-          "repository": "https://github.com/spider-rs/spider-nodejs",
-          "devDependencies": {
-                  "@napi-rs/cli": "^2.18.4",
-                  "@types/node": "^20.14.5",
-                  "ava": "^6.1.3",
-                  "typescript": "^5.4.5"
-          },
-          "ava": {
-                  "require": [
-                          "@swc-node/register"
-                  ],
-                  "extensions": [
-                          "ts"
-                  ],
-                  "timeout": "2m",
-                  "workerThreads": false,
-                  "environmentVariables": {
-                          "TS_NODE_PROJECT": "./tsconfig.json"
-                  }
-          },
-          "engines": {
-                  "node": ">= 10"
-          },
-          "scripts": {
-                  "artifacts": "napi artifacts",
-                  "bench": "cd bench && npm run bench",
-                  "bench:oss": "cd bench && npm run bench:oss",
-                  "build": "napi build --platform --release --pipe \"prettier -w\"",
-                  "build:debug": "napi build --platform --pipe \"prettier -w\"",
-                  "format": "run-p format:prettier format:rs format:toml",
-                  "format:prettier": "prettier . -w",
-                  "format:toml": "taplo format",
-                  "format:rs": "cargo fmt",
-                  "lint": "eslint . -c ./.eslintrc.yml",
-                  "prepublishOnly": "napi prepublish -t npm",
-                  "test": "ava",
-                  "version": "napi version"
-          },
-          "prettier": {
-                  "printWidth": 120,
-                  "semi": false,
-                  "trailingComma": "all",
-                  "singleQuote": true,
-                  "arrowParens": "always"
-          },
-          "packageManager": "yarn@4.0.2"
+    "name": "@spider-rs/spider-rs",
+    "version": "0.0.85",
+    "main": "index.js",
+    "types": "index.d.ts",
+    "napi": {
+      "name": "spider-rs",
+      "triples": {
+        "additional": [
+          "aarch64-apple-darwin",
+          "aarch64-linux-android",
+          "aarch64-unknown-linux-gnu",
+          "aarch64-unknown-linux-musl",
+          "aarch64-pc-windows-msvc",
+          "armv7-unknown-linux-gnueabihf",
+          "x86_64-unknown-linux-musl",
+          "x86_64-unknown-freebsd",
+          "i686-pc-windows-msvc",
+          "armv7-linux-androideabi",
+          "universal-apple-darwin"
+        ]
+      }
+    },
+    "license": "MIT",
+    "keywords": [
+      "spider",
+      "crawler"
+    ],
+    "repository": "https://github.com/spider-rs/spider-nodejs",
+    "devDependencies": {
+      "@napi-rs/cli": "^2.18.4",
+      "@types/node": "^20.14.5",
+      "ava": "^6.1.3",
+      "typescript": "^5.4.5"
+    },
+    "ava": {
+      "require": [
+        "@swc-node/register"
+      ],
+      "extensions": [
+        "ts"
+      ],
+      "timeout": "2m",
+      "workerThreads": false,
+      "environmentVariables": {
+        "TS_NODE_PROJECT": "./tsconfig.json"
+      }
+    },
+    "engines": {
+      "node": ">= 10"
+    },
+    "scripts": {
+      "artifacts": "napi artifacts",
+      "bench": "cd bench && npm run bench",
+      "bench:oss": "cd bench && npm run bench:oss",
+      "build": "napi build --platform --release --pipe \"prettier -w\"",
+      "build:debug": "napi build --platform --pipe \"prettier -w\"",
+      "format": "run-p format:prettier format:rs format:toml",
+      "format:prettier": "prettier . -w",
+      "format:toml": "taplo format",
+      "format:rs": "cargo fmt",
+      "lint": "eslint . -c ./.eslintrc.yml",
+      "prepublishOnly": "napi prepublish -t npm",
+      "test": "ava",
+      "version": "napi version"
+    },
+    "prettier": {
+      "printWidth": 120,
+      "semi": false,
+      "trailingComma": "all",
+      "singleQuote": true,
+      "arrowParens": "always"
+    },
+    "packageManager": "yarn@4.0.2"
   }
     

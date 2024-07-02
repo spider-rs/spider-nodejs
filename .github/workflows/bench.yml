@@ -21,6 +21,9 @@ jobs:
       - name: Checkout code from ${{ github.repository }}
         uses: actions/checkout@v4
 
+      - name: Install OpenSSL
+        run: sudo apt-get update && sudo apt-get install -y openssl
+
       - name: Install
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
