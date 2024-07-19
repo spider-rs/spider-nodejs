@@ -686,6 +686,13 @@ impl Website {
     self
   }
 
+  /// Determine whether to collect all the resources found on pages.
+  #[napi]
+  pub fn with_full_resources(&mut self, full_resources: bool) -> &Self {
+    self.inner.configuration.with_full_resources(full_resources);
+    self
+  }
+
   /// Use network interception for the request to only allow content that matches the host. If the content is from a 3rd party it needs to be part of our include list.
   #[napi]
   pub fn with_chrome_intercept(&mut self, chrome_intercept: bool, block_images: bool) -> &Self {
