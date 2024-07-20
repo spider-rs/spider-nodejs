@@ -1,11 +1,11 @@
-import { TEST_URL_MEDIUM, TEST_URL_LARGE, BenchSizes } from "./base";
-import { bench } from "./case/spider";
+import { TEST_URL_MEDIUM, TEST_URL_LARGE, BenchSizes } from './base'
+import { bench } from './case/spider'
 
 // small
-bench();
+bench()
 // small/medium
-bench(TEST_URL_MEDIUM, BenchSizes.MEDIUM);
+bench(TEST_URL_MEDIUM, BenchSizes.MEDIUM)
 // large 150k pages plus
 if (process.env.BENCH_LARGE) {
-    bench(TEST_URL_LARGE, BenchSizes.LARGE)
+  bench(TEST_URL_LARGE, BenchSizes.LARGE)
 }

@@ -3,15 +3,15 @@
 Scape a website and collect the resource data.
 
 ```ts
-import { Website } from "@spider-rs/spider-rs";
+import { Website } from '@spider-rs/spider-rs'
 
 // pass in the website url
-const website = new Website("https://rsseau.fr");
+const website = new Website('https://rsseau.fr')
 
-await website.scrape();
+await website.scrape()
 
 // [ { url: "https://rsseau.fr/blog", html: "<html>...</html>"}, ...]
-console.log(website.getPages());
+console.log(website.getPages())
 ```
 
 ## Headless Chrome
@@ -21,14 +21,14 @@ It will attempt to connect to chrome running remotely if the `CHROME_URL` env va
 drastically speed up runs.
 
 ```ts
-import { Website } from "@spider-rs/spider-rs";
+import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://rsseau.fr");
+const website = new Website('https://rsseau.fr')
 
 const onPageEvent = (err, value) => {
-  console.log(value);
-};
+  console.log(value)
+}
 
 // all params are optional. The third param determines headless rendering.
-await website.scrape(onPageEvent, false, true);
+await website.scrape(onPageEvent, false, true)
 ```

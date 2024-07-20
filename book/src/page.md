@@ -11,10 +11,10 @@ The first param is the url, followed by if subdomains should be included, and la
 Calling `page.fetch` is needed to get the content.
 
 ```ts
-import { Page } from "@spider-rs/spider-rs";
+import { Page } from '@spider-rs/spider-rs'
 
-const page = new Page("https://choosealicense.com", false, false);
-await page.fetch();
+const page = new Page('https://choosealicense.com', false, false)
+await page.fetch()
 ```
 
 ## Page Links
@@ -22,10 +22,10 @@ await page.fetch();
 get all the links related to a page.
 
 ```ts
-const page = new Page("https://choosealicense.com", false, false);
-await page.fetch();
-const links = await page.getLinks();
-console.log(links);
+const page = new Page('https://choosealicense.com', false, false)
+await page.fetch()
+const links = await page.getLinks()
+console.log(links)
 ```
 
 ## Page Html
@@ -33,10 +33,10 @@ console.log(links);
 Get the markup for the page or HTML.
 
 ```ts
-const page = new Page("https://choosealicense.com", false, false);
-await page.fetch();
-const html = page.getHtml();
-console.log(html);
+const page = new Page('https://choosealicense.com', false, false)
+await page.fetch()
+const html = page.getHtml()
+console.log(html)
 ```
 
 ## Page Bytes
@@ -44,8 +44,8 @@ console.log(html);
 Get the raw bytes of a page to store the files in a database.
 
 ```ts
-const page = new Page("https://choosealicense.com", false, false);
-await page.fetch();
-const bytes = page.getBytes();
-console.log(bytes);
+const page = new Page('https://choosealicense.com', false, false)
+await page.fetch()
+const bytes = page.getBytes()
+console.log(bytes)
 ```

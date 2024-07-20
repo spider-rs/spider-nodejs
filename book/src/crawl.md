@@ -3,15 +3,15 @@
 Crawl a website concurrently.
 
 ```ts
-import { Website } from "@spider-rs/spider-rs";
+import { Website } from '@spider-rs/spider-rs'
 
 // pass in the website url
-const website = new Website("https://rsseau.fr");
+const website = new Website('https://rsseau.fr')
 
-await website.crawl();
+await website.crawl()
 
 // [ "https://rsseau.fr/blog", ...]
-console.log(website.getLinks());
+console.log(website.getLinks())
 ```
 
 ## Async Event
@@ -19,15 +19,15 @@ console.log(website.getLinks());
 You can pass in a async function as the first param to the crawl function for realtime updates streamed.
 
 ```ts
-import { Website } from "@spider-rs/spider-rs";
+import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://rsseau.fr");
+const website = new Website('https://rsseau.fr')
 
 const onPageEvent = (err, value) => {
-  console.log(value);
-};
+  console.log(value)
+}
 
-await website.crawl(onPageEvent);
+await website.crawl(onPageEvent)
 ```
 
 ## Background
@@ -35,15 +35,15 @@ await website.crawl(onPageEvent);
 You can run the request in the background and receive events with the second param set to `true`.
 
 ```ts
-import { Website } from "@spider-rs/spider-rs";
+import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://rsseau.fr");
+const website = new Website('https://rsseau.fr')
 
 const onPageEvent = (err, value) => {
-  console.log(value);
-};
+  console.log(value)
+}
 
-await website.crawl(onPageEvent, true);
+await website.crawl(onPageEvent, true)
 // this will run instantly as the crawl is in the background
 ```
 
@@ -52,19 +52,19 @@ await website.crawl(onPageEvent, true);
 You can setup many subscriptions to run events when a crawl happens.
 
 ```ts
-import { Website } from "@spider-rs/spider-rs";
+import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://rsseau.fr");
+const website = new Website('https://rsseau.fr')
 
 const onPageEvent = (err, value) => {
-  console.log(value);
-};
+  console.log(value)
+}
 
-const subscriptionID = website.subscribe(onPageEvent);
+const subscriptionID = website.subscribe(onPageEvent)
 
-await website.crawl();
+await website.crawl()
 
-website.unsubscribe(subscriptionID);
+website.unsubscribe(subscriptionID)
 // this will run instantly as the crawl is in the background
 ```
 
@@ -75,16 +75,16 @@ It will attempt to connect to chrome running remotely if the `CHROME_URL` env va
 drastically speed up runs.
 
 ```ts
-import { Website } from "@spider-rs/spider-rs";
+import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://rsseau.fr");
+const website = new Website('https://rsseau.fr')
 
 const onPageEvent = (err, value) => {
-  console.log(value);
-};
+  console.log(value)
+}
 
 // all params are optional. The third param determines headless rendering.
-await website.crawl(onPageEvent, false, true);
+await website.crawl(onPageEvent, false, true)
 // make sure to call unsubscribe when finished or else the instance is kept alive when events are setup.
-website.unsubscribe();
+website.unsubscribe()
 ```

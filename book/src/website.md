@@ -9,9 +9,9 @@ We use the builder pattern to configure the website for crawling.
 \*note: Replace `https://choosealicense.com` from the examples below with your website target URL.
 
 ```ts
-import { Website } from "@spider-rs/spider-rs";
+import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://choosealicense.com");
+const website = new Website('https://choosealicense.com')
 ```
 
 ### Custom Headers
@@ -19,11 +19,11 @@ const website = new Website("https://choosealicense.com");
 Add custom HTTP headers to use when crawling/scraping.
 
 ```ts
-const website = new Website("https://choosealicense.com")
+const website = new Website('https://choosealicense.com')
   .withHeaders({
-    authorization: "somerandomjwt",
+    authorization: 'somerandomjwt',
   })
-  .build();
+  .build()
 ```
 
 ### Blacklist
@@ -31,9 +31,9 @@ const website = new Website("https://choosealicense.com")
 Prevent crawling a set path, url, or pattern with Regex.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withBlacklistUrl(["/blog", new RegExp("/books").source, "/resume"])
-  .build();
+const website = new Website('https://choosealicense.com')
+  .withBlacklistUrl(['/blog', new RegExp('/books').source, '/resume'])
+  .build()
 ```
 
 ### Whitelist
@@ -41,9 +41,9 @@ const website = new Website("https://choosealicense.com")
 Only crawl set paths, url, or pattern with Regex.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withWhitelistUrl(["/blog", new RegExp("/books").source, "/resume"])
-  .build();
+const website = new Website('https://choosealicense.com')
+  .withWhitelistUrl(['/blog', new RegExp('/books').source, '/resume'])
+  .build()
 ```
 
 ### Crons
@@ -51,9 +51,7 @@ const website = new Website("https://choosealicense.com")
 Setup a cron job that can run at any time in the background using cron-syntax.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withCron("1/5 * * * * *")
-  .build();
+const website = new Website('https://choosealicense.com').withCron('1/5 * * * * *').build()
 ```
 
 View the [cron](./cron-job.md) section for details how to use the cron.
@@ -63,11 +61,11 @@ View the [cron](./cron-job.md) section for details how to use the cron.
 Add a crawl budget that prevents crawling `x` amount of pages.
 
 ```ts
-const website = new Website("https://choosealicense.com")
+const website = new Website('https://choosealicense.com')
   .withBudget({
-    "*": 1,
+    '*': 1,
   })
-  .build();
+  .build()
 ```
 
 ### Subdomains
@@ -75,9 +73,7 @@ const website = new Website("https://choosealicense.com")
 Include subdomains in request.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withSubdomains(true)
-  .build();
+const website = new Website('https://choosealicense.com').withSubdomains(true).build()
 ```
 
 ### TLD
@@ -85,9 +81,7 @@ const website = new Website("https://choosealicense.com")
 Include TLDs in request.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withTlds(true)
-  .build();
+const website = new Website('https://choosealicense.com').withTlds(true).build()
 ```
 
 ### External Domains
@@ -95,9 +89,7 @@ const website = new Website("https://choosealicense.com")
 Add external domains to include with the website.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withExternalDomains(["https://www.myotherdomain.com"])
-  .build();
+const website = new Website('https://choosealicense.com').withExternalDomains(['https://www.myotherdomain.com']).build()
 ```
 
 ### Proxy
@@ -105,9 +97,7 @@ const website = new Website("https://choosealicense.com")
 Use a proxy to crawl a website.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withProxies(["https://www.myproxy.com"])
-  .build();
+const website = new Website('https://choosealicense.com').withProxies(['https://www.myproxy.com']).build()
 ```
 
 ### Delays
@@ -115,9 +105,7 @@ const website = new Website("https://choosealicense.com")
 Add delays between pages. Defaults to none.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withDelays(200)
-  .build();
+const website = new Website('https://choosealicense.com').withDelays(200).build()
 ```
 
 ### User-Agent
@@ -125,9 +113,7 @@ const website = new Website("https://choosealicense.com")
 Use a custom User-Agent.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withUserAgent("mybot/v1")
-  .build();
+const website = new Website('https://choosealicense.com').withUserAgent('mybot/v1').build()
 ```
 
 ### OpenAI
@@ -135,35 +121,34 @@ const website = new Website("https://choosealicense.com")
 Use OpenAI to generate dynamic scripts to use with headless. Make sure to set the `OPENAI_API_KEY` env variable.
 
 ```ts
-const website = new Website("https://google.com")
+const website = new Website('https://google.com')
   .withOpenAI({
-    model: "gpt-3.5-turbo",
-    prompt: "Search for movies",
-    maxTokens: 300
+    model: 'gpt-3.5-turbo',
+    prompt: 'Search for movies',
+    maxTokens: 300,
   })
-  .build();
+  .build()
 
 // make sure to crawl or scrape with the headless param set to true.
 ```
-
 
 ### Screenshots
 
 Take a screenshot of the pages on crawl when using headless chrome.
 
 ```ts
-const website = new Website("https://google.com")
+const website = new Website('https://google.com')
   .withScreenshot({
     params: {
-        cdp_params: null,
-        full_page: true,
-        omit_background: false
+      cdp_params: null,
+      full_page: true,
+      omit_background: false,
     },
     bytes: false,
     save: true,
-    output_dir: null
+    output_dir: null,
   })
-  .build();
+  .build()
 
 // make sure to crawl or scrape with the headless param set to true.
 ```
@@ -173,9 +158,7 @@ const website = new Website("https://google.com")
 Add a request timeout per page in miliseconds. Example shows 30 seconds.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withRequestTimeout(30000)
-  .build();
+const website = new Website('https://choosealicense.com').withRequestTimeout(30000).build()
 ```
 
 ### Respect Robots
@@ -183,9 +166,7 @@ const website = new Website("https://choosealicense.com")
 Respect the robots.txt file.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withRespectRobotsTxt(true)
-  .build();
+const website = new Website('https://choosealicense.com').withRespectRobotsTxt(true).build()
 ```
 
 ### Http2 Prior Knowledge
@@ -193,9 +174,7 @@ const website = new Website("https://choosealicense.com")
 Use http2 to connect if you know the website servers supports this.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withHttp2PriorKnowledge(true)
-  .build();
+const website = new Website('https://choosealicense.com').withHttp2PriorKnowledge(true).build()
 ```
 
 ### Chrome Network Interception
@@ -203,9 +182,7 @@ const website = new Website("https://choosealicense.com")
 Enable Network interception when using chrome to speed up request.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withChromeIntercept(true, true)
-  .build();
+const website = new Website('https://choosealicense.com').withChromeIntercept(true, true).build()
 ```
 
 ### Redirect Limit
@@ -213,9 +190,7 @@ const website = new Website("https://choosealicense.com")
 Set the redirect limit for request.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withRedirectLimit(2)
-  .build();
+const website = new Website('https://choosealicense.com').withRedirectLimit(2).build()
 ```
 
 ### Depth Limit
@@ -223,7 +198,7 @@ const website = new Website("https://choosealicense.com")
 Set the depth limit for the amount of forward pages.
 
 ```ts
-const website = new Website("https://choosealicense.com").withDepth(3).build();
+const website = new Website('https://choosealicense.com').withDepth(3).build()
 ```
 
 ### Cache
@@ -231,9 +206,7 @@ const website = new Website("https://choosealicense.com").withDepth(3).build();
 Enable HTTP caching, this useful when using the spider on a server.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withCaching(true)
-  .build();
+const website = new Website('https://choosealicense.com').withCaching(true).build()
 ```
 
 ### Redirect Policy
@@ -241,9 +214,7 @@ const website = new Website("https://choosealicense.com")
 Set the redirect policy for request, either strict or loose(default). Strict only allows redirects that match the domain.
 
 ```ts
-const website = new Website("https://choosealicense.com")
-  .withRedirectPolicy(true)
-  .build();
+const website = new Website('https://choosealicense.com').withRedirectPolicy(true).build()
 ```
 
 ## Chaining
@@ -251,12 +222,12 @@ const website = new Website("https://choosealicense.com")
 You can chain all of the configs together for simple configuration.
 
 ```ts
-const website = new Website("https://choosealicense.com")
+const website = new Website('https://choosealicense.com')
   .withSubdomains(true)
   .withTlds(true)
-  .withUserAgent("mybot/v1")
+  .withUserAgent('mybot/v1')
   .withRespectRobotsTxt(true)
-  .build();
+  .build()
 ```
 
 ## Raw Content
@@ -265,9 +236,9 @@ Set the second param of the website constructor to `true` to return content with
 This will return `rawContent` and leave `content` when using subscriptions or the Page Object.
 
 ```ts
-const rawContent = true;
-const website = new Website("https://choosealicense.com", rawContent);
-await website.scrape();
+const rawContent = true
+const website = new Website('https://choosealicense.com', rawContent)
+await website.scrape()
 ```
 
 ## Clearing Crawl Data
@@ -275,13 +246,13 @@ await website.scrape();
 Use `website.clear` to remove the links visited and page data or `website.drainLinks` to drain the links visited.
 
 ```ts
-const website = new Website("https://choosealicense.com");
-await website.crawl();
+const website = new Website('https://choosealicense.com')
+await website.crawl()
 // links found ["https://...", "..."]
-console.log(website.getLinks());
-website.clear();
+console.log(website.getLinks())
+website.clear()
 // links will be empty
-console.log(website.getLinks());
+console.log(website.getLinks())
 ```
 
 ## Storing and Exporting Data
@@ -289,19 +260,19 @@ console.log(website.getLinks());
 Collecting data to store can be done with `website.pushData()` and `website.exportJsonlData()`.
 
 ```ts
-const website = new Website("https://choosealicense.com");
+const website = new Website('https://choosealicense.com')
 
 const onPageEvent = (_err, page) => {
-  website.pushData(page);
-};
+  website.pushData(page)
+}
 
-await website.crawl(onPageEvent);
+await website.crawl(onPageEvent)
 
 // uncomment to read the data.
 // console.log(website.readData());
 
 // we only have one export method atm. Optional file path. All data by default goes to storage
-await website.exportJsonlData("./storage/test.jsonl");
+await website.exportJsonlData('./storage/test.jsonl')
 ```
 
 ## Stop crawl
@@ -309,15 +280,15 @@ await website.exportJsonlData("./storage/test.jsonl");
 To stop a crawl you can use `website.stopCrawl(id)`, pass in the crawl id to stop a run or leave empty for all crawls to stop.
 
 ```ts
-const website = new Website("https://choosealicense.com");
+const website = new Website('https://choosealicense.com')
 
 const onPageEvent = (_err, page) => {
-  console.log(page);
+  console.log(page)
   // stop the concurrent crawl when 8 pages are found.
   if (website.size >= 8) {
-    website.stop();
+    website.stop()
   }
-};
+}
 
-await website.crawl(onPageEvent);
+await website.crawl(onPageEvent)
 ```

@@ -1,249 +1,241 @@
-import test from "ava";
-import { crawl, Website, Page, type NPage, Cron, pageTitle } from "../index.js";
+import test from 'ava'
+import { crawl, Website, Page, type NPage, Cron, pageTitle } from '../index.js'
 
-const TEST_URL = "https://choosealicense.com";
+const TEST_URL = 'https://choosealicense.com'
 
-test("shortcut crawl native", async (t) => {
-  const { links, pages } = await crawl(TEST_URL);
+test('shortcut crawl native', async (t) => {
+  const { links, pages } = await crawl(TEST_URL)
 
-  t.assert(links.length > 1, "should be more than one link");
-  t.assert(pages.length > 1, "should be more than one page");
-});
+  t.assert(links.length > 1, 'should be more than one link')
+  t.assert(pages.length > 1, 'should be more than one page')
+})
 
-test("new website native", async (t) => {
-  const website = new Website(TEST_URL);
-  await website.crawl();
+test('new website native', async (t) => {
+  const website = new Website(TEST_URL)
+  await website.crawl()
 
-  t.assert(website.getLinks().length > 1, "should be more than one link");
-});
+  t.assert(website.getLinks().length > 1, 'should be more than one link')
+})
 
-test("new website scrape native", async (t) => {
-  const website = new Website(TEST_URL);
-  await website.scrape();
+test('new website scrape native', async (t) => {
+  const website = new Website(TEST_URL)
+  await website.scrape()
 
-  t.assert(website.getPages().length > 1, "should be more than one page");
-});
+  t.assert(website.getPages().length > 1, 'should be more than one page')
+})
 
-test("new website native with custom config", async (t) => {
+test('new website native with custom config', async (t) => {
   const website = new Website(TEST_URL)
     .withHeaders({
-      authorization: "somerandomjwt",
+      authorization: 'somerandomjwt',
     })
-    .build();
+    .build()
 
-  await website.crawl();
+  await website.crawl()
 
-  t.assert(website.getLinks().length > 1, "should be more than one page");
-});
+  t.assert(website.getLinks().length > 1, 'should be more than one page')
+})
 
-test("new website native budget one page", async (t) => {
+test('new website native budget one page', async (t) => {
   const website = new Website(TEST_URL)
     .withBudget({
-      "*": 1,
+      '*': 1,
     })
-    .build();
+    .build()
 
-  await website.crawl();
+  await website.crawl()
 
-  t.assert(website.getLinks().length === 1, "should be one link");
-});
+  t.assert(website.getLinks().length === 1, 'should be one link')
+})
 
-test("new website native blacklist pages", async (t) => {
-  const website = new Website(TEST_URL)
-    .withBlacklistUrl(["/blog", new RegExp("/books").source, "/resume"])
-    .build();
+test('new website native blacklist pages', async (t) => {
+  const website = new Website(TEST_URL).withBlacklistUrl(['/blog', new RegExp('/books').source, '/resume']).build()
 
-  await website.crawl();
+  await website.crawl()
 
-  const links = website.getLinks();
+  const links = website.getLinks()
 
   // should be valid unless new pages and routes are created.
-  t.assert(
-    links.length > 1 && !links.includes(`${TEST_URL}/blog`),
-    "should be more than one page",
-  );
-});
+  t.assert(links.length > 1 && !links.includes(`${TEST_URL}/blog`), 'should be more than one page')
+})
 
-test("new website native onPageEvent", async (t) => {
-  const website = new Website(TEST_URL);
+test('new website native onPageEvent', async (t) => {
+  const website = new Website(TEST_URL)
 
-  const links: NPage[] = [];
+  const links: NPage[] = []
 
   const onPageEvent = (err: Error | null, value: NPage) => {
-    links.push(value);
-  };
+    links.push(value)
+  }
 
   // running in background can be done with a sleep timer for test.
-  const backgroundStream = false;
+  const backgroundStream = false
 
-  await website.crawl(onPageEvent, backgroundStream);
+  await website.crawl(onPageEvent, backgroundStream)
 
   // should be valid unless new pages and routes are created.
-  t.assert(links.length > 1, "should be more than one page");
-});
+  t.assert(links.length > 1, 'should be more than one page')
+})
 
-test("new website native with title selector", async (t) => {
-  const website = new Website(TEST_URL);
+test('new website native with title selector', async (t) => {
+  const website = new Website(TEST_URL)
 
-  const links: { url: string; title: string }[] = [];
+  const links: { url: string; title: string }[] = []
 
   const onPageEvent = async (_err: Error | null, page: NPage) => {
-    const title = pageTitle(page);
-    links.push({ title, url: page.url });
-  };
+    const title = pageTitle(page)
+    links.push({ title, url: page.url })
+  }
 
-  await website.crawl(onPageEvent);
+  await website.crawl(onPageEvent)
 
   // should be valid unless new pages and routes are created.
-  t.assert(links.length > 1, "should be more than one page");
-});
+  t.assert(links.length > 1, 'should be more than one page')
+})
 
 // experimental - does not work on all platforms most likely due to time differences.
-test.skip("new website native cron", async (t) => {
-  const website = new Website(TEST_URL).withCron("1/5 * * * * *");
+test.skip('new website native cron', async (t) => {
+  const website = new Website(TEST_URL).withCron('1/5 * * * * *')
   // sleep function to test cron
   const sleep = (time: number, handle: Cron) => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(handle.stop());
-      }, time);
-    });
-  };
+        resolve(handle.stop())
+      }, time)
+    })
+  }
 
-  const links: NPage[] = [];
+  const links: NPage[] = []
 
   const onPageEvent = (err: Error | null, value: NPage) => {
-    links.push(value);
-  };
+    links.push(value)
+  }
 
-  const handle = await website.runCron(onPageEvent);
+  const handle = await website.runCron(onPageEvent)
 
-  await sleep(4000, handle);
+  await sleep(4000, handle)
 
   // should be valid unless new pages and routes are created.
-  t.assert(links.length > 1, "should be more than one page");
-});
+  t.assert(links.length > 1, 'should be more than one page')
+})
 
-test("new website native with subscriptions", async (t) => {
-  const website = new Website(TEST_URL);
+test('new website native with subscriptions', async (t) => {
+  const website = new Website(TEST_URL)
 
-  const links: NPage[] = [];
+  const links: NPage[] = []
 
   const onPageEvent = (_err: Error | null, value: NPage) => {
-    links.push(value);
-  };
+    links.push(value)
+  }
 
-  const id = website.subscribe(onPageEvent);
+  const id = website.subscribe(onPageEvent)
 
-  await website.crawl();
+  await website.crawl()
 
-  website.unsubscribe(id);
-
-  // should be valid unless new pages and routes are created.
-  t.assert(links.length > 1, "should be more than one page");
-});
-
-test("new single page", async (t) => {
-  const page = new Page(TEST_URL);
-  await page.fetch();
-  const links = await page.getLinks();
+  website.unsubscribe(id)
 
   // should be valid unless new pages and routes are created.
-  t.assert(links.length > 1, "should be more than one link");
-  t.assert(page.getHtml().length >= 100, "should be valid html");
-  t.assert(page.getBytes().length >= 100, "should be valid bytes");
-});
+  t.assert(links.length > 1, 'should be more than one page')
+})
 
-test.skip("new website native headless", async (t) => {
-  const website = new Website(TEST_URL);
-  await website.crawl(undefined, false, true);
+test('new single page', async (t) => {
+  const page = new Page(TEST_URL)
+  await page.fetch()
+  const links = await page.getLinks()
 
-  t.assert(website.getLinks().length > 1, "should be more than one link");
-});
+  // should be valid unless new pages and routes are created.
+  t.assert(links.length > 1, 'should be more than one link')
+  t.assert(page.getHtml().length >= 100, 'should be valid html')
+  t.assert(page.getBytes().length >= 100, 'should be valid bytes')
+})
 
-test.skip("new website native smart mode", async (t) => {
-  const website = new Website(TEST_URL);
-  await website.crawlSmart(undefined, false);
+test.skip('new website native headless', async (t) => {
+  const website = new Website(TEST_URL)
+  await website.crawl(undefined, false, true)
 
-  t.assert(website.getLinks().length > 1, "should be more than one link");
-});
+  t.assert(website.getLinks().length > 1, 'should be more than one link')
+})
 
-test.skip("new website native headless request interception", async (t) => {
-  const website = new Website(TEST_URL).withChromeIntercept(true, true);
-  await website.crawl(undefined, false, true);
+test.skip('new website native smart mode', async (t) => {
+  const website = new Website(TEST_URL)
+  await website.crawlSmart(undefined, false)
 
-  t.assert(website.getLinks().length > 1, "should be more than one link");
-});
+  t.assert(website.getLinks().length > 1, 'should be more than one link')
+})
 
-test("new website native raw content", async (t) => {
-  const website = new Website(TEST_URL, true);
+test.skip('new website native headless request interception', async (t) => {
+  const website = new Website(TEST_URL).withChromeIntercept(true, true)
+  await website.crawl(undefined, false, true)
 
-  const links: Buffer[] = [];
+  t.assert(website.getLinks().length > 1, 'should be more than one link')
+})
 
-  const onPageEvent = (_err: Error | null, page: NPage) =>
-    page.rawContent && links.push(page.rawContent);
+test('new website native raw content', async (t) => {
+  const website = new Website(TEST_URL, true)
 
-  await website.crawl(onPageEvent);
+  const links: Buffer[] = []
 
-  t.assert(links.length > 1, "should be more than one page");
-});
+  const onPageEvent = (_err: Error | null, page: NPage) => page.rawContent && links.push(page.rawContent)
 
+  await website.crawl(onPageEvent)
 
-test("new website data store and export", async (t) => {
-  const { promises } = await import('node:fs');
-  const readFile = promises.readFile;
-  
-  const website = new Website(TEST_URL, true);
-  const outputFile = "./storage/test.jsonl";
+  t.assert(links.length > 1, 'should be more than one page')
+})
 
-  const onPageEvent = (_err: Error | null, page: NPage) => website.pushData(page);
+test('new website data store and export', async (t) => {
+  const { promises } = await import('node:fs')
+  const readFile = promises.readFile
 
-  await website.crawl(onPageEvent);
-  await website.exportJsonlData(outputFile);
+  const website = new Website(TEST_URL, true)
+  const outputFile = './storage/test.jsonl'
 
-  const data = await readFile(outputFile);
+  const onPageEvent = (_err: Error | null, page: NPage) => website.pushData(page)
 
-  t.assert(!!data, "should contain valid json file");
-});
+  await website.crawl(onPageEvent)
+  await website.exportJsonlData(outputFile)
 
-test("new website stop", async (t) => {  
-  const website = new Website(TEST_URL);
+  const data = await readFile(outputFile)
+
+  t.assert(!!data, 'should contain valid json file')
+})
+
+test('new website stop', async (t) => {
+  const website = new Website(TEST_URL)
 
   const onPageEvent = async (_err: Error | null, page: NPage) => {
     if (website.size >= 2) {
-      await website.stop();
+      await website.stop()
     }
-  };
+  }
 
-  await website.crawl(onPageEvent);
+  await website.crawl(onPageEvent)
 
-  t.assert(website.size < 30, "should only have crawled a couple pages concurrently");
-});
+  t.assert(website.size < 30, 'should only have crawled a couple pages concurrently')
+})
 
-test("new website stop background", async (t) => {
+test('new website stop background', async (t) => {
   const sleep = (time: number) => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(true);
-      }, time);
-    });
-  };
+        resolve(true)
+      }, time)
+    })
+  }
 
-  const website = new Website(TEST_URL);
-  let count = 0;
+  const website = new Website(TEST_URL)
+  let count = 0
 
   const onPageEvent = async (_err: Error | null, page: NPage) => {
     if (count) {
-      await website.stop();
+      await website.stop()
     }
-    count++;
-  };
+    count++
+  }
 
   // lets wait for all other test since background shutsdown all crawls matching the url
-  await sleep(2000);
-  await website.crawl(onPageEvent, true);
-  await sleep(2000);
+  await sleep(2000)
+  await website.crawl(onPageEvent, true)
+  await sleep(2000)
 
-  t.assert(count < 15, "should only have crawled a couple pages concurrently in the background");
-});
-
+  t.assert(count < 15, 'should only have crawled a couple pages concurrently in the background')
+})

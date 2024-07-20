@@ -97,7 +97,7 @@ jobs:
           #   docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
           #   build: |
           #     set -e &&
-          #     rustup target add aarch64-unknown-linux-musl && 
+          #     rustup target add aarch64-unknown-linux-musl &&
           #     yarn build --target aarch64-unknown-linux-musl
           #   env:
           #     CXXFLAGS: '--stdlib=libc++ -L/usr/lib/llvm-18/lib -static'
@@ -257,7 +257,6 @@ jobs:
       - name: List packages
         run: ls -R .
         shell: bash
-
 
   test-linux-x64-gnu-binding:
     name: Test bindings on Linux-x64-gnu - node@${{ matrix.node }}

@@ -67,11 +67,22 @@ export class Website {
   /** stop a crawl */
   stop(id?: number | undefined | null): Promise<boolean>
   /** crawl a website */
-  crawl(onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null, background?: boolean | undefined | null, headless?: boolean | undefined | null): Promise<void>
+  crawl(
+    onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null,
+    background?: boolean | undefined | null,
+    headless?: boolean | undefined | null,
+  ): Promise<void>
   /** Start to crawl website with async concurrency smart. Use HTTP first and JavaScript Rendering as needed. */
-  crawlSmart(onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null, background?: boolean | undefined | null): Promise<void>
+  crawlSmart(
+    onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null,
+    background?: boolean | undefined | null,
+  ): Promise<void>
   /** scrape a website */
-  scrape(onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null, background?: boolean | undefined | null, headless?: boolean | undefined | null): Promise<void>
+  scrape(
+    onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null,
+    background?: boolean | undefined | null,
+    headless?: boolean | undefined | null,
+  ): Promise<void>
   /** run a cron job */
   runCron(onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null): Promise<Cron>
   /** get all the links of a website */
