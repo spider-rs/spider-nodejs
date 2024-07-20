@@ -186,50 +186,50 @@
 <p>The examples below can help get started with spider.</p>
 <h3 id="basic"><a class="header" href="#basic">Basic</a></h3>
 <p>A basic example.</p>
-<pre><code class="language-ts">import { Website } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://choosealicense.com");
+const website = new Website('https://choosealicense.com')
 
-await website.crawl();
-console.log(website.getLinks());
+await website.crawl()
+console.log(website.getLinks())
 </code></pre>
 <h3 id="events"><a class="header" href="#events">Events</a></h3>
 <p>You can pass a function that could be async as param to <code>crawl</code> and <code>scrape</code>.</p>
-<pre><code class="language-ts">import { Website, type NPage } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website, type NPage } from '@spider-rs/spider-rs'
 
-const website = new Website("https://choosealicense.com");
+const website = new Website('https://choosealicense.com')
 
-const links: NPage[] = [];
+const links: NPage[] = []
 
 const onPageEvent = async (err: Error | null, page: NPage) =&gt; {
-  links.push(page);
-};
+  links.push(page)
+}
 
-await website.crawl(onPageEvent);
-console.log(website.getLinks());
+await website.crawl(onPageEvent)
+console.log(website.getLinks())
 </code></pre>
 <h3 id="selector"><a class="header" href="#selector">Selector</a></h3>
 <p>The <code>title</code> method allows you to extract the title of the page.</p>
-<pre><code class="language-ts">import { Website, pageTitle } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website, pageTitle } from '@spider-rs/spider-rs'
 
-const website = new Website("https://choosealicense.com");
+const website = new Website('https://choosealicense.com')
 
-const links = [];
+const links = []
 
 const onPageEvent = async (err, page) =&gt; {
-  links.push({ title: pageTitle(page), url: page.url });
-};
+  links.push({ title: pageTitle(page), url: page.url })
+}
 
 // params in order event, background, and headless chrome
-await website.crawl(onPageEvent);
+await website.crawl(onPageEvent)
 </code></pre>
 <h2 id="shortcut"><a class="header" href="#shortcut">Shortcut</a></h2>
 <p>You can use the <code>crawl</code> shortcut method to collect contents quickly without configuration.</p>
-<pre><code class="language-ts">import { crawl } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { crawl } from '@spider-rs/spider-rs'
 
-const { links, pages } = await crawl("https://choosealicense.com");
+const { links, pages } = await crawl('https://choosealicense.com')
 
-console.log([links, pages]);
+console.log([links, pages])
 </code></pre>
 
                     </main>

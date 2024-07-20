@@ -191,13 +191,13 @@
 <li>Written in <a href="https://www.rust-lang.org/">Rust</a> for speed, safety, and simplicity</li>
 </ul>
 <p>Spider powers some big tools and helps bring the crawling aspect to almost no downtime with the correct setup, view the <a href="https://github.com/spider-rs/spider">spider</a> project to learn more.</p>
-<pre><code class="language-ts">import { Website } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://choosealicense.com");
+const website = new Website('https://choosealicense.com')
 
-await website.crawl();
+await website.crawl()
 
-console.log(website.getLinks());
+console.log(website.getLinks())
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h1>
 <p>Make sure to have <a href="https://nodejs.org/en/download">node</a> installed v10 and higher.</p>
@@ -213,261 +213,233 @@ npm install @spider-rs/spider-rs
 <p>The examples below can help get started with spider.</p>
 <h3 id="basic"><a class="header" href="#basic">Basic</a></h3>
 <p>A basic example.</p>
-<pre><code class="language-ts">import { Website } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://choosealicense.com");
+const website = new Website('https://choosealicense.com')
 
-await website.crawl();
-console.log(website.getLinks());
+await website.crawl()
+console.log(website.getLinks())
 </code></pre>
 <h3 id="events"><a class="header" href="#events">Events</a></h3>
 <p>You can pass a function that could be async as param to <code>crawl</code> and <code>scrape</code>.</p>
-<pre><code class="language-ts">import { Website, type NPage } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website, type NPage } from '@spider-rs/spider-rs'
 
-const website = new Website("https://choosealicense.com");
+const website = new Website('https://choosealicense.com')
 
-const links: NPage[] = [];
+const links: NPage[] = []
 
 const onPageEvent = async (err: Error | null, page: NPage) =&gt; {
-  links.push(page);
-};
+  links.push(page)
+}
 
-await website.crawl(onPageEvent);
-console.log(website.getLinks());
+await website.crawl(onPageEvent)
+console.log(website.getLinks())
 </code></pre>
 <h3 id="selector"><a class="header" href="#selector">Selector</a></h3>
 <p>The <code>title</code> method allows you to extract the title of the page.</p>
-<pre><code class="language-ts">import { Website, pageTitle } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website, pageTitle } from '@spider-rs/spider-rs'
 
-const website = new Website("https://choosealicense.com");
+const website = new Website('https://choosealicense.com')
 
-const links = [];
+const links = []
 
 const onPageEvent = async (err, page) =&gt; {
-  links.push({ title: pageTitle(page), url: page.url });
-};
+  links.push({ title: pageTitle(page), url: page.url })
+}
 
 // params in order event, background, and headless chrome
-await website.crawl(onPageEvent);
+await website.crawl(onPageEvent)
 </code></pre>
 <h2 id="shortcut"><a class="header" href="#shortcut">Shortcut</a></h2>
 <p>You can use the <code>crawl</code> shortcut method to collect contents quickly without configuration.</p>
-<pre><code class="language-ts">import { crawl } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { crawl } from '@spider-rs/spider-rs'
 
-const { links, pages } = await crawl("https://choosealicense.com");
+const { links, pages } = await crawl('https://choosealicense.com')
 
-console.log([links, pages]);
+console.log([links, pages])
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="website"><a class="header" href="#website">Website</a></h1>
 <p>The Website class is the foundations to the spider.</p>
 <h2 id="builder-pattern"><a class="header" href="#builder-pattern">Builder pattern</a></h2>
 <p>We use the builder pattern to configure the website for crawling.</p>
 <p>*note: Replace <code>https://choosealicense.com</code> from the examples below with your website target URL.</p>
-<pre><code class="language-ts">import { Website } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://choosealicense.com");
+const website = new Website('https://choosealicense.com')
 </code></pre>
 <h3 id="custom-headers"><a class="header" href="#custom-headers">Custom Headers</a></h3>
 <p>Add custom HTTP headers to use when crawling/scraping.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com')
   .withHeaders({
-    authorization: "somerandomjwt",
+    authorization: 'somerandomjwt',
   })
-  .build();
+  .build()
 </code></pre>
 <h3 id="blacklist"><a class="header" href="#blacklist">Blacklist</a></h3>
 <p>Prevent crawling a set path, url, or pattern with Regex.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
-  .withBlacklistUrl(["/blog", new RegExp("/books").source, "/resume"])
-  .build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com')
+  .withBlacklistUrl(['/blog', new RegExp('/books').source, '/resume'])
+  .build()
 </code></pre>
 <h3 id="whitelist"><a class="header" href="#whitelist">Whitelist</a></h3>
 <p>Only crawl set paths, url, or pattern with Regex.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
-  .withWhitelistUrl(["/blog", new RegExp("/books").source, "/resume"])
-  .build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com')
+  .withWhitelistUrl(['/blog', new RegExp('/books').source, '/resume'])
+  .build()
 </code></pre>
 <h3 id="crons"><a class="header" href="#crons">Crons</a></h3>
 <p>Setup a cron job that can run at any time in the background using cron-syntax.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
-  .withCron("1/5 * * * * *")
-  .build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com').withCron('1/5 * * * * *').build()
 </code></pre>
 <p>View the <a href="./cron-job.html">cron</a> section for details how to use the cron.</p>
 <h3 id="budget"><a class="header" href="#budget">Budget</a></h3>
 <p>Add a crawl budget that prevents crawling <code>x</code> amount of pages.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com')
   .withBudget({
-    "*": 1,
+    '*': 1,
   })
-  .build();
+  .build()
 </code></pre>
 <h3 id="subdomains"><a class="header" href="#subdomains">Subdomains</a></h3>
 <p>Include subdomains in request.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
-  .withSubdomains(true)
-  .build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com').withSubdomains(true).build()
 </code></pre>
 <h3 id="tld"><a class="header" href="#tld">TLD</a></h3>
 <p>Include TLDs in request.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
-  .withTlds(true)
-  .build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com').withTlds(true).build()
 </code></pre>
 <h3 id="external-domains"><a class="header" href="#external-domains">External Domains</a></h3>
 <p>Add external domains to include with the website.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
-  .withExternalDomains(["https://www.myotherdomain.com"])
-  .build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com').withExternalDomains(['https://www.myotherdomain.com']).build()
 </code></pre>
 <h3 id="proxy"><a class="header" href="#proxy">Proxy</a></h3>
 <p>Use a proxy to crawl a website.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
-  .withProxies(["https://www.myproxy.com"])
-  .build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com').withProxies(['https://www.myproxy.com']).build()
 </code></pre>
 <h3 id="delays"><a class="header" href="#delays">Delays</a></h3>
 <p>Add delays between pages. Defaults to none.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
-  .withDelays(200)
-  .build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com').withDelays(200).build()
 </code></pre>
 <h3 id="user-agent"><a class="header" href="#user-agent">User-Agent</a></h3>
 <p>Use a custom User-Agent.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
-  .withUserAgent("mybot/v1")
-  .build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com').withUserAgent('mybot/v1').build()
 </code></pre>
 <h3 id="openai"><a class="header" href="#openai">OpenAI</a></h3>
 <p>Use OpenAI to generate dynamic scripts to use with headless. Make sure to set the <code>OPENAI_API_KEY</code> env variable.</p>
-<pre><code class="language-ts">const website = new Website("https://google.com")
+<pre><code class="language-ts">const website = new Website('https://google.com')
   .withOpenAI({
-    model: "gpt-3.5-turbo",
-    prompt: "Search for movies",
-    maxTokens: 300
+    model: 'gpt-3.5-turbo',
+    prompt: 'Search for movies',
+    maxTokens: 300,
   })
-  .build();
+  .build()
 
 // make sure to crawl or scrape with the headless param set to true.
 </code></pre>
 <h3 id="screenshots"><a class="header" href="#screenshots">Screenshots</a></h3>
 <p>Take a screenshot of the pages on crawl when using headless chrome.</p>
-<pre><code class="language-ts">const website = new Website("https://google.com")
+<pre><code class="language-ts">const website = new Website('https://google.com')
   .withScreenshot({
     params: {
-        cdp_params: null,
-        full_page: true,
-        omit_background: false
+      cdp_params: null,
+      full_page: true,
+      omit_background: false,
     },
     bytes: false,
     save: true,
-    output_dir: null
+    output_dir: null,
   })
-  .build();
+  .build()
 
 // make sure to crawl or scrape with the headless param set to true.
 </code></pre>
 <h3 id="request-timeout"><a class="header" href="#request-timeout">Request Timeout</a></h3>
 <p>Add a request timeout per page in miliseconds. Example shows 30 seconds.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
-  .withRequestTimeout(30000)
-  .build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com').withRequestTimeout(30000).build()
 </code></pre>
 <h3 id="respect-robots"><a class="header" href="#respect-robots">Respect Robots</a></h3>
 <p>Respect the robots.txt file.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
-  .withRespectRobotsTxt(true)
-  .build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com').withRespectRobotsTxt(true).build()
 </code></pre>
 <h3 id="http2-prior-knowledge"><a class="header" href="#http2-prior-knowledge">Http2 Prior Knowledge</a></h3>
 <p>Use http2 to connect if you know the website servers supports this.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
-  .withHttp2PriorKnowledge(true)
-  .build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com').withHttp2PriorKnowledge(true).build()
 </code></pre>
 <h3 id="chrome-network-interception"><a class="header" href="#chrome-network-interception">Chrome Network Interception</a></h3>
 <p>Enable Network interception when using chrome to speed up request.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
-  .withChromeIntercept(true, true)
-  .build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com').withChromeIntercept(true, true).build()
 </code></pre>
 <h3 id="redirect-limit"><a class="header" href="#redirect-limit">Redirect Limit</a></h3>
 <p>Set the redirect limit for request.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
-  .withRedirectLimit(2)
-  .build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com').withRedirectLimit(2).build()
 </code></pre>
 <h3 id="depth-limit"><a class="header" href="#depth-limit">Depth Limit</a></h3>
 <p>Set the depth limit for the amount of forward pages.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com").withDepth(3).build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com').withDepth(3).build()
 </code></pre>
 <h3 id="cache"><a class="header" href="#cache">Cache</a></h3>
 <p>Enable HTTP caching, this useful when using the spider on a server.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
-  .withCaching(true)
-  .build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com').withCaching(true).build()
 </code></pre>
 <h3 id="redirect-policy"><a class="header" href="#redirect-policy">Redirect Policy</a></h3>
 <p>Set the redirect policy for request, either strict or loose(default). Strict only allows redirects that match the domain.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
-  .withRedirectPolicy(true)
-  .build();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com').withRedirectPolicy(true).build()
 </code></pre>
 <h2 id="chaining"><a class="header" href="#chaining">Chaining</a></h2>
 <p>You can chain all of the configs together for simple configuration.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com")
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com')
   .withSubdomains(true)
   .withTlds(true)
-  .withUserAgent("mybot/v1")
+  .withUserAgent('mybot/v1')
   .withRespectRobotsTxt(true)
-  .build();
+  .build()
 </code></pre>
 <h2 id="raw-content"><a class="header" href="#raw-content">Raw Content</a></h2>
 <p>Set the second param of the website constructor to <code>true</code> to return content without UTF-8.
 This will return <code>rawContent</code> and leave <code>content</code> when using subscriptions or the Page Object.</p>
-<pre><code class="language-ts">const rawContent = true;
-const website = new Website("https://choosealicense.com", rawContent);
-await website.scrape();
+<pre><code class="language-ts">const rawContent = true
+const website = new Website('https://choosealicense.com', rawContent)
+await website.scrape()
 </code></pre>
 <h2 id="clearing-crawl-data"><a class="header" href="#clearing-crawl-data">Clearing Crawl Data</a></h2>
 <p>Use <code>website.clear</code> to remove the links visited and page data or <code>website.drainLinks</code> to drain the links visited.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com");
-await website.crawl();
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com')
+await website.crawl()
 // links found ["https://...", "..."]
-console.log(website.getLinks());
-website.clear();
+console.log(website.getLinks())
+website.clear()
 // links will be empty
-console.log(website.getLinks());
+console.log(website.getLinks())
 </code></pre>
 <h2 id="storing-and-exporting-data"><a class="header" href="#storing-and-exporting-data">Storing and Exporting Data</a></h2>
 <p>Collecting data to store can be done with <code>website.pushData()</code> and <code>website.exportJsonlData()</code>.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com");
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com')
 
 const onPageEvent = (_err, page) =&gt; {
-  website.pushData(page);
-};
+  website.pushData(page)
+}
 
-await website.crawl(onPageEvent);
+await website.crawl(onPageEvent)
 
 // uncomment to read the data.
 // console.log(website.readData());
 
 // we only have one export method atm. Optional file path. All data by default goes to storage
-await website.exportJsonlData("./storage/test.jsonl");
+await website.exportJsonlData('./storage/test.jsonl')
 </code></pre>
 <h2 id="stop-crawl"><a class="header" href="#stop-crawl">Stop crawl</a></h2>
 <p>To stop a crawl you can use <code>website.stopCrawl(id)</code>, pass in the crawl id to stop a run or leave empty for all crawls to stop.</p>
-<pre><code class="language-ts">const website = new Website("https://choosealicense.com");
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com')
 
 const onPageEvent = (_err, page) =&gt; {
-  console.log(page);
+  console.log(page)
   // stop the concurrent crawl when 8 pages are found.
   if (website.size &gt;= 8) {
-    website.stop();
+    website.stop()
   }
-};
+}
 
-await website.crawl(onPageEvent);
+await website.crawl(onPageEvent)
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="page"><a class="header" href="#page">Page</a></h1>
 <p>A single page on a website, useful if you need just the root url.</p>
@@ -475,31 +447,31 @@ await website.crawl(onPageEvent);
 <p>Get a new page with content.</p>
 <p>The first param is the url, followed by if subdomains should be included, and last to include TLD's in links.</p>
 <p>Calling <code>page.fetch</code> is needed to get the content.</p>
-<pre><code class="language-ts">import { Page } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Page } from '@spider-rs/spider-rs'
 
-const page = new Page("https://choosealicense.com", false, false);
-await page.fetch();
+const page = new Page('https://choosealicense.com', false, false)
+await page.fetch()
 </code></pre>
 <h2 id="page-links"><a class="header" href="#page-links">Page Links</a></h2>
 <p>get all the links related to a page.</p>
-<pre><code class="language-ts">const page = new Page("https://choosealicense.com", false, false);
-await page.fetch();
-const links = await page.getLinks();
-console.log(links);
+<pre><code class="language-ts">const page = new Page('https://choosealicense.com', false, false)
+await page.fetch()
+const links = await page.getLinks()
+console.log(links)
 </code></pre>
 <h2 id="page-html"><a class="header" href="#page-html">Page Html</a></h2>
 <p>Get the markup for the page or HTML.</p>
-<pre><code class="language-ts">const page = new Page("https://choosealicense.com", false, false);
-await page.fetch();
-const html = page.getHtml();
-console.log(html);
+<pre><code class="language-ts">const page = new Page('https://choosealicense.com', false, false)
+await page.fetch()
+const html = page.getHtml()
+console.log(html)
 </code></pre>
 <h2 id="page-bytes"><a class="header" href="#page-bytes">Page Bytes</a></h2>
 <p>Get the raw bytes of a page to store the files in a database.</p>
-<pre><code class="language-ts">const page = new Page("https://choosealicense.com", false, false);
-await page.fetch();
-const bytes = page.getBytes();
-console.log(bytes);
+<pre><code class="language-ts">const page = new Page('https://choosealicense.com', false, false)
+await page.fetch()
+const bytes = page.getBytes()
+console.log(bytes)
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="environment"><a class="header" href="#environment">Environment</a></h1>
 <p>Env variables to adjust the project.</p>
@@ -509,135 +481,133 @@ console.log(bytes);
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="crawl"><a class="header" href="#crawl">Crawl</a></h1>
 <p>Crawl a website concurrently.</p>
-<pre><code class="language-ts">import { Website } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website } from '@spider-rs/spider-rs'
 
 // pass in the website url
-const website = new Website("https://rsseau.fr");
+const website = new Website('https://rsseau.fr')
 
-await website.crawl();
+await website.crawl()
 
 // [ "https://rsseau.fr/blog", ...]
-console.log(website.getLinks());
+console.log(website.getLinks())
 </code></pre>
 <h2 id="async-event"><a class="header" href="#async-event">Async Event</a></h2>
 <p>You can pass in a async function as the first param to the crawl function for realtime updates streamed.</p>
-<pre><code class="language-ts">import { Website } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://rsseau.fr");
+const website = new Website('https://rsseau.fr')
 
 const onPageEvent = (err, value) =&gt; {
-  console.log(value);
-};
+  console.log(value)
+}
 
-await website.crawl(onPageEvent);
+await website.crawl(onPageEvent)
 </code></pre>
 <h2 id="background"><a class="header" href="#background">Background</a></h2>
 <p>You can run the request in the background and receive events with the second param set to <code>true</code>.</p>
-<pre><code class="language-ts">import { Website } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://rsseau.fr");
+const website = new Website('https://rsseau.fr')
 
 const onPageEvent = (err, value) =&gt; {
-  console.log(value);
-};
+  console.log(value)
+}
 
-await website.crawl(onPageEvent, true);
+await website.crawl(onPageEvent, true)
 // this will run instantly as the crawl is in the background
 </code></pre>
 <h2 id="subscriptions"><a class="header" href="#subscriptions">Subscriptions</a></h2>
 <p>You can setup many subscriptions to run events when a crawl happens.</p>
-<pre><code class="language-ts">import { Website } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://rsseau.fr");
+const website = new Website('https://rsseau.fr')
 
 const onPageEvent = (err, value) =&gt; {
-  console.log(value);
-};
+  console.log(value)
+}
 
-const subscriptionID = website.subscribe(onPageEvent);
+const subscriptionID = website.subscribe(onPageEvent)
 
-await website.crawl();
+await website.crawl()
 
-website.unsubscribe(subscriptionID);
+website.unsubscribe(subscriptionID)
 // this will run instantly as the crawl is in the background
 </code></pre>
 <h2 id="headless-chrome"><a class="header" href="#headless-chrome">Headless Chrome</a></h2>
 <p>Headless Chrome rendering can be done by setting the third param in <code>crawl</code> or <code>scrape</code> to <code>true</code>.
 It will attempt to connect to chrome running remotely if the <code>CHROME_URL</code> env variable is set with chrome launching as a fallback. Using a remote connection with <code>CHROME_URL</code> will
 drastically speed up runs.</p>
-<pre><code class="language-ts">import { Website } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://rsseau.fr");
+const website = new Website('https://rsseau.fr')
 
 const onPageEvent = (err, value) =&gt; {
-  console.log(value);
-};
+  console.log(value)
+}
 
 // all params are optional. The third param determines headless rendering.
-await website.crawl(onPageEvent, false, true);
+await website.crawl(onPageEvent, false, true)
 // make sure to call unsubscribe when finished or else the instance is kept alive when events are setup.
-website.unsubscribe();
+website.unsubscribe()
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="scrape"><a class="header" href="#scrape">Scrape</a></h1>
 <p>Scape a website and collect the resource data.</p>
-<pre><code class="language-ts">import { Website } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website } from '@spider-rs/spider-rs'
 
 // pass in the website url
-const website = new Website("https://rsseau.fr");
+const website = new Website('https://rsseau.fr')
 
-await website.scrape();
+await website.scrape()
 
 // [ { url: "https://rsseau.fr/blog", html: "&lt;html&gt;...&lt;/html&gt;"}, ...]
-console.log(website.getPages());
+console.log(website.getPages())
 </code></pre>
 <h2 id="headless-chrome-1"><a class="header" href="#headless-chrome-1">Headless Chrome</a></h2>
 <p>Headless Chrome rendering can be done by setting the third param in <code>crawl</code> or <code>scrape</code> to <code>true</code>.
 It will attempt to connect to chrome running remotely if the <code>CHROME_URL</code> env variable is set with chrome launching as a fallback. Using a remote connection with <code>CHROME_URL</code> will
 drastically speed up runs.</p>
-<pre><code class="language-ts">import { Website } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://rsseau.fr");
+const website = new Website('https://rsseau.fr')
 
 const onPageEvent = (err, value) =&gt; {
-  console.log(value);
-};
+  console.log(value)
+}
 
 // all params are optional. The third param determines headless rendering.
-await website.scrape(onPageEvent, false, true);
+await website.scrape(onPageEvent, false, true)
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cron-jobs"><a class="header" href="#cron-jobs">Cron Jobs</a></h1>
 <p>Use a cron job that can run any time of day to gather website data.</p>
-<pre><code class="language-ts">import { Website } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://choosealicense.com")
-  .withCron("1/5 * * * * *")
-  .build();
+const website = new Website('https://choosealicense.com').withCron('1/5 * * * * *').build()
 
 // get the pages of the website when the cron runs streamed.
 const onPageEvent = (err, value) =&gt; {
-  console.log(value);
-};
+  console.log(value)
+}
 
-const handle = await website.runCron(onPageEvent);
+const handle = await website.runCron(onPageEvent)
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="storing-data"><a class="header" href="#storing-data">Storing Data</a></h1>
 <p>Storing data can be done to collect the raw content for a website.</p>
 <p>This allows you to upload and download the content without UTF-8 conversion. The property only appears when
 setting the second param of the <code>Website</code> class constructor to true.</p>
-<pre><code class="language-ts">const rawContent = true;
+<pre><code class="language-ts">const rawContent = true
 
-const links: Buffer[] = [];
+const links: Buffer[] = []
 
 const onPageEvent = (_err: Error | null, page: NPage) =&gt; {
   if (page.rawContent) {
     // we can download or store the content now to disk.
-    links.push(page.rawContent);
+    links.push(page.rawContent)
   }
-};
+}
 
-await website.crawl(onPageEvent);
+await website.crawl(onPageEvent)
 
-const website = new Website("https://choosealicense.com", rawContent);
+const website = new Website('https://choosealicense.com', rawContent)
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="benchmarks"><a class="header" href="#benchmarks">Benchmarks</a></h1>
 <p>Test url: <code>https://espn.com</code>

@@ -181,18 +181,16 @@
                     <main>
                         <h1 id="cron-jobs"><a class="header" href="#cron-jobs">Cron Jobs</a></h1>
 <p>Use a cron job that can run any time of day to gather website data.</p>
-<pre><code class="language-ts">import { Website } from "@spider-rs/spider-rs";
+<pre><code class="language-ts">import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website("https://choosealicense.com")
-  .withCron("1/5 * * * * *")
-  .build();
+const website = new Website('https://choosealicense.com').withCron('1/5 * * * * *').build()
 
 // get the pages of the website when the cron runs streamed.
 const onPageEvent = (err, value) =&gt; {
-  console.log(value);
-};
+  console.log(value)
+}
 
-const handle = await website.runCron(onPageEvent);
+const handle = await website.runCron(onPageEvent)
 </code></pre>
 
                     </main>
