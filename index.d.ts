@@ -14,6 +14,35 @@ export interface NPage {
   /** the raw content */
   rawContent?: Buffer
 }
+/** The screenshot params for the page */
+export interface ScreenshotConfigs {
+  /** The screenshot params. */
+  params: {
+    /** Chrome DevTools Protocol screenshot options. */
+    cdp_params: {
+      /** Image compression format (defaults to png). */
+      format: Record<string, unknown>
+      /** Compression quality from range [0..100] (jpeg only). */
+      quality: number
+      /** Capture the screenshot of a given region only. */
+      clip: Record<string, unknown>
+      /** Capture the screenshot from the surface, rather than the view. Defaults to true.*/
+      from_surface: boolean
+      /** Capture the screenshot beyond the viewport. Defaults to false. */
+      capture_beyond_viewport: boolean
+    }
+    /** Take full page screenshot */
+    full_page: boolean
+    /** Make the background transparent (png only). */
+    omit_background: boolean
+  },
+  /** Return the bytes of the screenshot on the Page. */
+  bytes: boolean
+  /** Store the screenshot to disk. This can be used with output_dir. If disabled will not store the file to the output directory. */
+  save: boolean
+  /** The output directory to store the file. Parent folders may be created inside the directory. */
+  output_dir: string | null
+}
 /** get the page title. */
 export function pageTitle(page: NPage): string
 /** crawl a website using HTTP gathering all links and html. */
@@ -128,7 +157,7 @@ export class Website {
   /** Use OpenAI to generate dynamic javascript snippets. Make sure to set the `OPENAI_API_KEY` env variable. */
   withOpenai(openaiConfigs?: object | undefined | null): this
   /** Take screenshots of web pages using chrome. */
-  withScreenshot(screenshotConfigs?: object | undefined | null): this
+  withScreenshot(screenshotConfigs?: ScreenshotConfigs | undefined | null): this
   /** Delay between request as ms. */
   withDelay(delay: number): this
   /** Set a crawl depth limit. If the value is 0 there is no limit. */
