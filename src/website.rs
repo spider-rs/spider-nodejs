@@ -877,7 +877,46 @@ impl Website {
 
   /// Take screenshots of web pages using chrome.
   #[napi]
-  pub fn with_screenshot(&mut self, env: Env, screenshot_configs: Option<napi::JsObject>) -> &Self {
+  pub fn with_screenshot(
+    &mut self,
+    env: Env,
+
+    #[napi(ts_arg_type = r#"{
+  /** The screenshot params. */
+  params: {
+    /** Chrome DevTools Protocol screenshot options. */
+    cdp_params: {
+      /** Image compression format (defaults to png). */
+      format: 'jpeg' | 'png' | 'webp'
+      /** Compression quality from range [0..100] (jpeg only). */
+      quality: number
+      /** Capture the screenshot of a given region only. */
+      clip: {
+        x: number
+        y: number
+        height: number
+        width: number
+        scale: number
+      }
+      /** Capture the screenshot from the surface, rather than the view. Defaults to true.*/
+      from_surface: boolean
+      /** Capture the screenshot beyond the viewport. Defaults to false. */
+      capture_beyond_viewport: boolean
+    }
+    /** Take full page screenshot */
+    full_page: boolean
+    /** Make the background transparent (png only). */
+    omit_background: boolean
+  }
+  /** Return the bytes of the screenshot on the Page. */
+  bytes: boolean
+  /** Store the screenshot to disk. This can be used with output_dir. If disabled will not store the file to the output directory. */
+  save: boolean
+  /** The output directory to store the file. Parent folders may be created inside the directory. */
+  output_dir: string | null
+}"#)]
+    screenshot_configs: Option<napi::JsObject>,
+  ) -> &Self {
     use serde_json::Value;
     use spider::configuration::ScreenShotConfig;
     let screenshot_configs: Option<Value> = match screenshot_configs {

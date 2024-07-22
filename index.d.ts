@@ -13,52 +13,24 @@ export interface NPage {
   statusCode: number
   /** the raw content */
   rawContent?: Buffer
-}
-/** The screenshot params for the page */
-export interface ScreenshotConfigs {
-  /** The screenshot params. */
-  params: {
-    /** Chrome DevTools Protocol screenshot options. */
-    cdp_params: {
-      /** Image compression format (defaults to png). */
-      format: Record<string, unknown>
-      /** Compression quality from range [0..100] (jpeg only). */
-      quality: number
-      /** Capture the screenshot of a given region only. */
-      clip: Record<string, unknown>
-      /** Capture the screenshot from the surface, rather than the view. Defaults to true.*/
-      from_surface: boolean
-      /** Capture the screenshot beyond the viewport. Defaults to false. */
-      capture_beyond_viewport: boolean
-    }
-    /** Take full page screenshot */
-    full_page: boolean
-    /** Make the background transparent (png only). */
-    omit_background: boolean
-  },
-  /** Return the bytes of the screenshot on the Page. */
-  bytes: boolean
-  /** Store the screenshot to disk. This can be used with output_dir. If disabled will not store the file to the output directory. */
-  save: boolean
-  /** The output directory to store the file. Parent folders may be created inside the directory. */
-  output_dir: string | null
+  headers?: Record<string, string>
 }
 /** get the page title. */
-export function pageTitle(page: NPage): string
+export declare function pageTitle(page: NPage): string
 /** crawl a website using HTTP gathering all links and html. */
-export function crawl(url: string, rawContent?: boolean | undefined | null): Promise<NWebsite>
+export declare function crawl(url: string, rawContent?: boolean | undefined | null): Promise<NWebsite>
 export interface PageEvent {
   page: NPage
 }
 /** website main data from rust to node. */
-export class NWebsite {
+export declare class NWebsite {
   /** all of the website links. */
   links: Array<string>
   /** the pages found. */
   pages: Array<NPage>
 }
 /** a simple page object */
-export class Page {
+export declare class Page {
   /** the url for the page */
   url: string
   subdomains?: boolean
@@ -76,7 +48,7 @@ export class Page {
   getBytes(): Uint8Array
 }
 /** a website holding the inner spider::website::Website from Rust fit for nodejs. */
-export class Website {
+export declare class Website {
   /** a new website. */
   constructor(url: string, rawContent?: boolean | undefined | null)
   /** Get the crawl status. */
@@ -130,6 +102,8 @@ export class Website {
   withUserAgent(userAgent?: string | undefined | null): this
   /** Respect robots.txt file. */
   withRespectRobotsTxt(respectRobotsTxt: boolean): this
+  /** Determine whether to collect all the resources found on pages. */
+  withFullResources(fullResources: boolean): this
   /** Use network interception for the request to only allow content that matches the host. If the content is from a 3rd party it needs to be part of our include list. */
   withChromeIntercept(chromeIntercept: boolean, blockImages: boolean): this
   /** Include subdomains detection. */
@@ -150,14 +124,49 @@ export class Website {
   withRedirectLimit(redirectLimit: number): this
   /** Set the redirect policy to use, either Strict or Loose by default. */
   withRedirectPolicy(strict: boolean): this
-  /** Regex black list urls from the crawl */
+  /** Regex blacklist urls from the crawl */
   withBlacklistUrl(blacklistUrl?: Array<string> | undefined | null): this
+  /** Regex whitelist urls from the crawl */
+  withWhitelistUrl(whitelistUrl?: Array<string> | undefined | null): this
   /** Setup cron jobs to run */
   withCron(cronStr: string, cronType?: string | undefined | null): this
   /** Use OpenAI to generate dynamic javascript snippets. Make sure to set the `OPENAI_API_KEY` env variable. */
   withOpenai(openaiConfigs?: object | undefined | null): this
   /** Take screenshots of web pages using chrome. */
-  withScreenshot(screenshotConfigs?: ScreenshotConfigs | undefined | null): this
+  withScreenshot(screenshotConfigs?: {
+    /** The screenshot params. */
+    params: {
+      /** Chrome DevTools Protocol screenshot options. */
+      cdp_params: {
+        /** Image compression format (defaults to png). */
+        format: 'jpeg' | 'png' | 'webp'
+        /** Compression quality from range [0..100] (jpeg only). */
+        quality: number
+        /** Capture the screenshot of a given region only. */
+        clip: {
+          x: number
+          y: number
+          height: number
+          width: number
+          scale: number
+        }
+        /** Capture the screenshot from the surface, rather than the view. Defaults to true.*/
+        from_surface: boolean
+        /** Capture the screenshot beyond the viewport. Defaults to false. */
+        capture_beyond_viewport: boolean
+      }
+      /** Take full page screenshot */
+      full_page: boolean
+      /** Make the background transparent (png only). */
+      omit_background: boolean
+    }
+    /** Return the bytes of the screenshot on the Page. */
+    bytes: boolean
+    /** Store the screenshot to disk. This can be used with output_dir. If disabled will not store the file to the output directory. */
+    save: boolean
+    /** The output directory to store the file. Parent folders may be created inside the directory. */
+    output_dir: string | null
+  }): this
   /** Delay between request as ms. */
   withDelay(delay: number): this
   /** Set a crawl depth limit. If the value is 0 there is no limit. */
@@ -172,7 +181,7 @@ export class Website {
   build(): this
 }
 /** a runner for handling crons */
-export class Cron {
+export declare class Cron {
   /** stop the cron instance */
   stop(): Promise<void>
 }

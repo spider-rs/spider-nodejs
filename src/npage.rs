@@ -2,7 +2,9 @@ use napi::bindgen_prelude::Buffer;
 use spider::{
   lazy_static::lazy_static,
   packages::scraper::{Html, Selector},
+  reqwest::header::HeaderMap,
 };
+use std::collections::HashMap;
 
 /// a simple page object
 #[derive(Default, Clone)]
@@ -16,6 +18,7 @@ pub struct NPage {
   pub status_code: u16,
   /// the raw content
   pub raw_content: Option<Buffer>,
+  pub headers: Option<HashMap<String, String>>,
 }
 
 #[napi]
@@ -41,6 +44,10 @@ impl NPage {
       } else {
         None
       },
+      headers: match res.headers {
+        Some(ref headers) => Some(header_map_to_hash_map(headers)),
+        _ => None,
+      },
     }
   }
 
@@ -56,4 +63,19 @@ impl NPage {
       _ => Default::default(),
     }
   }
+}
+
+/// convert a headermap to hashmap
+pub fn header_map_to_hash_map(header_map: &HeaderMap) -> HashMap<String, String> {
+  let mut hash_map = HashMap::new();
+
+  for (key, value) in header_map.iter() {
+    let key = key.as_str().to_string();
+
+    if let Ok(value_str) = value.to_str() {
+      hash_map.insert(key, value_str.to_string());
+    }
+  }
+
+  hash_map
 }
