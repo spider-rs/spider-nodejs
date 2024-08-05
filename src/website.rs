@@ -1,6 +1,6 @@
 use crate::conversions::{object_to_u8, ObjectConvert};
 use crate::{NPage, BUFFER};
-use compact_str::CompactString;
+use spider::compact_str::CompactString;
 use indexmap::IndexMap;
 use napi::{bindgen_prelude::Object, tokio::task::JoinHandle};
 use napi::{Env, JsUnknown};

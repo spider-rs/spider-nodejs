@@ -23,14 +23,14 @@ export interface PageEvent {
   page: NPage
 }
 /** website main data from rust to node. */
-export declare class NWebsite {
+export class NWebsite {
   /** all of the website links. */
   links: Array<string>
   /** the pages found. */
   pages: Array<NPage>
 }
 /** a simple page object */
-export declare class Page {
+export class Page {
   /** the url for the page */
   url: string
   subdomains?: boolean
@@ -48,7 +48,7 @@ export declare class Page {
   getBytes(): Uint8Array
 }
 /** a website holding the inner spider::website::Website from Rust fit for nodejs. */
-export declare class Website {
+export class Website {
   /** a new website. */
   constructor(url: string, rawContent?: boolean | undefined | null)
   /** Get the crawl status. */
@@ -68,22 +68,11 @@ export declare class Website {
   /** stop a crawl */
   stop(id?: number | undefined | null): Promise<boolean>
   /** crawl a website */
-  crawl(
-    onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null,
-    background?: boolean | undefined | null,
-    headless?: boolean | undefined | null,
-  ): Promise<void>
+  crawl(onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null, background?: boolean | undefined | null, headless?: boolean | undefined | null): Promise<void>
   /** Start to crawl website with async concurrency smart. Use HTTP first and JavaScript Rendering as needed. */
-  crawlSmart(
-    onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null,
-    background?: boolean | undefined | null,
-  ): Promise<void>
+  crawlSmart(onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null, background?: boolean | undefined | null): Promise<void>
   /** scrape a website */
-  scrape(
-    onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null,
-    background?: boolean | undefined | null,
-    headless?: boolean | undefined | null,
-  ): Promise<void>
+  scrape(onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null, background?: boolean | undefined | null, headless?: boolean | undefined | null): Promise<void>
   /** run a cron job */
   runCron(onPageEvent?: (err: Error | null, arg: NPage) => any | undefined | null): Promise<Cron>
   /** get all the links of a website */
@@ -134,38 +123,38 @@ export declare class Website {
   withOpenai(openaiConfigs?: object | undefined | null): this
   /** Take screenshots of web pages using chrome. */
   withScreenshot(screenshotConfigs?: {
-    /** The screenshot params. */
-    params: {
-      /** Chrome DevTools Protocol screenshot options. */
-      cdp_params: {
-        /** Image compression format (defaults to png). */
-        format: 'jpeg' | 'png' | 'webp'
-        /** Compression quality from range [0..100] (jpeg only). */
-        quality: number
-        /** Capture the screenshot of a given region only. */
-        clip: {
-          x: number
-          y: number
-          height: number
-          width: number
-          scale: number
-        }
-        /** Capture the screenshot from the surface, rather than the view. Defaults to true.*/
-        from_surface: boolean
-        /** Capture the screenshot beyond the viewport. Defaults to false. */
-        capture_beyond_viewport: boolean
-      }
-      /** Take full page screenshot */
-      full_page: boolean
-      /** Make the background transparent (png only). */
-      omit_background: boolean
-    }
-    /** Return the bytes of the screenshot on the Page. */
-    bytes: boolean
-    /** Store the screenshot to disk. This can be used with output_dir. If disabled will not store the file to the output directory. */
-    save: boolean
-    /** The output directory to store the file. Parent folders may be created inside the directory. */
-    output_dir: string | null
+  /** The screenshot params. */
+  params: {
+  /** Chrome DevTools Protocol screenshot options. */
+  cdp_params: {
+  /** Image compression format (defaults to png). */
+  format: 'jpeg' | 'png' | 'webp'
+  /** Compression quality from range [0..100] (jpeg only). */
+  quality: number
+  /** Capture the screenshot of a given region only. */
+  clip: {
+  x: number
+  y: number
+  height: number
+  width: number
+  scale: number
+  }
+  /** Capture the screenshot from the surface, rather than the view. Defaults to true.*/
+  from_surface: boolean
+  /** Capture the screenshot beyond the viewport. Defaults to false. */
+  capture_beyond_viewport: boolean
+  }
+  /** Take full page screenshot */
+  full_page: boolean
+  /** Make the background transparent (png only). */
+  omit_background: boolean
+  }
+  /** Return the bytes of the screenshot on the Page. */
+  bytes: boolean
+  /** Store the screenshot to disk. This can be used with output_dir. If disabled will not store the file to the output directory. */
+  save: boolean
+  /** The output directory to store the file. Parent folders may be created inside the directory. */
+  output_dir: string | null
   }): this
   /** Delay between request as ms. */
   withDelay(delay: number): this
@@ -181,7 +170,7 @@ export declare class Website {
   build(): this
 }
 /** a runner for handling crons */
-export declare class Cron {
+export class Cron {
   /** stop the cron instance */
   stop(): Promise<void>
 }

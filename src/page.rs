@@ -1,4 +1,3 @@
-use compact_str::CompactString;
 use napi;
 
 /// a simple page object
@@ -9,8 +8,8 @@ pub struct Page {
   inner: Option<spider::page::Page>,
   /// selectors
   selectors: Option<(
-    CompactString,
-    spider::smallvec::SmallVec<[CompactString; 2]>,
+    spider::compact_str::CompactString,
+    spider::smallvec::SmallVec<[spider::compact_str::CompactString; 2]>,
   )>,
   /// the url for the page
   pub url: String,
