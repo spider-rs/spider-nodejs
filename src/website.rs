@@ -1,9 +1,10 @@
 use crate::conversions::{object_to_u8, ObjectConvert};
 use crate::{NPage, BUFFER};
-use spider::compact_str::CompactString;
 use indexmap::IndexMap;
 use napi::{bindgen_prelude::Object, tokio::task::JoinHandle};
 use napi::{Env, JsUnknown};
+use spider::compact_str::CompactString;
+use spider::configuration::{WaitFor, WaitForDelay, WaitForIdleNetwork, WaitForSelector};
 use spider::{configuration::RedirectPolicy, utils::shutdown};
 use std::time::Duration;
 
@@ -831,6 +832,71 @@ impl Website {
           Some(whitelist)
         }
         _ => None,
+      });
+
+    self
+  }
+
+  #[napi]
+  /// Wait for a delay. Should only be used for testing. This method does nothing if the `chrome` feature is not enabled.
+  pub fn with_wait_for_delay(&mut self, seconds: Option<u32>, nanos: Option<u32>) -> &Self {
+    self
+      .inner
+      .configuration
+      .with_wait_for_delay(if seconds.is_some() || nanos.is_some() {
+        let duration = Duration::new(
+          seconds.unwrap_or_default() as u64,
+          nanos.unwrap_or_default(),
+        );
+        Some(WaitForDelay::new(Some(duration)))
+      } else {
+        None
+      });
+
+    self
+  }
+
+  #[napi]
+  /// Wait for a CSS query selector. This method does nothing if the `chrome` feature is not enabled.
+  pub fn with_wait_for_selector(
+    &mut self,
+    selector: Option<&str>,
+    seconds: Option<u32>,
+    nanos: Option<u32>,
+  ) -> &Self {
+    self
+      .inner
+      .configuration
+      .with_wait_for_selector(if seconds.is_some() || nanos.is_some() {
+        let duration = Duration::new(
+          seconds.unwrap_or_default() as u64,
+          nanos.unwrap_or_default(),
+        );
+        Some(WaitForSelector::new(
+          Some(duration),
+          selector.unwrap_or_default().to_string(),
+        ))
+      } else {
+        None
+      });
+
+    self
+  }
+
+  #[napi]
+  /// Wait for idle network request. This method does nothing if the `chrome` feature is not enabled.
+  pub fn with_wait_for_idle_network(&mut self, seconds: Option<u32>, nanos: Option<u32>) -> &Self {
+    self
+      .inner
+      .configuration
+      .with_wait_for_idle_network(if seconds.is_some() || nanos.is_some() {
+        let duration = Duration::new(
+          seconds.unwrap_or_default() as u64,
+          nanos.unwrap_or_default(),
+        );
+        Some(WaitForIdleNetwork::new(Some(duration)))
+      } else {
+        None
       });
 
     self
