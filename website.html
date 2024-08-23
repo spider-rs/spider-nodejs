@@ -241,6 +241,22 @@ const website = new Website('https://choosealicense.com')
 <p>Add delays between pages. Defaults to none.</p>
 <pre><code class="language-ts">const website = new Website('https://choosealicense.com').withDelays(200).build()
 </code></pre>
+<h3 id="wait_for_delay"><a class="header" href="#wait_for_delay">Wait_For_Delay</a></h3>
+<p>Wait for a delay on the page. Should only be used for testing. This method does nothing if the <code>chrome</code> feature is not enabled.
+The first param is the seconds of delay and the second is the nano seconds to delay by.</p>
+<pre><code class="language-ts">// a delay of 2 seconds and 500 nanos
+const website = new Website('https://choosealicense.com').with_wait_for_delay(2, 500).build()
+</code></pre>
+<h3 id="wait_for_selector"><a class="header" href="#wait_for_selector">Wait_For_Selector</a></h3>
+<p>Wait for a a selector on the page with a max timeout. This method does nothing if the <code>chrome</code> feature is not enabled.</p>
+<pre><code class="language-ts">// a delay of 2 seconds and 500 nanos
+const website = new Website('https://choosealicense.com').with_wait_for_selector('.news-feed', 2, 500).build()
+</code></pre>
+<h3 id="wait_for_idle_network"><a class="header" href="#wait_for_idle_network">Wait_For_Idle_Network</a></h3>
+<p>Wait for idle network request. This method does nothing if the <code>chrome</code> feature is not enabled.</p>
+<pre><code class="language-ts">// a delay of 2 seconds and 500 nanos
+const website = new Website('https://choosealicense.com').with_wait_for_idle_network(2, 500).build()
+</code></pre>
 <h3 id="user-agent"><a class="header" href="#user-agent">User-Agent</a></h3>
 <p>Use a custom User-Agent.</p>
 <pre><code class="language-ts">const website = new Website('https://choosealicense.com').withUserAgent('mybot/v1').build()
