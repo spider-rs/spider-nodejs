@@ -1,6 +1,6 @@
 {
   "name": "@spider-rs/spider-rs-darwin-x64",
-  "version": "0.0.148",
+  "version": "0.0.149",
   "repository": "https://github.com/spider-rs/spider-nodejs",
   "os": [
     "darwin"
