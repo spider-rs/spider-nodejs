@@ -108,6 +108,34 @@ Add delays between pages. Defaults to none.
 const website = new Website('https://choosealicense.com').withDelays(200).build()
 ```
 
+### Wait_For_Delay
+
+Wait for a delay on the page. Should only be used for testing. This method does nothing if the `chrome` feature is not enabled.
+The first param is the seconds of delay and the second is the nano seconds to delay by.
+
+```ts
+// a delay of 2 seconds and 500 nanos
+const website = new Website('https://choosealicense.com').with_wait_for_delay(2, 500).build()
+```
+
+### Wait_For_Selector
+
+Wait for a a selector on the page with a max timeout. This method does nothing if the `chrome` feature is not enabled.
+
+```ts
+// a delay of 2 seconds and 500 nanos
+const website = new Website('https://choosealicense.com').with_wait_for_selector('.news-feed', 2, 500).build()
+```
+
+### Wait_For_Idle_Network
+
+Wait for idle network request. This method does nothing if the `chrome` feature is not enabled.
+
+```ts
+// a delay of 2 seconds and 500 nanos
+const website = new Website('https://choosealicense.com').with_wait_for_idle_network(2, 500).build()
+```
+
 ### User-Agent
 
 Use a custom User-Agent.
