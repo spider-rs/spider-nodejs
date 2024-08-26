@@ -1,6 +1,6 @@
 {
   "name": "@spider-rs/spider-rs",
-  "version": "0.0.149",
+  "version": "0.0.150",
   "main": "index.js",
   "types": "index.d.ts",
   "napi": {
