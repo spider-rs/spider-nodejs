@@ -11,10 +11,13 @@ pub struct Page {
     spider::compact_str::CompactString,
     spider::smallvec::SmallVec<[spider::compact_str::CompactString; 2]>,
   )>,
-  /// the url for the page
+  /// The url for the page.
   pub url: String,
+  /// The website crawling subdomain pages?
   pub subdomains: Option<bool>,
+  /// The website crawling TLD pages?
   pub tld: Option<bool>,
+  /// The HTTP status code.
   pub status_code: u16,
 }
 

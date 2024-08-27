@@ -2349,9 +2349,9 @@ dependencies = [
 
 [[package]]
 name = "rustix"
-version = "0.38.34"
+version = "0.38.35"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "70dc5ec042f7a43c4a73241207cecc9873a06d45debb38b329f8541d85c2730f"
+checksum = "a85d50532239da68e9addb745ba38ff4612a242c1c7ceea689c4bc7c2f43c36f"
 dependencies = [
  "bitflags 2.6.0",
  "errno",
@@ -2673,9 +2673,9 @@ dependencies = [
 
 [[package]]
 name = "spider"
-version = "2.0.19"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "20e82a8b2d2e49745535ffada0483756ac28d124428b6eaed97c842e7f2cabf8"
+checksum = "6cc111d3f26cbceb70d37fabab58ed4730de66b0d2144dc67805dcdee318d6f0"
 dependencies = [
  "ahash",
  "async-openai",

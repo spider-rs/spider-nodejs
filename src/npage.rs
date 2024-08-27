@@ -10,15 +10,18 @@ use std::collections::HashMap;
 #[derive(Default, Clone)]
 #[napi(object)]
 pub struct NPage {
-  /// the url found.
+  /// The url found.
   pub url: String,
-  /// the content of the page found.
+  /// The content of the page found.
   pub content: String,
-  /// the HTTP status code.
+  /// The HTTP status code.
   pub status_code: u16,
-  /// the raw content
+  /// The Raw content if the resource needs to be sent as binary.
   pub raw_content: Option<Buffer>,
+  /// The HTTP headers.
   pub headers: Option<HashMap<String, String>>,
+  /// The links found on the page. Requires the website.builder method website.with_subscription_return_page_links to be set to true.
+  pub links: Option<Vec<String>>,
 }
 
 #[napi]
@@ -46,6 +49,15 @@ impl NPage {
       },
       headers: match res.headers {
         Some(ref headers) => Some(header_map_to_hash_map(headers)),
+        _ => None,
+      },
+      links: match res.page_links {
+        Some(ref links) => Some(
+          links
+            .iter()
+            .map(|link| link.as_ref().to_string())
+            .collect::<Vec<String>>(),
+        ),
         _ => None,
       },
     }

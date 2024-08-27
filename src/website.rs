@@ -4,7 +4,7 @@ use indexmap::IndexMap;
 use napi::{bindgen_prelude::Object, tokio::task::JoinHandle};
 use napi::{Env, JsUnknown};
 use spider::compact_str::CompactString;
-use spider::configuration::{WaitFor, WaitForDelay, WaitForIdleNetwork, WaitForSelector};
+use spider::configuration::{WaitForDelay, WaitForIdleNetwork, WaitForSelector};
 use spider::{configuration::RedirectPolicy, utils::shutdown};
 use std::time::Duration;
 
@@ -1014,6 +1014,13 @@ impl Website {
   #[napi]
   pub fn with_depth(&mut self, depth: u32) -> &Self {
     self.inner.configuration.with_depth(depth as usize);
+    self
+  }
+
+  /// Return the links found on the page in the channel subscriptions. This method does nothing if the `decentralized` is enabled.
+  #[napi]
+  pub fn with_return_page_links(&mut self, return_page_links: bool) -> &Self {
+    self.inner.configuration.with_return_page_links(return_page_links);
     self
   }
 

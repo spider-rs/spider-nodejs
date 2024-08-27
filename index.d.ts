@@ -5,15 +5,18 @@
 
 /** a simple page object */
 export interface NPage {
-  /** the url found. */
+  /** The url found. */
   url: string
-  /** the content of the page found. */
+  /** The content of the page found. */
   content: string
-  /** the HTTP status code. */
+  /** The HTTP status code. */
   statusCode: number
-  /** the raw content */
+  /** The Raw content if the resource needs to be sent as binary. */
   rawContent?: Buffer
+  /** The HTTP headers. */
   headers?: Record<string, string>
+  /** The links found on the page. Requires the website.builder method website.with_subscription_return_page_links to be set to true. */
+  links?: Array<string>
 }
 /** get the page title. */
 export declare function pageTitle(page: NPage): string
@@ -31,10 +34,13 @@ export class NWebsite {
 }
 /** a simple page object */
 export class Page {
-  /** the url for the page */
+  /** The url for the page. */
   url: string
+  /** The website crawling subdomain pages? */
   subdomains?: boolean
+  /** The website crawling TLD pages? */
   tld?: boolean
+  /** The HTTP status code. */
   statusCode: number
   /** a new page */
   constructor(url: string, subdomains?: boolean | undefined | null, tld?: boolean | undefined | null)
@@ -117,6 +123,12 @@ export class Website {
   withBlacklistUrl(blacklistUrl?: Array<string> | undefined | null): this
   /** Regex whitelist urls from the crawl */
   withWhitelistUrl(whitelistUrl?: Array<string> | undefined | null): this
+  /** Wait for a delay. Should only be used for testing. This method does nothing if the `chrome` feature is not enabled. */
+  withWaitForDelay(seconds?: number | undefined | null, nanos?: number | undefined | null): this
+  /** Wait for a CSS query selector. This method does nothing if the `chrome` feature is not enabled. */
+  withWaitForSelector(selector?: string | undefined | null, seconds?: number | undefined | null, nanos?: number | undefined | null): this
+  /** Wait for idle network request. This method does nothing if the `chrome` feature is not enabled. */
+  withWaitForIdleNetwork(seconds?: number | undefined | null, nanos?: number | undefined | null): this
   /** Setup cron jobs to run */
   withCron(cronStr: string, cronType?: string | undefined | null): this
   /** Use OpenAI to generate dynamic javascript snippets. Make sure to set the `OPENAI_API_KEY` env variable. */
@@ -160,6 +172,8 @@ export class Website {
   withDelay(delay: number): this
   /** Set a crawl depth limit. If the value is 0 there is no limit. */
   withDepth(depth: number): this
+  /** Return the links found on the page in the channel subscriptions. This method does nothing if the `decentralized` is enabled. */
+  withReturnPageLinks(returnPageLinks: boolean): this
   /** Cache the page following HTTP rules. */
   withCaching(cache: boolean): this
   /** Set the sitemap url. */
