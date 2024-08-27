@@ -14,6 +14,16 @@ import { Website } from '@spider-rs/spider-rs'
 const website = new Website('https://choosealicense.com')
 ```
 
+### Return Page Links
+
+Return links found on the page resource.
+
+```py
+const website = new Website('https://choosealicense.com')
+  .with_return_page_links(true)
+  .build()
+```
+
 ### Custom Headers
 
 Add custom HTTP headers to use when crawling/scraping.
