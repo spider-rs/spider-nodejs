@@ -7,10 +7,7 @@ pub struct Page {
   /// the page object from spider
   inner: Option<spider::page::Page>,
   /// selectors
-  selectors: Option<(
-    spider::compact_str::CompactString,
-    spider::smallvec::SmallVec<[spider::compact_str::CompactString; 2]>,
-  )>,
+  selectors: Option<spider::RelativeSelectors>,
   /// The url for the page.
   pub url: String,
   /// The website crawling subdomain pages?

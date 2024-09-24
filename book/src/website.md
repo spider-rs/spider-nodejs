@@ -154,6 +154,15 @@ Use a custom User-Agent.
 const website = new Website('https://choosealicense.com').withUserAgent('mybot/v1').build()
 ```
 
+### Chrome Remote Connection
+
+Add a chrome remote connection url. This can be a json endpoint or ws direct connection.
+
+```ts
+const website = new Website('https://choosealicense.com').with_chrome_connection("http://localhost:9222/json/version").build()
+```
+
+
 ### OpenAI
 
 Use OpenAI to generate dynamic scripts to use with headless. Make sure to set the `OPENAI_API_KEY` env variable.

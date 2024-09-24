@@ -617,10 +617,11 @@ impl Website {
   pub fn drain_links(&mut self) -> Vec<String> {
     let links = self
       .inner
-      .drain_links()
+      .get_links()
+      .iter()
       .map(|x| x.as_ref().to_string())
       .collect::<Vec<String>>();
-
+    self.inner.drain_links();
     links
   }
 
@@ -700,6 +701,26 @@ impl Website {
     self
       .inner
       .with_chrome_intercept(chrome_intercept, block_images);
+    self
+  }
+
+  /// Set the connection url for the chrome instance. This method does nothing if the `chrome` is not enabled.
+  #[napi]
+  pub fn with_chrome_connection(&mut self, chrome_connection: String) -> &Self {
+    self
+      .inner
+      .with_chrome_connection(if chrome_connection.is_empty() {
+        None
+      } else {
+        Some(chrome_connection)
+      });
+    self
+  }
+
+  /// Preserve the HOST header.
+  #[napi]
+  pub fn with_preserve_host_header(&mut self, preserve_host: bool) -> &Self {
+    self.inner.with_preserve_host_header(preserve_host);
     self
   }
 
@@ -1020,7 +1041,10 @@ impl Website {
   /// Return the links found on the page in the channel subscriptions. This method does nothing if the `decentralized` is enabled.
   #[napi]
   pub fn with_return_page_links(&mut self, return_page_links: bool) -> &Self {
-    self.inner.configuration.with_return_page_links(return_page_links);
+    self
+      .inner
+      .configuration
+      .with_return_page_links(return_page_links);
     self
   }
 
