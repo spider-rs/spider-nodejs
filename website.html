@@ -267,6 +267,10 @@ const website = new Website('https://choosealicense.com').with_wait_for_idle_net
 <p>Use a custom User-Agent.</p>
 <pre><code class="language-ts">const website = new Website('https://choosealicense.com').withUserAgent('mybot/v1').build()
 </code></pre>
+<h3 id="chrome-remote-connection"><a class="header" href="#chrome-remote-connection">Chrome Remote Connection</a></h3>
+<p>Add a chrome remote connection url. This can be a json endpoint or ws direct connection.</p>
+<pre><code class="language-ts">const website = new Website('https://choosealicense.com').with_chrome_connection("http://localhost:9222/json/version").build()
+</code></pre>
 <h3 id="openai"><a class="header" href="#openai">OpenAI</a></h3>
 <p>Use OpenAI to generate dynamic scripts to use with headless. Make sure to set the <code>OPENAI_API_KEY</code> env variable.</p>
 <pre><code class="language-ts">const website = new Website('https://google.com')
