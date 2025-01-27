@@ -1,8 +1,5 @@
 use napi::bindgen_prelude::Buffer;
-use spider::{
-  lazy_static::lazy_static,
-  reqwest::header::HeaderMap,
-};
+use spider::{lazy_static::lazy_static, reqwest::header::HeaderMap};
 use std::collections::HashMap;
 
 lazy_static! {

@@ -784,6 +784,18 @@ impl Website {
     self
   }
 
+  /// Dangerously accept invalid certificates - this should be used as a last resort.
+  #[napi]
+  pub fn with_danger_accept_invalid_certs(&mut self, accept_invalid_certs: Option<bool>) -> &Self {
+    self
+      .inner
+      .with_danger_accept_invalid_certs(match accept_invalid_certs {
+        Some(ext) => ext,
+        _ => false,
+      });
+    self
+  }
+
   #[napi]
   /// Set the crawling budget
   pub fn with_budget(&mut self, budget: Option<std::collections::HashMap<String, u32>>) -> &Self {

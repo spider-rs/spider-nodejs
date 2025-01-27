@@ -101,6 +101,10 @@ export class Website {
   withFullResources(fullResources: boolean): this
   /** Use network interception for the request to only allow content that matches the host. If the content is from a 3rd party it needs to be part of our include list. */
   withChromeIntercept(chromeIntercept: boolean, blockImages: boolean): this
+  /** Set the connection url for the chrome instance. This method does nothing if the `chrome` is not enabled. */
+  withChromeConnection(chromeConnection: string): this
+  /** Preserve the HOST header. */
+  withPreserveHostHeader(preserveHost: boolean): this
   /** Include subdomains detection. */
   withSubdomains(subdomains: boolean): this
   /** Include tld detection. */
