@@ -698,9 +698,12 @@ impl Website {
   /// Use network interception for the request to only allow content that matches the host. If the content is from a 3rd party it needs to be part of our include list.
   #[napi]
   pub fn with_chrome_intercept(&mut self, chrome_intercept: bool, block_images: bool) -> &Self {
-    self
-      .inner
-      .with_chrome_intercept(chrome_intercept, block_images);
+    let mut intercept_config =
+      spider::features::chrome_common::RequestInterceptConfiguration::new(chrome_intercept);
+
+    intercept_config.block_visuals = block_images;
+
+    self.inner.with_chrome_intercept(intercept_config);
     self
   }
 

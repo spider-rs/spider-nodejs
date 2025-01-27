@@ -50,11 +50,11 @@ impl Page {
     let page = spider::page::Page::new_page(&self.url, &PAGE_CLIENT).await;
     self.status_code = page.status_code.into();
     self.inner = Some(page);
-    self.selectors = spider::page::get_page_selectors(
+    self.selectors = Some(spider::page::get_page_selectors(
       &self.url,
       self.subdomains.unwrap_or_default(),
       self.tld.unwrap_or_default(),
-    );
+    ));
     self
   }
 
@@ -64,7 +64,7 @@ impl Page {
     match &self.selectors {
       Some(selectors) => match &self.inner {
         Some(inner) => {
-          let links = inner.links(&selectors).await;
+          let links = inner.clone().links(&selectors, &None).await;
           links
             .into_iter()
             .map(|i| i.as_ref().to_string())

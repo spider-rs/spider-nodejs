@@ -1,10 +1,13 @@
 use napi::bindgen_prelude::Buffer;
 use spider::{
   lazy_static::lazy_static,
-  packages::scraper::{Html, Selector},
   reqwest::header::HeaderMap,
 };
 use std::collections::HashMap;
+
+lazy_static! {
+  static ref TITLE_SELECTOR: scraper::Selector = scraper::Selector::parse("title").unwrap();
+}
 
 /// a simple page object
 #[derive(Default, Clone)]
@@ -66,10 +69,7 @@ impl NPage {
   #[napi]
   /// the html page title.
   pub fn title(&self) -> String {
-    lazy_static! {
-      static ref TITLE_SELECTOR: Selector = Selector::parse("title").unwrap();
-    }
-    let fragment: Html = Html::parse_document(&self.content);
+    let fragment: scraper::Html = scraper::Html::parse_document(&self.content);
     match fragment.select(&TITLE_SELECTOR).next() {
       Some(title) => title.inner_html(),
       _ => Default::default(),
