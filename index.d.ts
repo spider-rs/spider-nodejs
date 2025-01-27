@@ -117,6 +117,8 @@ export class Website {
   withExternalDomains(externalDomains?: Array<string> | undefined | null): this
   /** Use stealth mode for the request. This does nothing without chrome. */
   withStealth(stealthMode?: boolean | undefined | null): this
+  /** Dangerously accept invalid certificates - this should be used as a last resort. */
+  withDangerAcceptInvalidCerts(acceptInvalidCerts?: boolean | undefined | null): this
   /** Set the crawling budget */
   withBudget(budget?: Record<string, number> | undefined | null): this
   /** Set the max redirects allowed for request. */
