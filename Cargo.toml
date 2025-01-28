@@ -16,7 +16,7 @@ napi-derive = "2"
 num_cpus = "1"
 serde = "1"
 serde_json = "1"
-spider = { version = "2", features = ["cron", "regex", "cookies", "socks", "chrome", "control", "chrome_intercept", "cache", "openai", "serde", "real_browser", "headers", "reqwest_rustls_tls" ] }
+spider = { version = "2", default-features = false, features = ["cron", "regex", "cookies", "socks", "chrome", "control", "chrome_intercept", "cache", "openai", "serde", "real_browser", "headers", "reqwest_rustls_tls", "io_uring" ] }
 spider_scraper = "0.1"
 
 [build-dependencies]
