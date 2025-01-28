@@ -38,9 +38,9 @@ jobs:
           - host: windows-latest
             target: i686-pc-windows-msvc
             build: |
-              choco install .light
-              set _LIB_DIR=C:\Program Files\\lib
-              set _INCLUDE_DIR=C:\Program Files\\include
+              choco install openssl.light
+              set OPENSSL_LIB_DIR=C:\Program Files\OpenSSL\lib
+              set OPENSSL_INCLUDE_DIR=C:\Program Files\OpenSSL\include
               yarn build --target i686-pc-windows-msvc
               # timeout issue - signals not working with swc core
               # yarn test
@@ -48,12 +48,12 @@ jobs:
             target: x86_64-unknown-linux-gnu
             setup: |
               sudo apt-get update
-              sudo apt-get install -y gcc build-essential cmake  ca-certificates libc6 perl
+              sudo apt-get install -y gcc build-essential cmake openssl libssl-dev ca-certificates libc6 perl
             build: yarn build --target x86_64-unknown-linux-gnu
           # - host: ubuntu-latest
           #   target: x86_64-unknown-linux-musl
           #   setup: |
-          #     sudo apt-get update && sudo apt-get install -y build-essential pkg-config cmake musl-tools musl-dev  ca-certificates gcc g++ libc6
+          #     sudo apt-get update && sudo apt-get install -y build-essential pkg-config cmake musl-tools musl-dev openssl libssl-dev ca-certificates gcc g++ libc6
           #     export CC=musl-gcc
           #   docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
           #   build: yarn build --target x86_64-unknown-linux-musl
@@ -67,13 +67,13 @@ jobs:
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
             setup: |
               sudo apt-get update
-              sudo apt-get install -y gcc-aarch64-linux-gnu build-essential cmake  ca-certificates gcc libc6 perl pkg-config
+              sudo apt-get install -y gcc-aarch64-linux-gnu build-essential cmake openssl libssl-dev ca-certificates gcc libc6 perl pkg-config
             build: yarn build --target aarch64-unknown-linux-gnu
           # - host: ubuntu-latest
           #   target: armv7-unknown-linux-gnueabihf
           #   setup: |
           #     sudo apt-get update
-          #     sudo apt-get install build-essential pkg-config perl gcc cmake libc6 ca-certificates  gcc-arm-linux-gnueabihf -y
+          #     sudo apt-get install build-essential pkg-config perl gcc cmake libc6 ca-certificates openssl libssl-dev gcc-arm-linux-gnueabihf -y
           #   build: yarn build --target armv7-unknown-linux-gnueabihf
           #   env:
           #     CXXFLAGS: '--stdlib=libc++ -L/usr/lib/llvm-18/lib -static'
@@ -81,18 +81,18 @@ jobs:
             target: aarch64-linux-android
             setup: |
               sudo apt-get update
-              sudo apt-get install -y build-essential cmake  
+              sudo apt-get install -y build-essential cmake openssl libssl-dev openssl
             build: yarn build --target aarch64-linux-android
           - host: ubuntu-latest
             target: armv7-linux-androideabi
             setup: |
               sudo apt-get update
-              sudo apt-get install -y build-essential cmake  perl libc6 gcc ca-certificates
+              sudo apt-get install -y build-essential cmake openssl libssl-dev perl libc6 gcc ca-certificates
             build: yarn build --target armv7-linux-androideabi
           # - host: ubuntu-latest
           #   target: aarch64-unknown-linux-musl
           #   setup: |
-          #     sudo apt-get update && sudo apt-get install -y pkg-config clang perl-utils build-essential musl-tools musl-dev ca-certificates gcc g++ libc6 perl 
+          #     sudo apt-get update && sudo apt-get install -y pkg-config clang perl-utils build-essential musl-tools musl-dev ca-certificates gcc g++ libc6 perl openssl libssl-dev
           #     export CC=musl-gcc
           #   docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
           #   build: |
@@ -104,9 +104,9 @@ jobs:
           - host: windows-latest
             target: aarch64-pc-windows-msvc
             build: |
-              choco install .light
-              set _LIB_DIR=C:\Program Files\-Win64\lib
-              set _INCLUDE_DIR=C:\Program Files\-Win64\include
+              choco install openssl.light
+              set OPENSSL_LIB_DIR=C:\Program Files\OpenSSL-Win64\lib
+              set OPENSSL_INCLUDE_DIR=C:\Program Files\OpenSSL-Win64\include
               yarn build --target aarch64-pc-windows-msvc
     name: stable - ${{ matrix.settings.target }} - node@20
     runs-on: ${{ matrix.settings.host }}
@@ -188,7 +188,7 @@ jobs:
   #         environment_variables: DEBUG RUSTUP_IO_THREADS
   #         shell: bash
   #         run: |
-  #           sudo pkg install -y -f curl node libnghttp2 npm 
+  #           sudo pkg install -y -f curl node libnghttp2 npm openssl
   #           sudo npm install -g yarn --ignore-scripts
   #           curl https://sh.rustup.rs -sSf --output rustup.sh
   #           sh rustup.sh -y --profile minimal --default-toolchain stable
