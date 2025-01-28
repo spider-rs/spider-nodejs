@@ -1,6 +1,6 @@
 {
   "name": "@spider-rs/spider-rs-linux-arm64-gnu",
-  "version": "0.0.161",
+  "version": "0.0.162",
   "repository": "https://github.com/spider-rs/spider-nodejs",
   "os": [
     "linux"
