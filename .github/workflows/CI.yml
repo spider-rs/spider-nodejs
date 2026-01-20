@@ -2,29 +2,34 @@ name: CI
 env:
   DEBUG: napi:*
   APP_NAME: spider-rs
-  MACOSX_DEPLOYMENT_TARGET: '10.13'
+  MACOSX_DEPLOYMENT_TARGET: "10.13"
+  # Ensure provenance is always on (OIDC trusted publisher expects this)
+  NPM_CONFIG_PROVENANCE: "true"
+
 permissions:
   contents: write
   id-token: write
+
 on:
   push:
-    branches:
-      - main
-    tags-ignore:
-      - '**'
+    branches: [main]
+    tags-ignore: ["**"]
     paths-ignore:
-      - '**/*.md'
+      - "**/*.md"
       - LICENSE
-      - '**/*.gitignore'
+      - "**/*.gitignore"
       - .editorconfig
       - docs/**
-  pull_request: null
+  pull_request:
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
+    name: stable - ${{ matrix.settings.target }} - node@20
+    runs-on: ${{ matrix.settings.host }}
     strategy:
       fail-fast: false
       matrix:
@@ -32,98 +37,92 @@ jobs:
           - host: macos-latest
             target: x86_64-apple-darwin
             build: yarn build --target x86_64-apple-darwin
+
           - host: windows-latest
             target: x86_64-pc-windows-msvc
             build: yarn build --target x86_64-pc-windows-msvc
+
           - host: windows-latest
             target: i686-pc-windows-msvc
             build: |
-              choco install openssl.light
+              choco install openssl.light -y
               set OPENSSL_LIB_DIR=C:\Program Files\OpenSSL\lib
               set OPENSSL_INCLUDE_DIR=C:\Program Files\OpenSSL\include
               yarn build --target i686-pc-windows-msvc
-              # timeout issue - signals not working with swc core
-              # yarn test
+
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             setup: |
               sudo apt-get update
-              sudo apt-get install -y gcc build-essential cmake openssl libssl-dev ca-certificates libc6 perl
+              sudo apt-get install -y --no-install-recommends \
+                gcc build-essential cmake pkg-config perl libc6 \
+                ca-certificates openssl libssl-dev
             build: yarn build --target x86_64-unknown-linux-gnu
-          # - host: ubuntu-latest
-          #   target: x86_64-unknown-linux-musl
-          #   setup: |
-          #     sudo apt-get update && sudo apt-get install -y build-essential pkg-config cmake musl-tools musl-dev openssl libssl-dev ca-certificates gcc g++ libc6
-          #     export CC=musl-gcc
-          #   docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-          #   build: yarn build --target x86_64-unknown-linux-musl
-          #   env:
-          #     CXXFLAGS: '--stdlib=libc++ -L/usr/lib/llvm-18/lib -static'
+
           - host: macos-latest
             target: aarch64-apple-darwin
             build: yarn build --target aarch64-apple-darwin
-          - host: ubuntu-latest
-            target: aarch64-unknown-linux-gnu
-            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
-            setup: |
-              sudo apt-get update
-              sudo apt-get install -y gcc-aarch64-linux-gnu build-essential cmake openssl libssl-dev ca-certificates gcc libc6 perl pkg-config
-            build: yarn build --target aarch64-unknown-linux-gnu
+
+          # TEMP DISABLED (failing OpenSSL cross / android toolchain)
           # - host: ubuntu-latest
-          #   target: armv7-unknown-linux-gnueabihf
+          #   target: aarch64-unknown-linux-gnu
+          #   docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
+          #   build: yarn build --target aarch64-unknown-linux-gnu
+
+          # TEMP DISABLED (Android OpenSSL)
+          # - host: ubuntu-latest
+          #   target: aarch64-linux-android
           #   setup: |
           #     sudo apt-get update
-          #     sudo apt-get install build-essential pkg-config perl gcc cmake libc6 ca-certificates openssl libssl-dev gcc-arm-linux-gnueabihf -y
-          #   build: yarn build --target armv7-unknown-linux-gnueabihf
-          #   env:
-          #     CXXFLAGS: '--stdlib=libc++ -L/usr/lib/llvm-18/lib -static'
-          - host: ubuntu-latest
-            target: aarch64-linux-android
-            setup: |
-              sudo apt-get update
-              sudo apt-get install -y build-essential cmake openssl libssl-dev openssl
-            build: yarn build --target aarch64-linux-android
-          - host: ubuntu-latest
-            target: armv7-linux-androideabi
-            setup: |
-              sudo apt-get update
-              sudo apt-get install -y build-essential cmake openssl libssl-dev perl libc6 gcc ca-certificates
-            build: yarn build --target armv7-linux-androideabi
+          #     sudo apt-get install -y --no-install-recommends \
+          #       ca-certificates curl git \
+          #       build-essential cmake perl pkg-config clang \
+          #       unzip zip
+          #   build: yarn build --target aarch64-linux-android
+
+          # TEMP DISABLED (Android OpenSSL)
           # - host: ubuntu-latest
-          #   target: aarch64-unknown-linux-musl
+          #   target: armv7-linux-androideabi
           #   setup: |
-          #     sudo apt-get update && sudo apt-get install -y pkg-config clang perl-utils build-essential musl-tools musl-dev ca-certificates gcc g++ libc6 perl openssl libssl-dev
-          #     export CC=musl-gcc
-          #   docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-          #   build: |
-          #     set -e &&
-          #     rustup target add aarch64-unknown-linux-musl &&
-          #     yarn build --target aarch64-unknown-linux-musl
-          #   env:
-          #     CXXFLAGS: '--stdlib=libc++ -L/usr/lib/llvm-18/lib -static'
+          #     sudo apt-get update
+          #     sudo apt-get install -y --no-install-recommends \
+          #       ca-certificates curl git \
+          #       build-essential cmake perl pkg-config clang \
+          #       unzip zip
+          #   build: yarn build --target armv7-linux-androideabi
+
           - host: windows-latest
             target: aarch64-pc-windows-msvc
             build: |
-              choco install openssl.light
+              choco install openssl.light -y
               set OPENSSL_LIB_DIR=C:\Program Files\OpenSSL-Win64\lib
               set OPENSSL_INCLUDE_DIR=C:\Program Files\OpenSSL-Win64\include
               yarn build --target aarch64-pc-windows-msvc
-    name: stable - ${{ matrix.settings.target }} - node@20
-    runs-on: ${{ matrix.settings.host }}
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup node
         uses: actions/setup-node@v4
         if: ${{ !matrix.settings.docker }}
         with:
           node-version: 20
           cache: yarn
-      - name: Install
+
+      - name: Install Rust (latest stable)
         uses: dtolnay/rust-toolchain@stable
         if: ${{ !matrix.settings.docker }}
         with:
           toolchain: stable
           targets: ${{ matrix.settings.target }}
+
+      - name: Rust version (non-docker)
+        if: ${{ !matrix.settings.docker }}
+        run: |
+          rustc -Vv
+          cargo -Vv
+        shell: bash
+
       - name: Cache cargo
         uses: actions/cache@v4
         with:
@@ -133,17 +132,17 @@ jobs:
             ~/.cargo/git/db/
             .cargo-cache
             target/
-          key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}
-      - uses: goto-bus-stop/setup-zig@v2
-        if: ${{ matrix.settings.target == 'armv7-unknown-linux-gnueabihf' }}
-        with:
-          version: 0.12.0
-      - name: Setup toolchain
+          key: ${{ matrix.settings.target }}-cargo-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Setup toolchain deps
+        if: ${{ matrix.settings.setup && !matrix.settings.docker }}
         run: ${{ matrix.settings.setup }}
-        if: ${{ matrix.settings.setup }}
         shell: bash
+
       - name: Install dependencies
+        if: ${{ !matrix.settings.docker }}
         run: yarn --no-immutable
+
       - name: Setup node x86
         uses: actions/setup-node@v4
         if: matrix.settings.target == 'i686-pc-windows-msvc'
@@ -151,17 +150,12 @@ jobs:
           node-version: 20
           cache: yarn
           architecture: x86
-      - name: Build in docker
-        uses: addnab/docker-run-action@v3
-        if: ${{ matrix.settings.docker }}
-        with:
-          image: ${{ matrix.settings.docker }}
-          options: '--user 0:0 -v ${{ github.workspace }}/.cargo-cache/git/db:/usr/local/cargo/git/db -v ${{ github.workspace }}/.cargo/registry/cache:/usr/local/cargo/registry/cache -v ${{ github.workspace }}/.cargo/registry/index:/usr/local/cargo/registry/index -v ${{ github.workspace }}:/build -w /build'
-          run: ${{ matrix.settings.build }}
+
       - name: Build
-        run: ${{ matrix.settings.build }}
         if: ${{ !matrix.settings.docker }}
+        run: ${{ matrix.settings.build }}
         shell: bash
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -169,59 +163,9 @@ jobs:
           path: ${{ env.APP_NAME }}.*.node
           if-no-files-found: error
 
-  # build-freebsd:
-  #   runs-on: macos-13
-  #   name: Build FreeBSD
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Build
-  #       id: build
-  #       uses: cross-platform-actions/action@v0.25.0
-  #       env:
-  #         DEBUG: napi:*
-  #         RUSTUP_IO_THREADS: 1
-  #       with:
-  #         operating_system: freebsd
-  #         version: '13.2'
-  #         memory: 13G
-  #         cpu_count: 3
-  #         environment_variables: DEBUG RUSTUP_IO_THREADS
-  #         shell: bash
-  #         run: |
-  #           sudo pkg install -y -f curl node libnghttp2 npm openssl
-  #           sudo npm install -g yarn --ignore-scripts
-  #           curl https://sh.rustup.rs -sSf --output rustup.sh
-  #           sh rustup.sh -y --profile minimal --default-toolchain stable
-  #           source "$HOME/.cargo/env"
-  #           echo "~~~~ rustc --version ~~~~"
-  #           rustc --version
-  #           echo "~~~~ node -v ~~~~"
-  #           node -v
-  #           echo "~~~~ yarn --version ~~~~"
-  #           yarn --version
-  #           pwd
-  #           ls -lah
-  #           whoami
-  #           env
-  #           freebsd-version
-  #           yarn install
-  #           yarn build
-  #           strip -x *.node
-  #           yarn test
-  #           rm -rf node_modules
-  #           rm -rf target
-  #           rm -rf .yarn/cache
-  #     - name: Upload artifact
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: bindings-freebsd
-  #         path: ${{ env.APP_NAME }}.*.node
-  #         if-no-files-found: error
-
   test-macOS-windows-binding:
     name: Test bindings on ${{ matrix.settings.target }} - node@${{ matrix.node }}
-    needs:
-      - build
+    needs: [build]
     strategy:
       fail-fast: false
       matrix:
@@ -235,9 +179,7 @@ jobs:
           - host: macos-latest
             target: x86_64-apple-darwin
             architecture: x64
-        node:
-          - '18'
-          - '20'
+        node: ["18", "20"]
     runs-on: ${{ matrix.settings.host }}
     steps:
       - uses: actions/checkout@v4
@@ -260,14 +202,11 @@ jobs:
 
   test-linux-x64-gnu-binding:
     name: Test bindings on Linux-x64-gnu - node@${{ matrix.node }}
-    needs:
-      - build
+    needs: [build]
     strategy:
       fail-fast: false
       matrix:
-        node:
-          - '18'
-          - '20'
+        node: ["18", "20"]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -287,195 +226,166 @@ jobs:
         run: ls -R .
         shell: bash
 
-  test-linux-x64-musl-binding:
-    name: Test bindings on x86_64-unknown-linux-musl - node@${{ matrix.node }}
-    needs:
-      - build
-    strategy:
-      fail-fast: false
-      matrix:
-        node:
-          - '18'
-          - '20'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node }}
-          cache: yarn
-      - name: Install dependencies
-        run: |
-          yarn config set supportedArchitectures.libc "musl"
-          yarn --no-immutable
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: bindings-x86_64-unknown-linux-musl
-          path: .
-      - name: List packages
-        run: ls -R .
-        shell: bash
-
-  test-linux-aarch64-gnu-binding:
-    name: Test bindings on aarch64-unknown-linux-gnu - node@${{ matrix.node }}
-    needs:
-      - build
-    strategy:
-      fail-fast: false
-      matrix:
-        node:
-          - '18'
-          - '20'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: bindings-aarch64-unknown-linux-gnu
-          path: .
-      - name: List packages
-        run: ls -R .
-        shell: bash
-      - name: Install dependencies
-        run: |
-          yarn config set supportedArchitectures.cpu "arm64"
-          yarn config set supportedArchitectures.libc "glibc"
-          yarn --no-immutable
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: arm64
-      - run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-      - name: Setup and run tests
-        uses: addnab/docker-run-action@v3
-        with:
-          image: node:${{ matrix.node }}-slim
-          options: '--platform linux/arm64 -v ${{ github.workspace }}:/build -w /build'
-          run: |
-            set -e
-            yarn test
-            ls -la
-
-  test-linux-aarch64-musl-binding:
-    name: Test bindings on aarch64-unknown-linux-musl - node@lts
-    needs:
-      - build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: bindings-aarch64-unknown-linux-musl
-          path: .
-      - name: List packages
-        run: ls -R .
-        shell: bash
-      - name: Install dependencies
-        run: |
-          yarn config set supportedArchitectures.cpu "arm64"
-          yarn config set supportedArchitectures.libc "musl"
-          yarn --no-immutable
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: arm64
-      - run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-      - name: Setup and run tests
-        uses: addnab/docker-run-action@v3
-        with:
-          image: node:lts-alpine
-          options: '--platform linux/arm64 -v ${{ github.workspace }}:/build -w /build'
-          run: |
-            set -e
-            yarn test
-
-  test-linux-arm-gnueabihf-binding:
-    name: Test bindings on armv7-unknown-linux-gnueabihf - node@${{ matrix.node }}
-    needs:
-      - build
-    strategy:
-      fail-fast: false
-      matrix:
-        node:
-          - '18'
-          - '20'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: bindings-armv7-unknown-linux-gnueabihf
-          path: .
-      - name: List packages
-        run: ls -R .
-        shell: bash
-      - name: Install dependencies
-        run: |
-          yarn config set supportedArchitectures.cpu "arm"
-          yarn --no-immutable
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: arm
-      - run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-      - name: Setup and run tests
-        uses: addnab/docker-run-action@v3
-        with:
-          image: node:${{ matrix.node }}-bullseye-slim
-          options: '--platform linux/arm/v7 -v ${{ github.workspace }}:/build -w /build'
-          run: |
-            set -e
-            yarn test
-            ls -la
-
   publish:
     name: Publish
     runs-on: ubuntu-latest
     needs:
       - test-macOS-windows-binding
       - test-linux-x64-gnu-binding
-      # - build-freebsd
-      # - test-linux-x64-musl-binding
-      # - test-linux-aarch64-gnu-binding
-      # - test-linux-aarch64-musl-binding
-      # - test-linux-arm-gnueabihf-binding
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: yarn
+
       - name: Install dependencies
         run: yarn --no-immutable
+
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+
       - name: Move artifacts
         run: yarn artifacts
+
       - name: List packages
         run: ls -R ./npm
         shell: bash
-      - name: Publish
+
+      - name: Detect release + version
+        id: rel
+        shell: bash
         run: |
-          npm config set provenance true
-          if git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
-          then
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-            npm publish --access public
-          elif git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+";
-          then
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-            npm publish --tag next --access public
+          set -euo pipefail
+          MSG="$(git log -1 --pretty=%B | tr -d '\r')"
+          echo "Commit message: $MSG"
+          if echo "$MSG" | grep -Eq "^[0-9]+\.[0-9]+\.[0-9]+$"; then
+            echo "release=true" >> "$GITHUB_OUTPUT"
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+            echo "version=$MSG" >> "$GITHUB_OUTPUT"
+          elif echo "$MSG" | grep -Eq "^[0-9]+\.[0-9]+\.[0-9]+"; then
+            VER="$(echo "$MSG" | head -n1 | awk '{print $1}')"
+            echo "release=true" >> "$GITHUB_OUTPUT"
+            echo "tag=next" >> "$GITHUB_OUTPUT"
+            echo "version=$VER" >> "$GITHUB_OUTPUT"
           else
-            echo "Not a release, skipping publish"
+            echo "release=false" >> "$GITHUB_OUTPUT"
+            echo "tag=" >> "$GITHUB_OUTPUT"
+            echo "version=" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Skip publish (not a release)
+        if: steps.rel.outputs.release != 'true'
+        run: echo "Not a release, skipping publish"
+
+      # ✅ REQUIRED for "publish always": authenticate with NPM_TOKEN
+      - name: Configure npm auth + provenance (fail-fast)
+        if: steps.rel.outputs.release == 'true'
+        shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euxo pipefail
+
+          if [ -z "${NPM_TOKEN:-}" ]; then
+            echo "NPM_TOKEN secret is not set"
+            exit 1
+          fi
+
+          # Always-auth so scoped packages publish reliably
+          printf "@spider-rs:registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=%s\n" "$NPM_TOKEN" > ~/.npmrc
+          npm config set provenance true
+
+          # Hard check token validity
+          npm ping
+          npm whoami
+
+      # ✅ Make GitHub release creation idempotent (optional, but prevents 422)
+      - name: Ensure GitHub release exists (idempotent)
+        if: steps.rel.outputs.release == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.rel.outputs.version }}
+        run: |
+          set -euxo pipefail
+          TAG="v${VERSION}"
+          if gh release view "$TAG" --repo spider-rs/spider-nodejs >/dev/null 2>&1; then
+            echo "GitHub release $TAG already exists; skipping create."
+          else
+            gh release create "$TAG" --repo spider-rs/spider-nodejs --title "$TAG" --notes ""
+          fi
+
+      # ✅ Publish only packages matching this release version (prevents stale 0.0.162 folders)
+      - name: Publish platform packages (version-gated)
+        if: steps.rel.outputs.release == 'true'
+        shell: bash
+        env:
+          TAG: ${{ steps.rel.outputs.tag }}
+          VERSION: ${{ steps.rel.outputs.version }}
+        run: |
+          set -euxo pipefail
+
+          # Allowlist only targets you build right now
+          ALLOW_DIRS=(
+            "npm/win32-x64-msvc"
+            "npm/win32-ia32-msvc"
+            "npm/win32-arm64-msvc"
+            "npm/darwin-x64"
+            "npm/darwin-arm64"
+            "npm/linux-x64-gnu"
+          )
+
+          publish_dir () {
+            local dir="$1"
+            local pj="$dir/package.json"
+            local v
+            v="$(node -p "require('./$pj').version")"
+
+            # Only publish folders that match the release version
+            if [ "$v" != "$VERSION" ]; then
+              echo "Skipping $dir (package.json version=$v, expected=$VERSION)"
+              return 0
+            fi
+
+            echo "Publishing $dir (version=$v) ..."
+            if [ "$TAG" = "latest" ]; then
+              (cd "$dir" && npm publish --access public)
+            else
+              (cd "$dir" && npm publish --access public --tag "$TAG")
+            fi
+          }
+
+          for dir in "${ALLOW_DIRS[@]}"; do
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+              publish_dir "$dir"
+            else
+              echo "Skipping missing dir: $dir"
+            fi
+          done
+
+      - name: Publish root package (ignore scripts)
+        if: steps.rel.outputs.release == 'true'
+        shell: bash
+        env:
+          TAG: ${{ steps.rel.outputs.tag }}
+          VERSION: ${{ steps.rel.outputs.version }}
+        run: |
+          set -euxo pipefail
+
+          ROOT_VER="$(node -p "require('./package.json').version")"
+          if [ "$ROOT_VER" != "$VERSION" ]; then
+            echo "Root package version=$ROOT_VER does not match release version=$VERSION"
+            exit 1
+          fi
+
+          if [ "$TAG" = "latest" ]; then
+            npm publish --access public --ignore-scripts
+          else
+            npm publish --access public --tag "$TAG" --ignore-scripts
+          fi

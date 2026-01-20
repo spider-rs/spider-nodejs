@@ -1,5 +1,5 @@
 [package]
-edition = "2021"
+edition = "2024"
 name = "spider-rs_spider-rs"
 version = "0.0.0"
 description = "The fastest web crawler written in Rust ported to nodejs."
@@ -10,6 +10,7 @@ authors = ["j-mendez <jeff@a11ywatch.com>"]
 crate-type = ["cdylib"]
 
 [dependencies]
+openssl = { version = "0.10", optional = true }
 indexmap = "2"
 napi = { version = "2", default-features = false, features = ["napi4", "async", "tokio_rt", "serde-json"] }
 napi-derive = "2"
@@ -35,11 +36,16 @@ spider = { version = "2", default-features = false, features = [
     "disk", 
     "cookies", 
     "ua_generator", 
-    "encoding", 
+    "encoding",
+    "smart",
     "string_interner_buffer_backend", 
     "balance"
     ] }
 spider_scraper = "0.1"
+
+[features]
+default = []
+vendored-openssl = ["openssl/vendored"]
 
 [build-dependencies]
 napi-build = "2"

@@ -26,11 +26,6 @@ pub struct Website {
                                // file_handle: Option<spider::tokio::fs::File>,
 }
 
-#[napi(object)]
-struct PageEvent {
-  pub page: NPage,
-}
-
 #[napi]
 impl Website {
   #[napi(constructor)]

@@ -22,9 +22,6 @@ export interface NPage {
 export declare function pageTitle(page: NPage): string
 /** crawl a website using HTTP gathering all links and html. */
 export declare function crawl(url: string, rawContent?: boolean | undefined | null): Promise<NWebsite>
-export interface PageEvent {
-  page: NPage
-}
 /** website main data from rust to node. */
 export class NWebsite {
   /** all of the website links. */

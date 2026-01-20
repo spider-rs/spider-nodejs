@@ -36,13 +36,12 @@ impl Page {
   pub async unsafe fn fetch(&mut self) -> &Self {
     use spider::{
       lazy_static::lazy_static, reqwest::Client, reqwest_middleware::ClientWithMiddleware,
-      ClientBuilder,
     };
     lazy_static! {
       /// top level single page client to re-use.
       pub static ref PAGE_CLIENT: ClientWithMiddleware = {
         let reqwest_client = Client::builder().build().unwrap_or_default();
-        let client = ClientBuilder::new(reqwest_client).build();
+        let client = spider::reqwest_middleware::ClientBuilder::new(reqwest_client).build();
 
         client
       };
