@@ -9,7 +9,7 @@ The [spider](https://github.com/spider-rs/spider) project ported to Node.js
 ```ts
 import { Website, pageTitle } from '@spider-rs/spider-rs'
 
-const website = new Website('https://rsseau.fr')
+const website = new Website('https://spider.cloud')
   .withHeaders({
     authorization: 'somerandomjwt',
   })
@@ -33,7 +33,7 @@ const onPageEvent = (_err, page) => {
 }
 
 await website.crawl(onPageEvent)
-await website.exportJsonlData('./storage/rsseau.jsonl')
+await website.exportJsonlData('./storage/spider.jsonl')
 console.log(website.getLinks())
 ```
 
@@ -42,7 +42,7 @@ Collect the resources for a website.
 ```ts
 import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website('https://rsseau.fr')
+const website = new Website('https://spider.cloud')
   .withBudget({
     '*': 20,
     '/docs': 10,
@@ -60,7 +60,7 @@ Run the crawls in the background on another thread.
 ```ts
 import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website('https://rsseau.fr')
+const website = new Website('https://spider.cloud')
 
 const onPageEvent = (_err, page) => {
   console.log(page)
@@ -75,7 +75,7 @@ Use headless Chrome rendering for crawls.
 ```ts
 import { Website } from '@spider-rs/spider-rs'
 
-const website = new Website('https://rsseau.fr').withChromeIntercept(true, true)
+const website = new Website('https://spider.cloud').withChromeIntercept(true, true)
 
 const onPageEvent = (_err, page) => {
   console.log(page)
@@ -118,7 +118,7 @@ Use the crawl shortcut to get the page content and url.
 ```ts
 import { crawl } from '@spider-rs/spider-rs'
 
-const { links, pages } = await crawl('https://rsseau.fr')
+const { links, pages } = await crawl('https://spider.cloud')
 console.log(pages)
 ```
 
