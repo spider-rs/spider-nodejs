@@ -6,9 +6,7 @@ use crate::BUFFER;
 /// crawl a website using HTTP gathering all links and html.
 pub async fn crawl(url: String, raw_content: Option<bool>) -> NWebsite {
   let mut website = spider::website::Website::new(&url);
-  let mut rx2 = website
-    .subscribe(*BUFFER / 2)
-    .expect("sync feature should be enabled");
+  let mut rx2 = website.subscribe(*BUFFER / 2);
   let (tx, mut rx) = spider::tokio::sync::mpsc::channel(*BUFFER);
   let raw_content = raw_content.unwrap_or_default();
 
