@@ -144,10 +144,7 @@ impl Website {
     &mut self,
     on_page_event: napi::threadsafe_function::ThreadsafeFunction<NPage>,
   ) -> u32 {
-    let mut rx2 = self
-      .inner
-      .subscribe(*BUFFER / 2)
-      .expect("sync feature should be enabled");
+    let mut rx2 = self.inner.subscribe(*BUFFER / 2);
     let raw_content = self.raw_content;
 
     let handle = spider::tokio::spawn(async move {
@@ -253,9 +250,7 @@ impl Website {
       Some(callback) => {
         if background {
           let mut website = self.inner.clone();
-          let mut rx2 = website
-            .subscribe(*BUFFER / 2)
-            .expect("sync feature should be enabled");
+          let mut rx2 = website.subscribe(*BUFFER / 2);
 
           let handle = spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
@@ -287,10 +282,7 @@ impl Website {
           self.crawl_handles.insert(crawl_id, crawl_handle);
           self.subscription_handles.insert(id, handle);
         } else {
-          let mut rx2 = self
-            .inner
-            .subscribe(*BUFFER / 2)
-            .expect("sync feature should be enabled");
+          let mut rx2 = self.inner.subscribe(*BUFFER / 2);
 
           let handle = spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
@@ -363,9 +355,7 @@ impl Website {
       Some(callback) => {
         if background {
           let mut website = self.inner.clone();
-          let mut rx2 = website
-            .subscribe(*BUFFER / 2)
-            .expect("sync feature should be enabled");
+          let mut rx2 = website.subscribe(*BUFFER / 2);
 
           let handle = spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
@@ -393,10 +383,7 @@ impl Website {
           self.crawl_handles.insert(crawl_id, crawl_handle);
           self.subscription_handles.insert(id, handle);
         } else {
-          let mut rx2 = self
-            .inner
-            .subscribe(*BUFFER / 2)
-            .expect("sync feature should be enabled");
+          let mut rx2 = self.inner.subscribe(*BUFFER / 2);
 
           let handle = spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
@@ -452,9 +439,7 @@ impl Website {
       Some(callback) => {
         if background {
           let mut website = self.inner.clone();
-          let mut rx2 = website
-            .subscribe(*BUFFER / 2)
-            .expect("sync feature should be enabled");
+          let mut rx2 = website.subscribe(*BUFFER / 2);
 
           let handle = spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
@@ -486,10 +471,7 @@ impl Website {
           self.crawl_handles.insert(crawl_id, crawl_handle);
           self.subscription_handles.insert(id, handle);
         } else {
-          let mut rx2 = self
-            .inner
-            .subscribe(*BUFFER / 2)
-            .expect("sync feature should be enabled");
+          let mut rx2 = self.inner.subscribe(*BUFFER / 2);
 
           let handle = spider::tokio::spawn(async move {
             while let Ok(res) = rx2.recv().await {
@@ -546,10 +528,7 @@ impl Website {
   ) -> Cron {
     let cron_handle = match on_page_event {
       Some(callback) => {
-        let mut rx2 = self
-          .inner
-          .subscribe(*BUFFER / 2)
-          .expect("sync feature should be enabled");
+        let mut rx2 = self.inner.subscribe(*BUFFER / 2);
         let raw_content = self.raw_content;
 
         let handler = spider::tokio::spawn(async move {
