@@ -27,6 +27,7 @@
     "crawler"
   ],
   "repository": "https://github.com/spider-rs/spider-nodejs",
+  "homepage": "https://spider.cloud/web-scraper/",
   "devDependencies": {
     "@napi-rs/cli": "^2.18.4",
     "@swc-node/register": "^1.10.9",
