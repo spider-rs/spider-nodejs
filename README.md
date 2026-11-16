@@ -122,6 +122,8 @@ const { links, pages } = await crawl('https://spider.cloud')
 console.log(pages)
 ```
 
+The same engine also runs as a managed service. You can [scrape a single URL in the browser](https://spider.cloud/web-scraper/?utm_source=github&utm_medium=readme&utm_campaign=spider-nodejs) to see its output before you install anything.
+
 ## Benchmarks
 
 View the [benchmarks](./bench/README.md) to see a breakdown between libs and platforms.
